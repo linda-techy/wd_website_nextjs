@@ -1,0 +1,434 @@
+@import 'tailwindcss';
+@plugin 'tailwindcss-animate';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Gradient colors */
+  --color-primary: #d84940;
+  --color-skyblue: #79adff;
+  --color-lightskyblue: #9cc2dd;
+  --color-dark: #172023;
+
+  /* Shadow */
+  --shadow-3xl: 0px 4px 6px -2px #0000000D, 0px 10px 15px -3px #0000001A;
+  --shadow-auth: 0 20px 25px -5px #0000001a;
+  --shadow-dark-auth: rgba(255, 255, 255, 0.1) 0px 12px 28px 0px, rgba(255, 255, 255, 0.1) 0px 2px 4px 0px, rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
+
+  /* font size - Improved readability */
+  --text-xm: 1.125rem; /* 18px - for body text */
+  --text-9xl: 4rem; /* 64px - reduced from 6.5rem for better hero sizing */
+  --text-40: 2.5rem; /* 40px - section headings */
+  --text-52: 3.25rem; /* 52px - page headings */
+  --text-sm: 0.875rem; /* 14px - small text */
+  
+  /* Additional font sizes for better hierarchy */
+  --text-display: 4.5rem; /* 72px - for large display text on desktop */
+  --text-h1: 3rem; /* 48px - main headings */
+  --text-h2: 2.25rem; /* 36px - section headings */
+  --text-h3: 1.875rem; /* 30px - subsection headings */
+  --text-h4: 1.5rem; /* 24px - card titles */
+  --text-body-lg: 1.25rem; /* 20px - large body text */
+  --text-body: 1rem; /* 16px - standard body text */
+
+  /* Breakpoint */
+  --breakpoint-xs: 23.438rem;
+  /* 375px */
+  --breakpoint-mobile: 32.5rem;
+  /* 520px */
+
+  /* breakpoint / max-w */
+  --spacing-45p: 45%;
+  --spacing-85p: 85%;
+  --spacing-90p: 90%;
+  --spacing-68: 17.375rem;
+
+  --spacing-540: 33.75rem;
+  /* 540px */
+  --spacing-8xl: 87.5rem;
+  /* 1400px */
+
+  /* animation */
+  --animate-slide: slide 20s linear infinite;
+
+  @keyframes slide {
+    0% {
+      transform: translateX(0%);
+    }
+
+    100% {
+      transform: translateX(-103%);
+    }
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px; /* Base font size */
+}
+
+body {
+  @apply text-base leading-relaxed;
+}
+
+/* Typography Utilities */
+h1, .h1 {
+  @apply text-h1 font-bold leading-tight tracking-tight;
+}
+
+h2, .h2 {
+  @apply text-h2 font-semibold leading-tight tracking-tight;
+}
+
+h3, .h3 {
+  @apply text-h3 font-semibold leading-snug;
+}
+
+h4, .h4 {
+  @apply text-h4 font-medium leading-snug;
+}
+
+p {
+  @apply leading-relaxed;
+}
+
+/* Better readability for body text */
+.body-text {
+  @apply text-base leading-relaxed;
+}
+
+.body-text-lg {
+  @apply text-body-lg leading-relaxed;
+}
+
+.body-text-sm {
+  @apply text-sm leading-normal;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+section {
+  @apply py-6 sm:py-8 md:py-10 lg:py-12;
+}
+
+.blog-details p, .blog-details hr {
+  @apply mb-8;
+}
+
+.blog-details strong {
+  @apply font-bold dark:text-white;
+}
+
+.blog-details ul {
+  @apply list-none space-y-3 mb-10;
+}
+
+.blog-details ul li {
+  @apply mb-0 relative pl-4 text-base leading-relaxed before:absolute before:w-1 before:h-1 before:rounded-full before:bg-dark dark:before:bg-white/60 before:top-2.5 before:left-0;
+}
+
+.blog-details ol {
+  @apply mb-8 list-inside list-decimal space-y-3;
+}
+
+.blog-details ol li {
+  @apply mb-0
+}
+
+.blog-details h1 {
+  @apply mb-8 text-3xl font-bold text-dark dark:text-white sm:text-4xl md:text-[40px] md:leading-[1.28];
+}
+
+.blog-details h2 {
+  @apply mb-2 text-2xl font-bold text-dark dark:text-white sm:text-3xl md:text-[35px] md:leading-[1.28];
+}
+
+.blog-details h3 {
+  @apply mb-6 text-2xl text-dark dark:text-white sm:leading-relaxed;
+}
+
+.blog-details h4 {
+  @apply mb-6 text-xl leading-relaxed text-dark dark:text-white;
+}
+
+.blog-details hr {
+  @apply border-white
+}
+
+.blog-details p {
+  @apply text-dark dark:text-white text-lg leading-relaxed;
+}
+
+/* Print Styles for Brochure */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+
+  html, body {
+    width: 210mm;
+    height: 297mm;
+    margin: 0;
+    padding: 0;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+
+  /* Hide only specific elements */
+  header,
+  footer:not(.brochure-content footer),
+  nav,
+  .print-hidden {
+    display: none !important;
+  }
+
+  [class*="fixed"] {
+    display: none !important;
+  }
+
+  /* Container */
+  .container {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Brochure wrapper */
+  .brochure-content {
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Sections */
+  section {
+    page-break-inside: avoid;
+    margin-bottom: 10mm !important;
+    padding: 5mm !important;
+  }
+
+  .space-y-20 > * + * {
+    margin-top: 8mm !important;
+  }
+
+  /* Typography - keep original sizes but readable */
+  h1 {
+    font-size: 24pt !important;
+    color: inherit !important;
+  }
+
+  h2 {
+    font-size: 20pt !important;
+    color: inherit !important;
+  }
+
+  h3 {
+    font-size: 14pt !important;
+    color: inherit !important;
+  }
+
+  h4, h5, h6 {
+    font-size: 12pt !important;
+    color: inherit !important;
+  }
+
+  p {
+    font-size: 10pt !important;
+    color: inherit !important;
+  }
+
+  span, div, li {
+    font-size: 10pt !important;
+    color: inherit !important;
+  }
+
+  /* Preserve ALL background colors and gradients */
+  * {
+    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+  }
+
+  /* Keep gradient backgrounds */
+  [class*="bg-gradient-to-br"],
+  [class*="bg-gradient-to-r"] {
+    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+  }
+
+  /* Images */
+  img {
+    max-width: 100%;
+    height: auto;
+    page-break-inside: avoid;
+  }
+
+  /* Grid layouts */
+  .grid {
+    display: grid !important;
+    gap: 3mm !important;
+  }
+
+  [class*="grid-cols-2"] {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  [class*="grid-cols-3"] {
+    grid-template-columns: 1fr 1fr 1fr !important;
+  }
+
+  [class*="grid-cols-4"] {
+    grid-template-columns: 1fr 1fr 1fr 1fr !important;
+  }
+
+  /* Remove transforms only */
+  * {
+    transform: none !important;
+  }
+
+  /* Keep relative positioning */
+  .relative {
+    position: relative !important;
+  }
+
+  /* Page break classes */
+  .page-break-before {
+    page-break-before: always;
+  }
+
+  .page-break-avoid {
+    page-break-inside: avoid;
+  }
+
+  /* Remove excessive padding */
+  [class*="p-16"] {
+    padding: 8mm !important;
+  }
+
+  [class*="p-12"] {
+    padding: 6mm !important;
+  }
+
+  [class*="p-8"] {
+    padding: 4mm !important;
+  }
+
+  /* Fix specific color issues */
+  .text-primary {
+    color: #d84940 !important;
+  }
+
+  .bg-white {
+    background-color: white !important;
+    color: black !important;
+  }
+
+  /* Ensure comparison section colors */
+  [class*="border-red"] {
+    border-color: #dc2626 !important;
+  }
+
+  [class*="border-green"] {
+    border-color: #16a34a !important;
+  }
+
+  [class*="bg-red-50"] {
+    background-color: #fef2f2 !important;
+  }
+
+  [class*="bg-green-50"] {
+    background-color: #f0fdf4 !important;
+  }
+
+  /* Text in colored backgrounds */
+  [class*="bg-gray-"] p,
+  [class*="bg-gray-"] span,
+  [class*="bg-blue-"] p,
+  [class*="bg-blue-"] span,
+  [class*="bg-green-"] p,
+  [class*="bg-green-"] span {
+    color: #1f2937 !important;
+  }
+
+  /* Mobile phone mockup text */
+  [class*="bg-gradient-to-b"] p,
+  [class*="bg-gradient-to-b"] span,
+  [class*="bg-gradient-to-b"] h3,
+  [class*="bg-gradient-to-b"] h4 {
+    color: inherit !important;
+  }
+
+  /* Keep white backgrounds white */
+  .bg-white,
+  [class*="bg-white"] {
+    background-color: white !important;
+  }
+
+  /* Ensure all text is readable */
+  p[class*="text-xs"],
+  span[class*="text-xs"],
+  p[class*="text-sm"],
+  span[class*="text-sm"] {
+    font-size: 9pt !important;
+    color: inherit !important;
+  }
+
+  /* Fix margin issues */
+  [class*="mb-12"] {
+    margin-bottom: 8mm !important;
+  }
+
+  [class*="mb-8"] {
+    margin-bottom: 6mm !important;
+  }
+
+  [class*="mb-6"] {
+    margin-bottom: 4mm !important;
+  }
+
+  [class*="mb-4"] {
+    margin-bottom: 3mm !important;
+  }
+
+  /* Grid gap */
+  [class*="gap-"] {
+    gap: 3mm !important;
+  }
+
+  /* Ensure proper display */
+  .brochure-content * {
+    display: block;
+  }
+
+  .brochure-content .flex,
+  .brochure-content [class*="flex"] {
+    display: flex !important;
+  }
+
+  .brochure-content .grid,
+  .brochure-content [class*="grid"] {
+    display: grid !important;
+  }
+
+  .brochure-content .inline-flex {
+    display: inline-flex !important;
+  }
+
+  /* Remove opacity effects */
+  [class*="opacity-"] {
+    opacity: 1 !important;
+  }
+}
