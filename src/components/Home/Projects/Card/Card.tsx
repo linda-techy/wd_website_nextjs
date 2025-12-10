@@ -85,7 +85,7 @@ const PropertyCard: React.FC<{ item: PropertyHomes }> = ({ item }) => {
                 className="sm:w-5 sm:h-5"
               />
               <p className="text-xs sm:text-sm font-normal text-black dark:text-white leading-tight">
-                {area}m<sup>2</sup>
+                {area} sq ft<sup></sup>
               </p>
             </div>
           </div>
