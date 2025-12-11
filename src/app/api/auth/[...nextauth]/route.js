@@ -22,7 +22,7 @@ const { handlers } = NextAuth({
       },
       authorize: async (credentials) => {
         // Add your own authentication logic here
-        if (credentials.username === 'admin' && credentials.password === 'admin123') {
+        if (credentials.username === process.env.ADMIN_USERNAME && credentials.password === process.env.ADMIN_PASSWORD) {
           // Return user object if credentials are valid
           return { id: 1, name: 'Admin', email: 'admin@example.com' };
         } else {
