@@ -669,7 +669,7 @@ export default function BrochureContent() {
                                         <Icon icon={"ph:arrow-right"} width={20} height={20} className="text-white group-hover:translate-x-1 transition-transform" />
                                     </a>
                                     <a 
-                                        href="/tools"
+                                        href="https://app.walldotbuilders.com" target="_blank" rel="noopener noreferrer"
                                         className="inline-flex items-center gap-3 px-6 py-3 rounded-xl bg-white hover:bg-white/90 transition-all duration-300 hover:scale-105 group cursor-pointer"
                                     >
                                         <Icon icon={"ph:globe-fill"} width={32} height={32} className="text-primary" />
