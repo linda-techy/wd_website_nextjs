@@ -35,12 +35,10 @@ export async function POST(req: NextRequest) {
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('Hugging Face API error response:', errorText);
         throw new Error(`HTTP error! status: ${response.status}, response: ${errorText}`);
       }
 
       const result = await response.blob();
-      console.log('Hugging Face API response blob:', result);
       
       // Convert blob to base64
       const arrayBuffer = await result.arrayBuffer();
@@ -50,7 +48,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ imageDataUrl });
       
     } catch (hfError) {
-      console.error('Hugging Face API error:', hfError);
       
       // Fallback: Return placeholder image with instructions
       const placeholderImage = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTc5MiIgaGVpZ2h0PSIxMDI0IiB2aWV3Qm94PSIwIDAgMTc5MiAxMDI0IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjRjNGNEY2Ii8+Cjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IiM2QjcyODAiPkFJIEludGVyaW9yIERlc2lnbiAzNjDigJl8IFBsYWNlaG9sZGVyPC90ZXh0Pgo8L3N2Zz4K'
@@ -62,7 +59,6 @@ export async function POST(req: NextRequest) {
     }
 
   } catch (e: any) {
-    console.error('Server error:', e)
     return new NextResponse(e?.message || 'Server error', { status: 500 })
   }
 }

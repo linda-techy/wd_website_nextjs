@@ -101,42 +101,34 @@ export default function Partnerships() {
     // Submit handlers
     const handleArchitecturalSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Architectural Partnership:", architecturalFormData);
     };
 
     const handleRealEstateSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Real Estate Partnership:", realEstateFormData);
     };
 
     const handleInteriorDesignerSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Interior Designer Partnership:", interiorDesignerFormData);
     };
 
     const handleFinancialSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Financial Partnership:", financialFormData);
     };
 
     const handleMaterialSupplierSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Material Supplier Partnership:", materialSupplierFormData);
     };
 
     const handleVastuSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Vastu Consultant Partnership:", vastuFormData);
     };
 
     const handleLandConsultantSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Land Consultant Partnership:", landConsultantFormData);
     };
 
     const handleCorporateSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Corporate Partnership:", corporateFormData);
     };
 
     // Partnership tab configuration

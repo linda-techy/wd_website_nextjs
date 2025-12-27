@@ -169,7 +169,6 @@ export default function BrochureContent() {
                 await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
                 await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js');
             } catch (error) {
-                console.error('Failed to load PDF libraries:', error);
             }
         };
 
@@ -213,17 +212,14 @@ export default function BrochureContent() {
                     foreignObjectRendering: false,
                     onclone: (clonedDoc: Document) => {
                         try {
-                            console.log('Starting color conversion for PDF...');
                             
                             // Step 1: Remove all style and link elements that might contain oklab/oklch
                             const styleElements = clonedDoc.querySelectorAll('style, link[rel="stylesheet"]');
-                            console.log(`Removing ${styleElements.length} style/link elements`);
                             styleElements.forEach(el => el.remove());
                             
                             // Step 2: Get original and cloned elements
                             const originalElements = brochureRef.current!.querySelectorAll('*');
                             const clonedElements = clonedDoc.querySelectorAll('*');
-                            console.log(`Processing ${originalElements.length} elements`);
                             
                             // Step 3: Apply computed styles as inline styles
                             originalElements.forEach((originalEl: Element, index: number) => {
@@ -254,7 +250,6 @@ export default function BrochureContent() {
                                     
                                     // Convert any oklab/oklch/var to safe RGB values
                                     if (value.includes('oklab') || value.includes('oklch') || value.includes('var(')) {
-                                        console.warn(`Found unsupported color in ${kebabProp}:`, value);
                                         
                                         if (kebabProp.includes('color')) {
                                             value = 'rgb(0, 0, 0)';
@@ -268,11 +263,9 @@ export default function BrochureContent() {
                                     htmlEl.style.setProperty(kebabProp, value, 'important');
                                 });
                                 
-                                // Handle background images/gradients separately
                                 let bgImage = computedStyle.backgroundImage;
                                 if (bgImage && bgImage !== 'none') {
                                     if (bgImage.includes('oklab') || bgImage.includes('oklch')) {
-                                        console.warn('Found unsupported color in gradient:', bgImage);
                                         bgImage = bgImage
                                             .replace(/oklab\([^)]+\)/g, 'rgb(0, 0, 0)')
                                             .replace(/oklch\([^)]+\)/g, 'rgb(0, 0, 0)');
@@ -281,9 +274,7 @@ export default function BrochureContent() {
                                 }
                             });
                             
-                            console.log('Color conversion completed successfully');
                         } catch (error) {
-                            console.error('Error in onclone handler:', error);
                         }
                     }
                 },
@@ -295,11 +286,8 @@ export default function BrochureContent() {
                 pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
             };
 
-            await window.html2pdf().set(opt).from(brochureRef.current).save();
-            
             setIsGenerating(false);
         } catch (error) {
-            console.error('Error generating PDF:', error);
             const errorMessage = error instanceof Error ? error.message : 'Unknown error';
             if (errorMessage.includes('oklab') || errorMessage.includes('oklch')) {
                 alert('Color format error. Please refresh the page and try again.');

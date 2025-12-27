@@ -131,7 +131,6 @@ export default function AIInteriorDesigner360() {
     setIsGenerating(true)
     try {
       // TEMPORARY: Bypass lead submission for testing
-      console.log('Bypassing lead submission for testing')
       
       // then generate
       const res = await fetch('/api/tools/ai-interior-designer-360', {
