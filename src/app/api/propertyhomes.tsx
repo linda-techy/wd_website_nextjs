@@ -34,7 +34,7 @@ export const propertyHomes: PropertyHomes[] = [
     clientImage: "/images/clients/alex-antony.jpg"
   },
   {
-    name: 'Jini Alex',
+    name: 'Renoy V V',
     slug: 'project2',
     location: 'Guruvayur, Thrissur, Kerala',
     status: 'completed',

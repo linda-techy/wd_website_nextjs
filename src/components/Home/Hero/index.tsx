@@ -32,14 +32,13 @@ const Hero: React.FC = () => {
               </Link>
             </div>
           </div>
-          <div className="hidden md:block absolute -top-2 -right-68">
+          <div className="hidden md:block absolute top-10 right-0 bottom-10 w-1/2 z-0">
             <Image
-              src={"/images/hero/heroBanner.png"}
-              alt="heroImg"
-              width={1082}
-              height={1016}
-              priority={false}
+              src={"/images/hero/modern-kerala-home.png"}
+              alt="Modern Kerala Home"
+              fill
               unoptimized={true}
+              className="object-cover rounded-l-[50px]"
             />
           </div>
         </div>

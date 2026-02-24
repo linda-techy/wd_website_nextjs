@@ -3,7 +3,7 @@ import { footerlinks } from "@/types/footerlinks"
 // Company Links
 export const FooterCompanyLinks: footerlinks[] = [
     { label: 'About Us', href: '/aboutus' },
-    { label: 'Partnerships', href: '/partnerships' },
+    { label: 'Referral Partnership', href: '/partnerships' },
     { label: 'Refer a Friend', href: '/referrals' },
     { label: 'Contact Us', href: '/contactus' },
 ]

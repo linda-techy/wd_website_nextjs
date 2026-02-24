@@ -14,6 +14,8 @@ const Testimonial = () => {
     const [api, setApi] = React.useState<CarouselApi | undefined>(undefined);
     const [current, setCurrent] = React.useState(0);
     const [count, setCount] = React.useState(0);
+    const [isSectionInView, setIsSectionInView] = React.useState(false);
+    const sectionRef = React.useRef<HTMLElement>(null);
 
     React.useEffect(() => {
         if (!api) return;
@@ -26,6 +28,25 @@ const Testimonial = () => {
         });
     }, [api]);
 
+    React.useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                setIsSectionInView(entry.isIntersecting);
+            },
+            { threshold: 0.3 } // Play when at least 30% of the section is visible
+        );
+
+        if (sectionRef.current) {
+            observer.observe(sectionRef.current);
+        }
+
+        return () => {
+            if (sectionRef.current) {
+                observer.unobserve(sectionRef.current);
+            }
+        };
+    }, []);
+
     const handleDotClick = (index: number) => {
         if (api) {
             api.scrollTo(index);
@@ -33,7 +54,7 @@ const Testimonial = () => {
     };
 
     return (
-        <section className="bg-dark relative overflow-hidden" id="testimonial">
+        <section ref={sectionRef} className="bg-dark relative overflow-hidden" id="testimonial">
             <div className="absolute right-0">
                 <Image
                     src="/images/testimonial/Vector.png"
@@ -60,44 +81,88 @@ const Testimonial = () => {
                     }}
                 >
                     <CarouselContent>
-                        {testimonials.map((item, index) => (
-                            <CarouselItem key={index} className="mt-9">
-                                <div className="lg:flex items-center gap-11">
-                                    <div className="flex items-start gap-11 lg:pr-20">
-                                        <div>
-                                            <Icon icon="ph:house-simple" width={32} height={32} className="text-primary" />
-                                        </div>
-                                        <div>
-                                            <h4 className="text-white text-xl md:text-2xl lg:text-3xl font-medium leading-relaxed">{item.review}</h4>
-                                            <div className="flex items-center mt-8 gap-6">
-                                                <Image
-                                                    src={item.image}
-                                                    alt={item.name}
-                                                    width={80}
-                                                    height={80}
-                                                    className="rounded-full lg:hidden block"
-                                                    unoptimized={true}
-                                                />
-                                                <div>
-                                                    <h6 className="text-white text-lg md:text-xl font-semibold">{item.name}</h6>
-                                                    <p className="text-white/60 text-base">{item.position}</p>
+                        {testimonials.map((item, index) => {
+                            const isActiveSlide = current === index + 1;
+                            const shouldAutoPlay = isSectionInView && isActiveSlide;
+                            const videoUrl = item.youtubeId 
+                                ? `https://www.youtube.com/embed/${item.youtubeId}?rel=0&modestbranding=1${shouldAutoPlay ? '&autoplay=1&mute=1' : ''}`
+                                : '';
+
+                            return (
+                                <CarouselItem key={index} className="mt-9">
+                                    <div className="lg:flex items-center gap-11">
+                                        {/* Left: review text + name */}
+                                        <div className="flex items-start gap-11 lg:pr-20">
+                                            <div>
+                                                <Icon icon="ph:house-simple" width={32} height={32} className="text-primary" />
+                                            </div>
+                                            <div>
+                                                <h4 className="text-white text-xl md:text-2xl lg:text-3xl font-medium leading-relaxed">{item.review}</h4>
+                                                <div className="flex items-center mt-8 gap-6">
+                                                    {/* Mobile: show photo if no video */}
+                                                    {!item.youtubeId && (
+                                                        <Image
+                                                            src={item.image ?? ""}
+                                                            alt={item.name}
+                                                            width={80}
+                                                            height={80}
+                                                            className="rounded-full lg:hidden block"
+                                                            unoptimized={true}
+                                                        />
+                                                    )}
+                                                    <div>
+                                                        <h6 className="text-white text-lg md:text-xl font-semibold">{item.name}</h6>
+                                                        <p className="text-white/60 text-base">{item.position}</p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+
+                                        {/* Right: YouTube embed or fallback photo */}
+                                        <div className="lg:block hidden w-full max-w-[440px] flex-shrink-0">
+                                            {item.youtubeId ? (
+                                                <div className="relative w-full rounded-2xl overflow-hidden shadow-2xl"
+                                                    style={{ paddingBottom: '56.25%' /* 16:9 */ }}>
+                                                    <iframe
+                                                        className="absolute inset-0 w-full h-full"
+                                                        src={videoUrl}
+                                                        title={`${item.name} testimonial`}
+                                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                        allowFullScreen
+                                                    />
+                                                </div>
+                                            ) : (
+                                                <div className="w-full h-full rounded-2xl overflow-hidden">
+                                                    <Image
+                                                        src={item.image ?? ""}
+                                                        alt={item.name}
+                                                        width={440}
+                                                        height={440}
+                                                        unoptimized={true}
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* Mobile: YouTube embed below text */}
+                                        {item.youtubeId && (
+                                            <div className="lg:hidden block w-full mt-6">
+                                                <div className="relative w-full rounded-2xl overflow-hidden shadow-2xl"
+                                                    style={{ paddingBottom: '56.25%' }}>
+                                                    <iframe
+                                                        className="absolute inset-0 w-full h-full"
+                                                        src={videoUrl}
+                                                        title={`${item.name} testimonial`}
+                                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                        allowFullScreen
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
-                                    <div className="w-full h-full rounded-2xl overflow-hidden">
-                                        <Image
-                                            src={item.image}
-                                            alt={item.name}
-                                            width={440}
-                                            height={440}
-                                            className="lg:block hidden"
-                                            unoptimized={true}
-                                        />
-                                    </div>
-                                </div>
-                            </CarouselItem>
-                        ))}
+                                </CarouselItem>
+                            );
+                        })}
                     </CarouselContent>
                 </Carousel>
                 <div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 flex gap-2.5 p-2.5 bg-white/20 rounded-full">
@@ -105,8 +170,7 @@ const Testimonial = () => {
                         <button
                             key={index}
                             onClick={() => handleDotClick(index)}
-                            className={`w-2.5 h-2.5 rounded-full ${current === index + 1 ? "bg-white" : "bg-white/50"
-                                }`}
+                            className={`w-2.5 h-2.5 rounded-full ${current === index + 1 ? "bg-white" : "bg-white/50"}`}
                             aria-label={`Go to slide ${index + 1}`}
                         />
                     ))}

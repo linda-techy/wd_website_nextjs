@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 
 const GetInTouch: React.FC = () => {
@@ -5,15 +6,13 @@ const GetInTouch: React.FC = () => {
         <section>
             <div className='container max-w-8xl mx-auto px-4 sm:px-5 2xl:px-0'>
                 <div className="relative rounded-t-2xl overflow-hidden">
-                    <video
-                        className="w-full absolute top-0 left-0 object-cover -z-10"
-                        autoPlay
-                        loop
-                        muted
-                        aria-label="Video background showing luxurious real estate"
-                    >
-                        <source src="https://videos.pexels.com/video-files/7233782/7233782-hd_1920_1080_25fps.mp4" type="video/mp4" />
-                    </video>
+                    <Image
+                        src="/images/get-in-touch-bg.jpg"
+                        alt="Kerala luxury interior"
+                        fill
+                        className="object-cover -z-10"
+                        priority
+                    />
 
                     <div className="bg-black/30 py-8 sm:py-10 md:py-12 lg:py-14">
                         <div className="flex flex-col items-center gap-5 sm:gap-6 md:gap-8">
@@ -41,7 +40,7 @@ const GetInTouch: React.FC = () => {
                             GET A FREE COST ESTIMATE — START YOUR HOME CONSTRUCTION JOURNEY TODAY!
                         </Link>
                         <Link href="/partnerships" className='text-white text-base md:text-lg font-semibold whitespace-nowrap relative after:absolute after:w-20 after:h-px after:bg-white after:top-3 after:-right-32 hover:underline'>
-                            PARTNER WITH US — GROW YOUR BUSINESS WITH KERALA&apos;S TRUSTED BUILDERS
+                            REFERRAL PARTNERSHIP — GROW YOUR BUSINESS WITH KERALA&apos;S TRUSTED BUILDERS
                         </Link>
                         <Link href="/referrals" className='text-white text-base md:text-lg font-semibold whitespace-nowrap relative after:absolute after:w-20 after:h-px after:bg-white after:top-3 after:-right-32 hover:underline'>
                             REFER A FRIEND — HELP OTHERS BUILD THEIR DREAM HOMES!

@@ -15,7 +15,7 @@ export const navLinks: NavLinks[] = [
   { label: 'Tools', href: '/tools' },
   { label: 'Brochure', href: '/brochure' },
   { label: 'Refer a Friend', href: '/referrals' },
-  { label: 'Partnerships', href: '/partnerships' },
+  { label: 'Referral Partnership', href: '/partnerships' },
   { label: 'Contact', href: '/contactus' },
 ]
 

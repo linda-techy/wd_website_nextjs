@@ -54,7 +54,7 @@ const page = () => {
                         "@context": "https://schema.org",
                         "@type": "WebPage",
                         "name": "Referral Program | Walldot Builders",
-                        "description": "Join the Walldot Builders referral program. Refer clients for construction projects or architects for partnership opportunities and earn rewards.",
+                        "description": "Join the Walldot Builders referral program. Refer clients for construction projects or join our Referral Partnership Program for professional collaboration and earn commissions.",
                         "url": "https://walldotbuilders.com/referrals",
                         "publisher": {
                             "@type": "Organization",
@@ -76,7 +76,7 @@ const page = () => {
                             },
                             {
                                 "@type": "ProfessionalService",
-                                "name": "Walldot Builders Architectural Partnership Program",
+                                "name": "Walldot Builders Referral Partnership Program",
                                 "description": "Refer architects and design professionals to join our trusted partner network and earn commissions on completed projects.",
                                 "provider": {
                                     "@type": "Organization",

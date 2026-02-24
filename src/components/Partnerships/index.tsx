@@ -251,7 +251,7 @@ export default function Partnerships() {
     const faqData = [
         {
             question: "What is the difference between referral and partnership programs?",
-            answer: "Our Referral Program is for individuals referring friends/family clients (one-time cash rewards). Our Partnership Program is for professionals and businesses seeking ongoing collaboration with commission-based revenue. Partnerships involve long-term relationships, formal agreements, and continuous project flow."
+            answer: "Our Referral Program is for individuals referring friends/family clients (one-time cash rewards). Our Referral Partnership Program is for professionals and businesses seeking ongoing collaboration with commission-based revenue. Partnerships involve long-term relationships, formal agreements, and continuous project flow."
         },
         {
             question: "How do partnership commissions work?",
@@ -323,7 +323,7 @@ export default function Partnerships() {
                     <div className="flex gap-2.5 items-center justify-center mb-6">
                         <Icon icon={"ph:briefcase-fill"} width={24} height={24} className="text-primary" />
                         <p className="text-base md:text-lg font-bold text-badge dark:text-white/90">
-                            Choose Partnership Type
+                            Choose Referral Partnership Type
                         </p>
                     </div>
                     
@@ -367,10 +367,10 @@ export default function Partnerships() {
                 <div className="text-center mb-12">
                     <div className="flex gap-2.5 items-center justify-center mb-4">
                         <Icon icon={"ph:star-fill"} width={24} height={24} className="text-primary" />
-                        <p className="text-base md:text-lg font-bold text-badge dark:text-white/90">Partnership Benefits</p>
+                        <p className="text-base md:text-lg font-bold text-badge dark:text-white/90">Referral Partnership Benefits</p>
                     </div>
                     <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-52 font-bold tracking-tight text-black dark:text-white mb-4 leading-tight px-4">
-                        Why Partner With Us
+                        Why Join Referral Partnership Program
                     </h2>
                     <p className="text-base md:text-lg font-normal text-black/70 dark:text-white/70 leading-relaxed max-w-3xl mx-auto px-4">
                         Unlock exclusive collaboration opportunities and grow your business
@@ -402,7 +402,7 @@ export default function Partnerships() {
                 <div className="text-center mb-12">
                     <div className="flex gap-2.5 items-center justify-center mb-4">
                         <Icon icon={"ph:path-fill"} width={24} height={24} className="text-primary" />
-                        <p className="text-base md:text-lg font-bold text-badge dark:text-white/90">Partnership Process</p>
+                        <p className="text-base md:text-lg font-bold text-badge dark:text-white/90">Referral Partnership Process</p>
                     </div>
                     <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-52 font-bold tracking-tight text-black dark:text-white mb-4 leading-tight px-4">
                         How It Works
@@ -442,7 +442,7 @@ export default function Partnerships() {
                         <p className="text-base md:text-lg font-bold text-badge dark:text-white/90">Apply Now</p>
                     </div>
                     <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-52 font-bold tracking-tight text-black dark:text-white mb-4 leading-tight px-4">
-                        Partnership Application
+                        Referral Partnership Application
                     </h2>
                     <p className="text-base md:text-lg font-normal text-black/70 dark:text-white/70 leading-relaxed max-w-3xl mx-auto px-4">
                         Fill out the form below to start the partnership process
@@ -915,7 +915,7 @@ export default function Partnerships() {
                                 </label>
                             </div>
                             <button type="submit" className="px-8 py-4 rounded-full bg-primary text-white text-base font-semibold w-full mobile:w-fit hover:bg-dark duration-300 flex items-center justify-center gap-2 group">
-                                Submit Partnership Application
+                                Submit Referral Partnership Application
                                 <Icon icon={"ph:arrow-right"} width={20} height={20} className="group-hover:translate-x-1 transition-transform" />
                             </button>
                         </form>
@@ -929,7 +929,7 @@ export default function Partnerships() {
                 <div className="text-center mb-12">
                     <div className="flex gap-2.5 items-center justify-center mb-4">
                         <Icon icon={"ph:question-fill"} width={24} height={24} className="text-primary" />
-                        <p className="text-base md:text-lg font-bold text-badge dark:text-white/90">Partnership FAQ</p>
+                        <p className="text-base md:text-lg font-bold text-badge dark:text-white/90">Referral Partnership FAQ</p>
                     </div>
                     <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-52 font-bold tracking-tight text-black dark:text-white mb-4 leading-tight px-4">
                         Frequently Asked Questions
@@ -976,7 +976,7 @@ export default function Partnerships() {
                         className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-black/5 dark:bg-white/5 text-black dark:text-white hover:bg-primary hover:text-white transition-colors duration-300"
                     >
                         <Icon icon={"ph:envelope-fill"} width={20} height={20} />
-                        <span className="font-semibold">Contact Partnership Team</span>
+                        <span className="font-semibold">Contact Referral Partnership Team</span>
                     </a>
                 </div>
             </section>

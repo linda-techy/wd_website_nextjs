@@ -1,0 +1,61 @@
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Dynamic Composition of a Modern Kerala House -->
+  
+  <!-- Ground Shadow/Base -->
+  <ellipse cx="400" cy="540" rx="350" ry="20" fill="black" fill-opacity="0.2"/>
+
+  <!-- Main Output Structure -->
+  <g transform="translate(100, 100)">
+    
+    <!-- Background Elements (Trees/Nature) -->
+    <g id="nature-bg">
+      <!-- Coconut Tree Left -->
+      <path d="M50 300 Q40 200 80 100" stroke="#8B4513" stroke-width="15" fill="none"/>
+      <path d="M80 100 L40 80 L90 70 L60 50 L110 60 L100 30 L130 70 Z" fill="#228B22"/>
+      
+      <!-- Coconut Tree Right -->
+      <path d="M550 320 Q560 220 520 120" stroke="#8B4513" stroke-width="12" fill="none"/>
+      <path d="M520 120 L560 100 L510 90 L540 70 L490 80 L500 50 L470 90 Z" fill="#228B22"/>
+    </g>
+
+    <!-- House Body - Ground Floor -->
+    <rect x="100" y="300" width="400" height="150" fill="#F5F5F5" stroke="#D3D3D3" stroke-width="2"/>
+    
+    <!-- Veranda/Sit-out -->
+    <rect x="80" y="420" width="440" height="30" fill="#D2B48C"/>
+    <rect x="80" y="440" width="440" height="10" fill="#8B4513"/> <!-- Base Plinth -->
+    
+    <!-- Pillars -->
+    <rect x="110" y="300" width="20" height="120" fill="#8B4513"/> <!-- Wood Pillar 1 -->
+    <rect x="290" y="300" width="20" height="120" fill="#8B4513"/> <!-- Wood Pillar 2 -->
+    <rect x="470" y="300" width="20" height="120" fill="#8B4513"/> <!-- Wood Pillar 3 -->
+    
+    <!-- Door and Windows -->
+    <rect x="260" y="320" width="80" height="100" fill="#654321"/> <!-- Main Door -->
+    <rect x="150" y="340" width="60" height="60" fill="#87CEEB" stroke="#654321" stroke-width="4"/> <!-- Window Left -->
+    <rect x="390" y="340" width="60" height="60" fill="#87CEEB" stroke="#654321" stroke-width="4"/> <!-- Window Right -->
+    
+    <!-- Upper Floor -->
+    <rect x="120" y="180" width="360" height="120" fill="#FFF8DC" stroke="#D3D3D3" stroke-width="2"/>
+    <rect x="270" y="200" width="60" height="60" fill="#87CEEB" stroke="#654321" stroke-width="4"/> <!-- Upper Window -->
+    
+    <!-- Balcony Railing -->
+    <path d="M120 280 H480" stroke="#8B4513" stroke-width="4"/>
+    <path d="M140 280 V300 M180 280 V300 M220 280 V300 M380 280 V300 M420 280 V300 M460 280 V300" stroke="#8B4513" stroke-width="2"/>
+
+    <!-- Roof Structure (Traditional Sloping) -->
+    <!-- Main Roof -->
+    <path d="M90 180 L300 80 L510 180 Z" fill="#A52A2A"/> <!-- Triangle Roof -->
+    <path d="M100 180 L300 90 L500 180" fill="none" stroke="#800000" stroke-width="2"/> <!-- Detail line -->
+    
+    <!-- Porch Roof (Charupadi area) -->
+    <path d="M80 300 L60 330 L540 330 L520 300 H80 Z" fill="#A52A2A"/>
+    
+    <!-- Decorative Gable/Mukappu -->
+    <path d="M270 140 L300 110 L330 140 Z" fill="#8B4513"/>
+    
+    <!-- Shadows/Depth -->
+    <path d="M300 80 L510 180 L480 180 Z" fill="black" fill-opacity="0.1"/>
+    
+  </g>
+</svg>

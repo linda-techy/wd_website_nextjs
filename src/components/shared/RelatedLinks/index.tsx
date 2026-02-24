@@ -95,7 +95,7 @@ export const homeRelatedLinks: RelatedLink[] = [
     icon: "ph:info-fill"
   },
   {
-    label: "Partnership Program",
+    label: "Referral Partnership Program",
     href: "/partnerships",
     description: "Grow your business by partnering with us",
     icon: "ph:handshake-fill"

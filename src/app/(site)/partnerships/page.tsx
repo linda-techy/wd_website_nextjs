@@ -4,9 +4,9 @@ import { Metadata } from "next";
 import Partnerships from "@/components/Partnerships";
 
 export const metadata: Metadata = {
-    title: "Professional Partnerships | Walldot Builders - Join Our Network of Trusted Partners",
-    description: "Partner with Walldot Builders and grow your business. We offer partnership opportunities for architects, real estate agents, interior designers, financial institutions, material suppliers, Vastu consultants, land consultants, and corporate entities across Kerala. Earn commissions through ongoing collaboration.",
-    keywords: "walldot builders partnership, architectural partnership Kerala, real estate agent collaboration, interior designer partnership, construction industry network, B2B construction partnership, builder vendor partnership, architect collaboration Kerala, professional partnership program, construction business network",
+    title: "Referral Partnership Program | Walldot Builders - Join Our Network of Trusted Partners",
+    description: "Join the Referral Partnership Program with Walldot Builders and grow your business. We offer referral partnership opportunities for architects, real estate agents, interior designers, financial institutions, material suppliers, Vastu consultants, land consultants, and corporate entities across Kerala. Earn commissions through ongoing collaboration.",
+    keywords: "walldot builders referral partnership, architectural partnership Kerala, real estate agent collaboration, interior designer partnership, construction industry network, B2B construction partnership, builder vendor partnership, architect collaboration Kerala, professional referral partnership program, construction business network",
     openGraph: {
         title: "Professional Partnerships | Walldot Builders",
         description: "Join our network of professional partners. Architects, Real Estate Agents, Interior Designers, and more. Grow your business with Kerala's leading construction company.",
@@ -64,9 +64,9 @@ const page = () => {
                 }}
             />
             <HeroSub
-                title="Professional Partnership Program"
+                title="Referral Partnership Program"
                 description="Join our network of trusted partners and grow your business through collaboration"
-                badge="B2B Partnerships"
+                badge="B2B Referral Partnerships"
             />
             <Partnerships />
         </>

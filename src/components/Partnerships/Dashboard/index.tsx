@@ -280,10 +280,10 @@ export default function PartnerDashboard() {
                 <div className="mb-8 flex items-center justify-between flex-wrap gap-4">
                     <div>
                         <h1 className="text-3xl md:text-4xl font-bold text-black dark:text-white mb-2">
-                            Partner Dashboard
+                            Referral Partner Dashboard
                         </h1>
                         <p className="text-black/60 dark:text-white/60">
-                            Welcome back, {partnerInfo?.phone || "Partner"}
+                            Welcome back, {partnerInfo?.phone || "Referral Partner"}
                         </p>
                     </div>
                     <button
@@ -397,7 +397,7 @@ export default function PartnerDashboard() {
                                 </div>
                                 <div>
                                     <h2 className="text-2xl font-bold text-black dark:text-white mb-2">
-                                        Welcome to Your Partner Dashboard
+                                        Welcome to Your Referral Partner Dashboard
                                     </h2>
                                     <p className="text-black/70 dark:text-white/70 mb-4">
                                         Track all your referrals, view commission status, and submit new referrals in one place.

@@ -2,5 +2,6 @@ export type Testimonial = {
     review: string
     name: string
     position: string
-    image: string
+    image?: string
+    youtubeId?: string
 }

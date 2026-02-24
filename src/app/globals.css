@@ -16,20 +16,32 @@
   --shadow-dark-auth: rgba(255, 255, 255, 0.1) 0px 12px 28px 0px, rgba(255, 255, 255, 0.1) 0px 2px 4px 0px, rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
 
   /* font size - Improved readability */
-  --text-xm: 1.125rem; /* 18px - for body text */
-  --text-9xl: 4rem; /* 64px - reduced from 6.5rem for better hero sizing */
-  --text-40: 2.5rem; /* 40px - section headings */
-  --text-52: 3.25rem; /* 52px - page headings */
-  --text-sm: 0.875rem; /* 14px - small text */
-  
+  --text-xm: 1.125rem;
+  /* 18px - for body text */
+  --text-9xl: 4rem;
+  /* 64px - reduced from 6.5rem for better hero sizing */
+  --text-40: 2.5rem;
+  /* 40px - section headings */
+  --text-52: 3.25rem;
+  /* 52px - page headings */
+  --text-sm: 0.875rem;
+  /* 14px - small text */
+
   /* Additional font sizes for better hierarchy */
-  --text-display: 4.5rem; /* 72px - for large display text on desktop */
-  --text-h1: 3rem; /* 48px - main headings */
-  --text-h2: 2.25rem; /* 36px - section headings */
-  --text-h3: 1.875rem; /* 30px - subsection headings */
-  --text-h4: 1.5rem; /* 24px - card titles */
-  --text-body-lg: 1.25rem; /* 20px - large body text */
-  --text-body: 1rem; /* 16px - standard body text */
+  --text-display: 4.5rem;
+  /* 72px - for large display text on desktop */
+  --text-h1: 3rem;
+  /* 48px - main headings */
+  --text-h2: 2.25rem;
+  /* 36px - section headings */
+  --text-h3: 1.875rem;
+  /* 30px - subsection headings */
+  --text-h4: 1.5rem;
+  /* 24px - card titles */
+  --text-body-lg: 1.25rem;
+  /* 20px - large body text */
+  --text-body: 1rem;
+  /* 16px - standard body text */
 
   /* Breakpoint */
   --breakpoint-xs: 23.438rem;
@@ -64,7 +76,8 @@
 
 html {
   scroll-behavior: smooth;
-  font-size: 16px; /* Base font size */
+  font-size: 16px;
+  /* Base font size */
 }
 
 body {
@@ -72,19 +85,23 @@ body {
 }
 
 /* Typography Utilities */
-h1, .h1 {
+h1,
+.h1 {
   @apply text-h1 font-bold leading-tight tracking-tight;
 }
 
-h2, .h2 {
+h2,
+.h2 {
   @apply text-h2 font-semibold leading-tight tracking-tight;
 }
 
-h3, .h3 {
+h3,
+.h3 {
   @apply text-h3 font-semibold leading-snug;
 }
 
-h4, .h4 {
+h4,
+.h4 {
   @apply text-h4 font-medium leading-snug;
 }
 
@@ -122,7 +139,8 @@ section {
   @apply py-6 sm:py-8 md:py-10 lg:py-12;
 }
 
-.blog-details p, .blog-details hr {
+.blog-details p,
+.blog-details hr {
   @apply mb-8;
 }
 
@@ -174,32 +192,26 @@ section {
 @media print {
   @page {
     size: A4 portrait;
-    margin: 10mm;
+    margin: 12mm 10mm;
   }
-
   html, body {
     width: 210mm;
-    height: 297mm;
     margin: 0;
     padding: 0;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
-    color-adjust: exact;
   }
 
-  /* Hide only specific elements */
+  /* Hide UI chrome */
   header,
   footer:not(.brochure-content footer),
   nav,
-  .print-hidden {
-    display: none !important;
-  }
-
+  .print-hidden,
   [class*="fixed"] {
     display: none !important;
   }
 
-  /* Container */
+  /* Container reset */
   .container {
     max-width: 100% !important;
     width: 100% !important;
@@ -207,163 +219,175 @@ section {
     margin: 0 !important;
   }
 
-  /* Brochure wrapper */
   .brochure-content {
     width: 100% !important;
     padding: 0 !important;
     margin: 0 !important;
   }
 
-  /* Sections */
-  section {
-    page-break-inside: avoid;
-    margin-bottom: 10mm !important;
-    padding: 5mm !important;
-  }
-
-  .space-y-20 > * + * {
-    margin-top: 8mm !important;
-  }
-
-  /* Typography - keep original sizes but readable */
-  h1 {
-    font-size: 24pt !important;
-    color: inherit !important;
-  }
-
-  h2 {
-    font-size: 20pt !important;
-    color: inherit !important;
-  }
-
-  h3 {
-    font-size: 14pt !important;
-    color: inherit !important;
-  }
-
-  h4, h5, h6 {
-    font-size: 12pt !important;
-    color: inherit !important;
-  }
-
-  p {
-    font-size: 10pt !important;
-    color: inherit !important;
-  }
-
-  span, div, li {
-    font-size: 10pt !important;
-    color: inherit !important;
-  }
-
-  /* Preserve ALL background colors and gradients */
+  /* Preserve all colors & gradients */
   * {
     print-color-adjust: exact !important;
     -webkit-print-color-adjust: exact !important;
   }
 
-  /* Keep gradient backgrounds */
-  [class*="bg-gradient-to-br"],
-  [class*="bg-gradient-to-r"] {
-    print-color-adjust: exact !important;
-    -webkit-print-color-adjust: exact !important;
+  /* Remove transforms (keep on images - Next.js fill uses transforms) */
+  *:not(img) {
+    transform: none !important;
   }
+
+  /* Keep positioning */
+  .relative { position: relative !important; }
+  .absolute { position: absolute !important; }
 
   /* Images */
   img {
     max-width: 100%;
-    height: auto;
+    break-inside: avoid;
     page-break-inside: avoid;
   }
 
-  /* Grid layouts */
-  .grid {
-    display: grid !important;
-    gap: 3mm !important;
+  /*
+   * THE DEFINITIVE FIX FOR CARD SPLITTING
+   *
+   * WHY break-inside:avoid FAILS ON GRID CHILDREN:
+   * Chrome/Edge print engines do NOT reliably honor
+   * break-inside:avoid when the parent is display:grid or flex.
+   * This is a known, long-standing browser limitation.
+   *
+   * THE SOLUTION:
+   * Convert .print-grid containers to display:block in print.
+   * Block children DO reliably respect break-inside:avoid.
+   */
+
+  /* Step 1: Convert grid containers to block layout */
+  .print-grid {
+    display: block !important;
   }
 
-  [class*="grid-cols-2"] {
+  /* Step 2: Each card becomes a block element - break-inside now works */
+  .print-card {
+    display: block !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    margin-bottom: 6mm !important;
+    width: 100% !important;
+  }
+
+  /* Step 3: Sections never break */
+  section {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 8mm !important;
+    padding: 5mm !important;
+  }
+
+  /* Step 4: Keep headings with content below */
+  h1, h2, h3, h4 {
+    break-after: avoid;
+    page-break-after: avoid;
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* Step 5: Lists */
+  ul, ol, li {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Preserve flex for non-print-grid containers */
+  .flex,
+  [class*="flex"] {
+    display: flex !important;
+  }
+
+  .inline-flex,
+  [class*="inline-flex"] {
+    display: inline-flex !important;
+  }
+
+  /* Restore inner grids inside cards (e.g. feature lists) */
+  .print-card .grid,
+  .print-card [class*="grid"] {
+    display: grid !important;
+  }
+
+  /* Grid column overrides for non-print-grid grids */
+  .grid {
+    display: grid !important;
+  }
+
+  [class*="grid-cols-4"],
+  [class*="md:grid-cols-4"] {
     grid-template-columns: 1fr 1fr !important;
   }
 
-  [class*="grid-cols-3"] {
-    grid-template-columns: 1fr 1fr 1fr !important;
+  [class*="grid-cols-3"],
+  [class*="md:grid-cols-3"] {
+    grid-template-columns: 1fr 1fr !important;
   }
 
-  [class*="grid-cols-4"] {
-    grid-template-columns: 1fr 1fr 1fr 1fr !important;
+  [class*="grid-cols-2"],
+  [class*="md:grid-cols-2"],
+  [class*="sm:grid-cols-2"] {
+    grid-template-columns: 1fr 1fr !important;
   }
 
-  /* Remove transforms only */
-  * {
-    transform: none !important;
+  /* Gap & spacing */
+  [class*="gap-"] {
+    gap: 4mm !important;
   }
 
-  /* Keep relative positioning */
-  .relative {
-    position: relative !important;
+  [class*="space-y-"] > * + * {
+    margin-top: 4mm !important;
   }
 
-  /* Page break classes */
-  .page-break-before {
-    page-break-before: always;
+  /* Padding reduction */
+  [class*="p-16"] { padding: 6mm !important; }
+  [class*="p-12"] { padding: 5mm !important; }
+  [class*="p-8"]  { padding: 4mm !important; }
+  [class*="p-6"]  { padding: 3mm !important; }
+
+  [class*="mb-12"] { margin-bottom: 6mm !important; }
+  [class*="mb-8"]  { margin-bottom: 4mm !important; }
+  [class*="mb-6"]  { margin-bottom: 3mm !important; }
+  [class*="mb-4"]  { margin-bottom: 2mm !important; }
+
+  /* Typography */
+  h1 { font-size: 22pt !important; }
+  h2 { font-size: 18pt !important; }
+  h3 { font-size: 13pt !important; }
+  h4, h5, h6 { font-size: 11pt !important; }
+  p  { font-size: 10pt !important; }
+  span, div, li { font-size: 10pt !important; }
+
+  p[class*="text-xs"],
+  span[class*="text-xs"],
+  p[class*="text-sm"],
+  span[class*="text-sm"] {
+    font-size: 9pt !important;
   }
 
-  .page-break-avoid {
-    page-break-inside: avoid;
-  }
+  /* Color fixes */
+  .text-primary { color: #d84940 !important; }
 
-  /* Remove excessive padding */
-  [class*="p-16"] {
-    padding: 8mm !important;
-  }
-
-  [class*="p-12"] {
-    padding: 6mm !important;
-  }
-
-  [class*="p-8"] {
-    padding: 4mm !important;
-  }
-
-  /* Fix specific color issues */
-  .text-primary {
-    color: #d84940 !important;
-  }
-
-  .bg-white {
+  .bg-white,
+  [class*="bg-white"] {
     background-color: white !important;
-    color: black !important;
   }
 
-  /* Ensure comparison section colors */
-  [class*="border-red"] {
-    border-color: #dc2626 !important;
-  }
+  [class*="border-red"]   { border-color: #dc2626 !important; }
+  [class*="border-green"] { border-color: #16a34a !important; }
+  [class*="bg-red-50"]    { background-color: #fef2f2 !important; }
+  [class*="bg-green-50"]  { background-color: #f0fdf4 !important; }
 
-  [class*="border-green"] {
-    border-color: #16a34a !important;
-  }
-
-  [class*="bg-red-50"] {
-    background-color: #fef2f2 !important;
-  }
-
-  [class*="bg-green-50"] {
-    background-color: #f0fdf4 !important;
-  }
-
-  /* Text in colored backgrounds */
-  [class*="bg-gray-"] p,
-  [class*="bg-gray-"] span,
-  [class*="bg-blue-"] p,
-  [class*="bg-blue-"] span,
-  [class*="bg-green-"] p,
-  [class*="bg-green-"] span {
+  [class*="bg-gray-"] p, [class*="bg-gray-"] span,
+  [class*="bg-blue-"] p, [class*="bg-blue-"] span,
+  [class*="bg-green-"] p, [class*="bg-green-"] span {
     color: #1f2937 !important;
   }
 
-  /* Mobile phone mockup text */
   [class*="bg-gradient-to-b"] p,
   [class*="bg-gradient-to-b"] span,
   [class*="bg-gradient-to-b"] h3,
@@ -371,64 +395,10 @@ section {
     color: inherit !important;
   }
 
-  /* Keep white backgrounds white */
-  .bg-white,
-  [class*="bg-white"] {
-    background-color: white !important;
-  }
+  /* Opacity */
+  [class*="opacity-"] { opacity: 1 !important; }
 
-  /* Ensure all text is readable */
-  p[class*="text-xs"],
-  span[class*="text-xs"],
-  p[class*="text-sm"],
-  span[class*="text-sm"] {
-    font-size: 9pt !important;
-    color: inherit !important;
-  }
-
-  /* Fix margin issues */
-  [class*="mb-12"] {
-    margin-bottom: 8mm !important;
-  }
-
-  [class*="mb-8"] {
-    margin-bottom: 6mm !important;
-  }
-
-  [class*="mb-6"] {
-    margin-bottom: 4mm !important;
-  }
-
-  [class*="mb-4"] {
-    margin-bottom: 3mm !important;
-  }
-
-  /* Grid gap */
-  [class*="gap-"] {
-    gap: 3mm !important;
-  }
-
-  /* Ensure proper display */
-  .brochure-content * {
-    display: block;
-  }
-
-  .brochure-content .flex,
-  .brochure-content [class*="flex"] {
-    display: flex !important;
-  }
-
-  .brochure-content .grid,
-  .brochure-content [class*="grid"] {
-    display: grid !important;
-  }
-
-  .brochure-content .inline-flex {
-    display: inline-flex !important;
-  }
-
-  /* Remove opacity effects */
-  [class*="opacity-"] {
-    opacity: 1 !important;
-  }
+  /* Page break utility classes */
+  .page-break-before { break-before: page !important; page-break-before: always !important; }
+  .page-break-avoid  { break-inside: avoid !important; page-break-inside: avoid !important; }
 }

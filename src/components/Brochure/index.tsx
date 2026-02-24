@@ -6,18 +6,6 @@ import { useRef, useEffect, useState } from "react";
 import { testimonials } from "@/app/api/testimonial";
 import { propertyHomes } from "@/app/api/propertyhomes";
 
-declare global {
-    interface Window {
-        html2pdf: () => {
-            set: (opt: Record<string, unknown>) => {
-                from: (element: HTMLElement) => {
-                    save: () => Promise<void>;
-                };
-            };
-        };
-    }
-}
-
 // Phone Mockup Components
 const PhoneMockup = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
     <div className={`bg-gradient-to-b from-gray-800 to-gray-900 rounded-[3rem] p-3 shadow-2xl border-8 border-gray-800 ${className}`}>
@@ -144,235 +132,187 @@ const BudgetPhone = () => (
 export default function BrochureContent() {
     const brochureRef = useRef<HTMLDivElement>(null);
     const [isGenerating, setIsGenerating] = useState(false);
-    const [activeMockup, setActiveMockup] = useState(0); // For mobile carousel
+    const [isPrinting, setIsPrinting] = useState(false);
+    const [activeMockup, setActiveMockup] = useState(0);
 
-    useEffect(() => {
-        // Load html2canvas and jsPDF from CDN
-        const loadScript = (src: string) => {
-            return new Promise<void>((resolve, reject) => {
-                if (document.querySelector(`script[src="${src}"]`)) {
-                    resolve();
-                    return;
-                }
-                const script = document.createElement('script');
-                script.src = src;
-                script.async = true;
-                script.onload = () => resolve();
-                script.onerror = () => reject();
-                document.head.appendChild(script);
-            });
-        };
-
-        const loadLibraries = async () => {
-            try {
-                await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
-                await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
-                await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js');
-            } catch (error) {
-            }
-        };
-
-        loadLibraries();
-    }, []);
-
-    // Auto-rotate mobile mockups on mobile devices
+    // Auto-rotate mobile mockups
     useEffect(() => {
         const timer = setInterval(() => {
             setActiveMockup((prev) => (prev + 1) % 3);
-        }, 4000); // Change every 4 seconds
-
+        }, 4000);
         return () => clearInterval(timer);
     }, []);
 
-    const handleDownload = async () => {
-        if (!brochureRef.current) return;
+    /**
+     * PRIMARY: Print / Save as PDF via browser print dialog.
+     * Uses the @media print CSS in globals.css for pixel-perfect rendering.
+     * Works in all browsers, zero dependencies, handles fonts/images natively.
+     */
+    const handlePrint = () => {
+        setIsPrinting(true);
+        // Small delay to let the state update render (hides the button via print-hidden)
+        setTimeout(() => {
+            window.print();
+            setIsPrinting(false);
+        }, 100);
+    };
 
+    /**
+     * SECONDARY: Programmatic PDF download using html-to-image + jsPDF.
+     * High-DPI capture (3x scale), preloads fonts and images before capture.
+     */
+    const handleDownloadPDF = async () => {
+        if (!brochureRef.current) return;
         setIsGenerating(true);
 
         try {
-            // Wait for html2pdf to be loaded
-            if (typeof window.html2pdf === 'undefined') {
-                alert('PDF library is still loading. Please try again in a moment.');
-                setIsGenerating(false);
-                return;
-            }
+            // Dynamically import to keep initial bundle small
+            const [{ toPng }, { default: jsPDF }] = await Promise.all([
+                import('html-to-image'),
+                import('jspdf'),
+            ]);
 
-            const opt = {
-                margin: [0.5, 0.5],
-                filename: 'Walldot-Builders-Brochure.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { 
-                    scale: 2,
-                    useCORS: true,
-                    logging: true,
-                    letterRendering: true,
-                    backgroundColor: '#ffffff',
-                    windowWidth: 1200,
-                    allowTaint: true,
-                    foreignObjectRendering: false,
-                    onclone: (clonedDoc: Document) => {
-                        try {
-                            
-                            // Step 1: Remove all style and link elements that might contain oklab/oklch
-                            const styleElements = clonedDoc.querySelectorAll('style, link[rel="stylesheet"]');
-                            styleElements.forEach(el => el.remove());
-                            
-                            // Step 2: Get original and cloned elements
-                            const originalElements = brochureRef.current!.querySelectorAll('*');
-                            const clonedElements = clonedDoc.querySelectorAll('*');
-                            
-                            // Step 3: Apply computed styles as inline styles
-                            originalElements.forEach((originalEl: Element, index: number) => {
-                                if (index >= clonedElements.length) return;
-                                
-                                const htmlEl = clonedElements[index] as HTMLElement;
-                                const computedStyle = window.getComputedStyle(originalEl);
-                                
-                                // Copy all relevant computed styles to inline styles
-                                const stylesToCopy = [
-                                    'color', 'backgroundColor', 'borderColor', 
-                                    'borderTopColor', 'borderRightColor', 'borderBottomColor', 'borderLeftColor',
-                                    'outlineColor', 'fontSize', 'fontWeight', 
-                                    'fontFamily', 'lineHeight', 'padding', 'margin', 'border',
-                                    'borderRadius', 'display', 'flexDirection', 'alignItems', 
-                                    'justifyContent', 'gap', 'width', 'height', 'maxWidth', 
-                                    'maxHeight', 'minHeight', 'position', 'top', 'right', 'bottom', 'left',
-                                    'zIndex', 'overflow', 'textAlign', 'opacity', 'boxShadow'
-                                ];
-                                
-                                stylesToCopy.forEach(prop => {
-                                    const kebabProp = prop.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-                                    let value = computedStyle.getPropertyValue(kebabProp);
-                                    
-                                    if (!value || value === 'none' || value === 'auto' || value === 'normal' || value === 'rgba(0, 0, 0, 0)') {
-                                        return;
-                                    }
-                                    
-                                    // Convert any oklab/oklch/var to safe RGB values
-                                    if (value.includes('oklab') || value.includes('oklch') || value.includes('var(')) {
-                                        
-                                        if (kebabProp.includes('color')) {
-                                            value = 'rgb(0, 0, 0)';
-                                        } else if (kebabProp === 'background-color') {
-                                            value = 'transparent';
-                                        } else {
-                                            return; // Skip this property
-                                        }
-                                    }
-                                    
-                                    htmlEl.style.setProperty(kebabProp, value, 'important');
-                                });
-                                
-                                let bgImage = computedStyle.backgroundImage;
-                                if (bgImage && bgImage !== 'none') {
-                                    if (bgImage.includes('oklab') || bgImage.includes('oklch')) {
-                                        bgImage = bgImage
-                                            .replace(/oklab\([^)]+\)/g, 'rgb(0, 0, 0)')
-                                            .replace(/oklch\([^)]+\)/g, 'rgb(0, 0, 0)');
-                                    }
-                                    htmlEl.style.setProperty('background-image', bgImage, 'important');
-                                }
-                            });
-                            
-                        } catch (error) {
-                        }
+            // 1. Wait for all web fonts to be fully loaded
+            await document.fonts.ready;
+
+            // 2. Preload all images in the brochure
+            const images = Array.from(brochureRef.current.querySelectorAll('img'));
+            await Promise.allSettled(
+                images.map(
+                    (img) =>
+                        new Promise<void>((resolve) => {
+                            if (img.complete && img.naturalWidth > 0) {
+                                resolve();
+                            } else {
+                                img.onload = () => resolve();
+                                img.onerror = () => resolve(); // Don't block on broken images
+                            }
+                        })
+                )
+            );
+
+            // 3. Capture the brochure as a high-DPI PNG
+            const dataUrl = await toPng(brochureRef.current, {
+                quality: 1,
+                pixelRatio: 3, // 3x for print-quality resolution
+                backgroundColor: '#ffffff',
+                // Ensure cross-origin images are handled
+                fetchRequestInit: { cache: 'no-cache' },
+                // Filter out the download button itself
+                filter: (node) => {
+                    if (node instanceof HTMLElement) {
+                        return !node.classList.contains('print-hidden');
                     }
+                    return true;
                 },
-                jsPDF: { 
-                    unit: 'in', 
-                    format: 'a4', 
-                    orientation: 'portrait'
-                },
-                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-            };
+            });
 
-            setIsGenerating(false);
-        } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-            if (errorMessage.includes('oklab') || errorMessage.includes('oklch')) {
-                alert('Color format error. Please refresh the page and try again.');
+            // 4. Calculate dimensions for A4 PDF
+            const img = new window.Image();
+            img.src = dataUrl;
+            await new Promise<void>((resolve) => { img.onload = () => resolve(); });
+
+            const A4_WIDTH_MM = 210;
+            const A4_HEIGHT_MM = 297;
+            const imgAspectRatio = img.width / img.height;
+            const pdfWidth = A4_WIDTH_MM;
+            const pdfHeight = pdfWidth / imgAspectRatio;
+
+            // 5. Build multi-page PDF
+            const pdf = new jsPDF({
+                orientation: pdfHeight > A4_HEIGHT_MM ? 'portrait' : 'portrait',
+                unit: 'mm',
+                format: 'a4',
+                compress: true,
+            });
+
+            let yOffset = 0;
+            const pageContentHeight = A4_HEIGHT_MM;
+
+            // If content fits on one page
+            if (pdfHeight <= pageContentHeight) {
+                pdf.addImage(dataUrl, 'PNG', 0, 0, pdfWidth, pdfHeight);
             } else {
-                alert(`Failed to generate PDF: ${errorMessage}. Please try again.`);
+                // Multi-page: slice the image across pages
+                let remainingHeight = pdfHeight;
+                let page = 0;
+
+                while (remainingHeight > 0) {
+                    if (page > 0) pdf.addPage();
+
+                    const sliceHeight = Math.min(pageContentHeight, remainingHeight);
+                    const srcY = (yOffset / pdfHeight) * img.height;
+                    const srcH = (sliceHeight / pdfHeight) * img.height;
+
+                    // Create a canvas slice for this page
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = srcH;
+                    const ctx = canvas.getContext('2d')!;
+                    ctx.drawImage(img, 0, srcY, img.width, srcH, 0, 0, img.width, srcH);
+
+                    pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, pdfWidth, sliceHeight);
+
+                    yOffset += sliceHeight;
+                    remainingHeight -= sliceHeight;
+                    page++;
+                }
             }
+
+            pdf.save('Walldot-Builders-Brochure.pdf');
+        } catch (error) {
+            console.error('PDF generation failed:', error);
+            alert('PDF generation failed. Please use the "Print / Save as PDF" button instead.');
+        } finally {
             setIsGenerating(false);
         }
     };
 
     return (
         <>
-            <style jsx global>{`
-                @media print {
-                    /* Hide browser headers and footers */
-                    @page {
-                        margin: 0;
-                        size: A4;
-                    }
-                    
-                    body {
-                        margin: 0;
-                        padding: 0;
-                    }
-
-                    /* Hide header and footer */
-                    header, footer, nav {
-                        display: none !important;
-                    }
-
-                    /* Hide download button */
-                    .print-hidden {
-                        display: none !important;
-                    }
-
-                    /* Ensure mobile mockups display properly */
-                    .brochure-content [class*="w-64"] {
-                        max-width: 180px !important;
-                        margin: 0 auto;
-                    }
-
-                    /* Phone mockup alignment */
-                    .brochure-content .flex.gap-6 {
-                        display: flex !important;
-                        flex-wrap: wrap;
-                        justify-content: center;
-                        gap: 10px !important;
-                    }
-
-                    /* Ensure all content inherits proper colors */
-                    .brochure-content {
-                        color: #000;
-                    }
-
-                    /* Hide decorative blurs */
-                    .brochure-content [class*="blur"] {
-                        display: none !important;
-                    }
-                }
-            `}</style>
             <div className="container max-w-8xl mx-auto px-4 sm:px-5 2xl:px-0 py-6 sm:py-8 md:py-10 lg:py-12">
-                {/* Download Button - Fixed */}
-                        <div className="fixed bottom-8 right-8 z-50 print-hidden">
+                {/* Download Buttons - Fixed, hidden on print */}
+                <div className="fixed bottom-8 right-8 z-50 print-hidden flex flex-col gap-3 items-end">
+                    {/* Primary: Print / Save as PDF */}
                     <button
-                        onClick={handleDownload}
-                        disabled={isGenerating}
-                        className={`px-6 py-4 rounded-full bg-primary text-white shadow-2xl hover:shadow-primary/50 transition-all duration-300 flex items-center gap-3 group hover:scale-105 ${
+                        onClick={handlePrint}
+                        disabled={isPrinting || isGenerating}
+                        title="Open browser print dialog to save as PDF"
+                        className={`px-5 py-3.5 rounded-full bg-primary text-white shadow-2xl hover:shadow-primary/50 transition-all duration-300 flex items-center gap-2.5 group hover:scale-105 ${
+                            isPrinting ? 'opacity-75 cursor-not-allowed' : 'cursor-pointer'
+                        }`}
+                    >
+                        {isPrinting ? (
+                            <>
+                                <Icon icon="ph:spinner" width={20} height={20} className="animate-spin" />
+                                <span className="font-semibold text-sm">Preparing...</span>
+                            </>
+                        ) : (
+                            <>
+                                <Icon icon="ph:printer-fill" width={20} height={20} />
+                                <span className="font-semibold text-sm">Print / Save as PDF</span>
+                            </>
+                        )}
+                    </button>
+
+                    {/* Secondary: Programmatic PDF download */}
+                    <button
+                        onClick={handleDownloadPDF}
+                        disabled={isGenerating || isPrinting}
+                        title="Download as PDF file directly"
+                        className={`px-5 py-3.5 rounded-full bg-white text-primary border-2 border-primary shadow-xl hover:shadow-primary/30 transition-all duration-300 flex items-center gap-2.5 group hover:scale-105 ${
                             isGenerating ? 'opacity-75 cursor-not-allowed' : 'cursor-pointer'
                         }`}
                     >
                         {isGenerating ? (
                             <>
-                                <Icon icon={"ph:spinner"} width={24} height={24} className="animate-spin" />
-                                <span className="font-semibold">Generating PDF...</span>
+                                <Icon icon="ph:spinner" width={20} height={20} className="animate-spin" />
+                                <span className="font-semibold text-sm">Generating PDF...</span>
                             </>
                         ) : (
                             <>
-                                <Icon icon={"ph:download-fill"} width={24} height={24} />
-                                <span className="font-semibold">Download PDF</span>
-                                <Icon 
-                                    icon={"ph:arrow-down"} 
-                                    width={20} 
-                                    height={20} 
-                                    className="group-hover:translate-y-1 transition-transform"
-                                />
+                                <Icon icon="ph:download-simple-fill" width={20} height={20} />
+                                <span className="font-semibold text-sm">Download PDF</span>
                             </>
                         )}
                     </button>
@@ -417,8 +357,8 @@ export default function BrochureContent() {
 
                 {/* 2. SOCIAL PROOF - Trust & Credibility */}
                 <section>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-5 sm:mb-6 md:mb-8">
-                        <div className="border border-primary/30 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 text-center bg-gradient-to-br from-primary/5 to-transparent hover:shadow-xl transition-all duration-300 hover:scale-105">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-5 sm:mb-6 md:mb-8 print-grid">
+                        <div className="border border-primary/30 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 text-center bg-gradient-to-br from-primary/5 to-transparent hover:shadow-xl transition-all duration-300 hover:scale-105 print-card">
                             <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mx-auto mb-2 sm:mb-3">
                                 <Icon icon={"ph:buildings-fill"} width={24} height={24} className="text-white sm:w-7 sm:h-7 md:w-8 md:h-8" />
                             </div>
@@ -449,9 +389,9 @@ export default function BrochureContent() {
                     </div>
 
                     {/* Testimonials with Images */}
-                    <div className="grid md:grid-cols-2 gap-6">
+                    <div className="grid md:grid-cols-2 gap-6 print-grid">
                         {testimonials.map((testimonial, index) => (
-                            <div key={index} className="border border-black/10 dark:border-white/10 rounded-2xl p-6 sm:p-8 bg-gradient-to-br from-primary/5 to-transparent relative overflow-hidden">
+                            <div key={index} className="border border-black/10 dark:border-white/10 rounded-2xl p-6 sm:p-8 bg-gradient-to-br from-primary/5 to-transparent relative overflow-hidden print-card">
                                 <div className="absolute top-4 right-4">
                                     {[...Array(5)].map((_, i) => (
                                         <Icon key={i} icon={"ph:star-fill"} width={20} height={20} className="text-yellow-500 inline" />
@@ -734,8 +674,8 @@ export default function BrochureContent() {
                         </p>
                     </div>
 
-                    <div className="grid md:grid-cols-2 gap-6">
-                        <div className="border-2 border-primary/20 rounded-2xl p-8 hover:border-primary transition-all duration-300 hover:shadow-2xl hover:shadow-primary/20">
+                    <div className="grid md:grid-cols-2 gap-6 print-grid">
+                        <div className="border-2 border-primary/20 rounded-2xl p-8 hover:border-primary transition-all duration-300 hover:shadow-2xl hover:shadow-primary/20 print-card">
                             <div className="flex items-center gap-4 mb-6">
                                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
                                     <Icon icon={"ph:house-fill"} width={32} height={32} className="text-white" />
@@ -765,7 +705,7 @@ export default function BrochureContent() {
                             </div>
                         </div>
 
-                        <div className="border-2 border-primary/20 rounded-2xl p-8 hover:border-primary transition-all duration-300 hover:shadow-2xl hover:shadow-primary/20">
+                        <div className="border-2 border-primary/20 rounded-2xl p-8 hover:border-primary transition-all duration-300 hover:shadow-2xl hover:shadow-primary/20 print-card">
                             <div className="flex items-center gap-4 mb-6">
                                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
                                     <Icon icon={"ph:buildings-fill"} width={32} height={32} className="text-white" />
@@ -795,7 +735,7 @@ export default function BrochureContent() {
                             </div>
                         </div>
 
-                        <div className="border-2 border-primary/20 rounded-2xl p-8 hover:border-primary transition-all duration-300 hover:shadow-2xl hover:shadow-primary/20">
+                        <div className="border-2 border-primary/20 rounded-2xl p-8 hover:border-primary transition-all duration-300 hover:shadow-2xl hover:shadow-primary/20 print-card">
                             <div className="flex items-center gap-4 mb-6">
                                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
                                     <Icon icon={"ph:key-fill"} width={32} height={32} className="text-white" />
@@ -825,7 +765,7 @@ export default function BrochureContent() {
                             </div>
                         </div>
 
-                        <div className="border-2 border-primary/20 rounded-2xl p-8 hover:border-primary transition-all duration-300 hover:shadow-2xl hover:shadow-primary/20">
+                        <div className="border-2 border-primary/20 rounded-2xl p-8 hover:border-primary transition-all duration-300 hover:shadow-2xl hover:shadow-primary/20 print-card">
                             <div className="flex items-center gap-4 mb-6">
                                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center">
                                     <Icon icon={"ph:ruler-fill"} width={32} height={32} className="text-white" />
@@ -872,7 +812,7 @@ export default function BrochureContent() {
                         </p>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-6">
+                    <div className="grid md:grid-cols-3 gap-6 print-grid">
                         {[
                             { num: "01", icon: "ph:handshake-fill", title: "Free Consultation", desc: "Discuss your vision & budget" },
                             { num: "02", icon: "ph:cube-fill", title: "Design & 3D Plans", desc: "See your home before it's built" },
@@ -881,7 +821,7 @@ export default function BrochureContent() {
                             { num: "05", icon: "ph:check-circle-fill", title: "Quality Inspections", desc: "Multiple quality checkpoints" },
                             { num: "06", icon: "ph:key-fill", title: "Handover Keys", desc: "Move into your dream home" }
                         ].map((step, index) => (
-                            <div key={index} className="relative bg-white dark:bg-dark border border-black/10 dark:border-white/10 rounded-2xl p-6 hover:shadow-xl transition-all duration-300">
+                            <div key={index} className="relative bg-white dark:bg-dark border border-black/10 dark:border-white/10 rounded-2xl p-6 hover:shadow-xl transition-all duration-300 print-card">
                                 <div className="absolute -top-4 -left-4 w-12 h-12 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
                                     <span className="text-xl font-bold text-white">{step.num}</span>
                                 </div>
@@ -907,9 +847,9 @@ export default function BrochureContent() {
                         </h2>
                     </div>
 
-                    <div className="grid md:grid-cols-2 gap-6">
+                    <div className="grid md:grid-cols-2 gap-6 print-grid">
                         {/* Traditional Way */}
-                        <div className="border-2 border-red-200 rounded-2xl p-8 bg-red-50/50 dark:bg-red-900/10">
+                        <div className="border-2 border-red-200 rounded-2xl p-8 bg-red-50/50 dark:bg-red-900/10 print-card">
                             <div className="flex items-center gap-3 mb-6">
                                 <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
                                     <Icon icon={"ph:x-circle-fill"} width={28} height={28} className="text-red-600" />
@@ -934,7 +874,7 @@ export default function BrochureContent() {
                         </div>
 
                         {/* Walldot Way */}
-                        <div className="border-2 border-green-200 rounded-2xl p-8 bg-gradient-to-br from-green-50 to-primary/5 dark:from-green-900/10 dark:to-primary/10 relative overflow-hidden">
+                        <div className="border-2 border-green-200 rounded-2xl p-8 bg-gradient-to-br from-green-50 to-primary/5 dark:from-green-900/10 dark:to-primary/10 relative overflow-hidden print-card">
                             <div className="absolute top-4 right-4">
                                 <div className="bg-gradient-to-r from-primary to-green-500 text-white px-3 py-1 rounded-full text-xs font-bold">
                                     RECOMMENDED
@@ -1000,7 +940,7 @@ export default function BrochureContent() {
                         </p>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-6">
+                    <div className="grid md:grid-cols-3 gap-6 print-grid">
                         {[
                             { icon: "ph:device-mobile-fill", title: "Mobile Project Tracking", desc: "Industry-first 24/7 mobile monitoring system", color: "from-blue-500 to-blue-600" },
                             { icon: "ph:shield-check-fill", title: "100% Quality Guarantee", desc: "Premium materials & certified vendors only", color: "from-green-500 to-green-600" },
@@ -1009,7 +949,7 @@ export default function BrochureContent() {
                             { icon: "ph:users-three-fill", title: "Expert Team", desc: "Skilled professionals with 3+ years of experience", color: "from-red-500 to-red-600" },
                             { icon: "ph:medal-fill", title: "Lifetime Support", desc: "Post-construction support & warranty", color: "from-teal-500 to-teal-600" }
                         ].map((item, index) => (
-                            <div key={index} className="border border-black/10 dark:border-white/10 rounded-2xl p-6 hover:shadow-2xl transition-all duration-300 hover:scale-105 group cursor-pointer">
+                            <div key={index} className="border border-black/10 dark:border-white/10 rounded-2xl p-6 hover:shadow-2xl transition-all duration-300 hover:scale-105 group cursor-pointer print-card">
                                 <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${item.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                                     <Icon icon={item.icon} width={32} height={32} className="text-white" />
                                 </div>
@@ -1032,18 +972,18 @@ export default function BrochureContent() {
                         </h2>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-6">
-                        <div className="bg-white dark:bg-dark border border-black/10 dark:border-white/10 rounded-2xl p-8 text-center">
+                    <div className="grid md:grid-cols-3 gap-6 print-grid">
+                        <div className="bg-white dark:bg-dark border border-black/10 dark:border-white/10 rounded-2xl p-8 text-center print-card">
                             <Icon icon={"ph:certificate-fill"} width={48} height={48} className="text-primary mx-auto mb-4" />
                             <h3 className="text-xl font-bold text-black dark:text-white mb-2">Certified Materials</h3>
                             <p className="text-sm text-black/60 dark:text-white/60">ISI certified materials from authorized dealers</p>
                         </div>
-                        <div className="bg-white dark:bg-dark border border-black/10 dark:border-white/10 rounded-2xl p-8 text-center">
+                        <div className="bg-white dark:bg-dark border border-black/10 dark:border-white/10 rounded-2xl p-8 text-center print-card">
                             <Icon icon={"ph:shield-checkered-fill"} width={48} height={48} className="text-primary mx-auto mb-4" />
                             <h3 className="text-xl font-bold text-black dark:text-white mb-2">5-Year Warranty</h3>
                             <p className="text-sm text-black/60 dark:text-white/60">Comprehensive warranty on all structural work</p>
                         </div>
-                        <div className="bg-white dark:bg-dark border border-black/10 dark:border-white/10 rounded-2xl p-8 text-center">
+                        <div className="bg-white dark:bg-dark border border-black/10 dark:border-white/10 rounded-2xl p-8 text-center print-card">
                             <Icon icon={"ph:users-fill"} width={48} height={48} className="text-primary mx-auto mb-4" />
                             <h3 className="text-xl font-bold text-black dark:text-white mb-2">Skilled Workforce</h3>
                             <p className="text-sm text-black/60 dark:text-white/60">Trained & certified construction professionals</p>

@@ -422,13 +422,13 @@ export default function Referrals() {
                         Are You a Professional?
                     </h3>
                     <p className="text-base text-black/70 dark:text-white/70 mb-6 max-w-2xl mx-auto">
-                        If you&apos;re an architect, real estate agent, interior designer, or industry professional, explore our Partnership Program for ongoing collaboration opportunities.
+                        If you&apos;re an architect, real estate agent, interior designer, or industry professional, explore our Referral Partnership Program for ongoing collaboration opportunities.
                     </p>
                     <a
                         href="/partnerships"
                         className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-primary text-white font-semibold hover:bg-dark transition-colors"
                     >
-                        Explore Partnership Program
+                        Explore Referral Partnership Program
                         <Icon icon={"ph:arrow-right"} width={20} height={20} />
                     </a>
                 </div>

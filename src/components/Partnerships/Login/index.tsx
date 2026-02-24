@@ -65,10 +65,10 @@ export default function PartnerLogin() {
                         <Icon icon={"ph:handshake-fill"} width={40} height={40} className="text-primary" />
                     </div>
                     <h1 className="text-3xl font-bold text-black dark:text-white mb-2">
-                        Partner Login
+                        Referral Partner Login
                     </h1>
                     <p className="text-sm text-black/60 dark:text-white/60">
-                        Access your partnership dashboard
+                        Access your referral partnership dashboard
                     </p>
                 </div>
 
@@ -168,7 +168,7 @@ export default function PartnerLogin() {
                             className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-black/5 dark:bg-white/5 text-black dark:text-white hover:bg-primary hover:text-white transition-colors font-semibold cursor-pointer"
                         >
                             <Icon icon={"ph:user-plus-fill"} width={20} height={20} />
-                            Apply for Partnership
+                            Apply for Referral Partnership
                         </a>
                     </div>
                 </div>
@@ -182,7 +182,7 @@ export default function PartnerLogin() {
                         href="mailto:info@walldotbuilders.com"
                         className="text-sm text-primary hover:underline font-semibold cursor-pointer"
                     >
-                        Contact Partnership Team
+                        Contact Referral Partnership Team
                     </a>
                 </div>
             </div>
