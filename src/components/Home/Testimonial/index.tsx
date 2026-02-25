@@ -85,7 +85,7 @@ const Testimonial = () => {
                             const isActiveSlide = current === index + 1;
                             const shouldAutoPlay = isSectionInView && isActiveSlide;
                             const videoUrl = item.youtubeId 
-                                ? `https://www.youtube.com/embed/${item.youtubeId}?rel=0&modestbranding=1${shouldAutoPlay ? '&autoplay=1&mute=1' : ''}`
+                                ? `https://www.youtube.com/embed/${item.youtubeId}?rel=0&modestbranding=1&loop=1&playlist=${item.youtubeId}${shouldAutoPlay ? '&autoplay=1&mute=1' : ''}`
                                 : '';
 
                             return (

@@ -328,14 +328,14 @@ export default function BrochureContent() {
                     </div>
                     <div className="relative z-10 max-w-4xl">
                         <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/20 backdrop-blur-sm mb-4 sm:mb-6">
-                            <Icon icon={"ph:star-fill"} width={16} height={16} className="text-white sm:w-5 sm:h-5" />
-                            <span className="text-white text-xs sm:text-sm font-semibold">Kerala&apos;s Trusted Construction Partner</span>
+                            <Icon icon={"ph:device-mobile-fill"} width={16} height={16} className="text-white sm:w-5 sm:h-5" />
+                            <span className="text-white text-xs sm:text-sm font-semibold">24/7 Mobile Project Tracking — Transparency You Can See</span>
                         </div>
                         <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-3 sm:mb-4 md:mb-6 leading-tight">
                             Building Dreams.<br/>Creating Homes.
                         </h1>
                         <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 mb-4 sm:mb-6 md:mb-8 leading-relaxed">
-                            Premium construction services with 3+ years of proven excellence. 5+ successfully completed projects. Join 5+ happy families who chose quality and transparency.
+                            Daily site photos. Real-time budget tracking. Direct chat with your construction team — all from your phone, without visiting the site once. No surprises. No delays. No hidden costs.
                         </p>
                         <div className="flex flex-wrap gap-2 sm:gap-3 md:gap-4">
                             <div className="flex items-center gap-1.5 sm:gap-2 bg-white/20 backdrop-blur-sm px-3 py-1.5 sm:px-4 sm:py-2 md:px-5 md:py-2.5 rounded-full">
@@ -360,17 +360,17 @@ export default function BrochureContent() {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-5 sm:mb-6 md:mb-8 print-grid">
                         <div className="border border-primary/30 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 text-center bg-gradient-to-br from-primary/5 to-transparent hover:shadow-xl transition-all duration-300 hover:scale-105 print-card">
                             <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mx-auto mb-2 sm:mb-3">
-                                <Icon icon={"ph:buildings-fill"} width={24} height={24} className="text-white sm:w-7 sm:h-7 md:w-8 md:h-8" />
+                                <Icon icon={"ph:device-mobile-fill"} width={24} height={24} className="text-white sm:w-7 sm:h-7 md:w-8 md:h-8" />
                             </div>
-                            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-1">5+</h3>
-                            <p className="text-xs sm:text-sm text-black/70 dark:text-white/70 font-semibold">Projects Completed</p>
+                            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-1">24/7</h3>
+                             <p className="text-xs sm:text-sm text-black/70 dark:text-white/70 font-semibold">Mobile Project Access</p>
                         </div>
                         <div className="border border-primary/30 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 text-center bg-gradient-to-br from-primary/5 to-transparent hover:shadow-xl transition-all duration-300 hover:scale-105">
                             <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center mx-auto mb-2 sm:mb-3">
                                 <Icon icon={"ph:smiley-fill"} width={24} height={24} className="text-white sm:w-7 sm:h-7 md:w-8 md:h-8" />
                             </div>
-                            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-green-600 mb-1">5+</h3>
-                            <p className="text-xs sm:text-sm text-black/70 dark:text-white/70 font-semibold">Happy Families</p>
+                            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-green-600 mb-1">4.9★</h3>
+                            <p className="text-xs sm:text-sm text-black/70 dark:text-white/70 font-semibold">Client Rating</p>
                         </div>
                         <div className="border border-primary/30 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 text-center bg-gradient-to-br from-primary/5 to-transparent hover:shadow-xl transition-all duration-300 hover:scale-105">
                             <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mx-auto mb-2 sm:mb-3">
@@ -381,10 +381,10 @@ export default function BrochureContent() {
                         </div>
                         <div className="border border-primary/30 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 text-center bg-gradient-to-br from-primary/5 to-transparent hover:shadow-xl transition-all duration-300 hover:scale-105">
                             <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center mx-auto mb-2 sm:mb-3">
-                                <Icon icon={"ph:star-fill"} width={24} height={24} className="text-white sm:w-7 sm:h-7 md:w-8 md:h-8" />
+                                <Icon icon={"ph:currency-inr-fill"} width={24} height={24} className="text-white sm:w-7 sm:h-7 md:w-8 md:h-8" />
                             </div>
-                            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-purple-600 mb-1">100%</h3>
-                            <p className="text-xs sm:text-sm text-black/70 dark:text-white/70 font-semibold">Satisfaction</p>
+                            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-purple-600 mb-1">₹0</h3>
+                            <p className="text-xs sm:text-sm text-black/70 dark:text-white/70 font-semibold">Hidden Costs</p>
                         </div>
                     </div>
 
@@ -400,7 +400,7 @@ export default function BrochureContent() {
                                 <div className="flex items-center gap-4 mb-4">
                                     <div className="relative w-16 h-16 rounded-full overflow-hidden bg-primary/20">
                                         <Image
-                                            src={testimonial.image}
+                                            src={testimonial.image || '/images/default-avatar.jpg'}
                                             alt={testimonial.name}
                                             fill
                                             className="object-cover"
@@ -552,11 +552,11 @@ export default function BrochureContent() {
                                 </div>
 
                                 <div className="grid md:grid-cols-3 gap-4 mb-6">
-                                    <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4 text-center">
-                                        <Icon icon={"ph:globe-fill"} width={32} height={32} className="text-white mx-auto mb-2" />
+                                    <a href="https://app.walldotbuilders.com/" target="_blank" rel="noopener noreferrer" className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 hover:border-white/40 rounded-xl p-4 text-center transition-all duration-300 hover:scale-105 cursor-pointer group">
+                                        <Icon icon={"ph:globe-fill"} width={32} height={32} className="text-white mx-auto mb-2 group-hover:scale-110 transition-transform" />
                                         <h4 className="text-white font-bold text-sm mb-1">Web Access</h4>
                                         <p className="text-white/70 text-xs">Browser-based tracking</p>
-                                    </div>
+                                    </a>
                                     <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4 text-center">
                                         <Icon icon={"ph:android-logo-fill"} width={32} height={32} className="text-white mx-auto mb-2" />
                                         <h4 className="text-white font-bold text-sm mb-1">Android App</h4>
@@ -569,45 +569,7 @@ export default function BrochureContent() {
                                     </div>
                                 </div>
 
-                                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                                    <a 
-                                        href="https://play.google.com/store"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-3 px-6 py-3 rounded-xl bg-black hover:bg-black/80 transition-all duration-300 hover:scale-105 group cursor-pointer"
-                                    >
-                                        <Icon icon={"ph:google-play-logo-fill"} width={32} height={32} className="text-white" />
-                                        <div className="text-left">
-                                            <p className="text-white/70 text-xs leading-tight">GET IT ON</p>
-                                            <p className="text-white font-bold text-sm leading-tight">Google Play</p>
-                                        </div>
-                                        <Icon icon={"ph:arrow-right"} width={20} height={20} className="text-white group-hover:translate-x-1 transition-transform" />
-                                    </a>
-                                    <a 
-                                        href="https://apps.apple.com"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-3 px-6 py-3 rounded-xl bg-black hover:bg-black/80 transition-all duration-300 hover:scale-105 group cursor-pointer"
-                                    >
-                                        <Icon icon={"ph:apple-logo-fill"} width={32} height={32} className="text-white" />
-                                        <div className="text-left">
-                                            <p className="text-white/70 text-xs leading-tight">Download on the</p>
-                                            <p className="text-white font-bold text-sm leading-tight">App Store</p>
-                                        </div>
-                                        <Icon icon={"ph:arrow-right"} width={20} height={20} className="text-white group-hover:translate-x-1 transition-transform" />
-                                    </a>
-                                    <a 
-                                        href="https://app.walldotbuilders.com" target="_blank" rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-3 px-6 py-3 rounded-xl bg-white hover:bg-white/90 transition-all duration-300 hover:scale-105 group cursor-pointer"
-                                    >
-                                        <Icon icon={"ph:globe-fill"} width={32} height={32} className="text-primary" />
-                                        <div className="text-left">
-                                            <p className="text-primary/70 text-xs leading-tight">Access via</p>
-                                            <p className="text-primary font-bold text-sm leading-tight">Web Browser</p>
-                                        </div>
-                                        <Icon icon={"ph:arrow-right"} width={20} height={20} className="text-primary group-hover:translate-x-1 transition-transform" />
-                                    </a>
-                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -624,7 +586,7 @@ export default function BrochureContent() {
                             Completed Projects Showcase
                         </h2>
                         <p className="text-base md:text-lg font-normal text-black/70 dark:text-white/70 leading-relaxed max-w-3xl mx-auto px-4">
-                            From luxury villas to modern homes - see the quality we deliver
+                            From luxury villas to modern homes — see the quality we deliver in Kerala
                         </p>
                     </div>
 
@@ -656,6 +618,13 @@ export default function BrochureContent() {
                                 </div>
                             </div>
                         ))}
+                    </div>
+                    <div className="text-center mt-8">
+                        <a href="/properties" className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-all duration-300 cursor-pointer">
+                            <Icon icon={"ph:images-fill"} width={20} height={20} />
+                            View All Projects
+                            <Icon icon={"ph:arrow-right"} width={18} height={18} />
+                        </a>
                     </div>
                 </section>
 
@@ -805,21 +774,21 @@ export default function BrochureContent() {
                             <p className="text-base font-semibold text-badge dark:text-white/90">Simple Process</p>
                         </div>
                         <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-52 font-bold tracking-tight text-black dark:text-white mb-3 leading-tight px-4">
-                            Your Journey to Dream Home
+                            Your Journey to Your Dream Home
                         </h2>
                         <p className="text-base md:text-lg font-normal text-black/70 dark:text-white/70 leading-relaxed max-w-3xl mx-auto px-4">
-                            6 simple steps from consultation to keys in hand
+                            6 clear steps from first call to keys in hand — with full timeline visibility
                         </p>
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-6 print-grid">
                         {[
-                            { num: "01", icon: "ph:handshake-fill", title: "Free Consultation", desc: "Discuss your vision & budget" },
-                            { num: "02", icon: "ph:cube-fill", title: "Design & 3D Plans", desc: "See your home before it's built" },
-                            { num: "03", icon: "ph:file-text-fill", title: "Approvals & Permits", desc: "We handle all paperwork" },
-                            { num: "04", icon: "ph:hard-hat-fill", title: "Construction Begins", desc: "Daily updates via mobile app" },
-                            { num: "05", icon: "ph:check-circle-fill", title: "Quality Inspections", desc: "Multiple quality checkpoints" },
-                            { num: "06", icon: "ph:key-fill", title: "Handover Keys", desc: "Move into your dream home" }
+                            { num: "01", icon: "ph:handshake-fill", title: "Free Consultation", desc: "Discuss your vision & budget", duration: "1–2 days" },
+                            { num: "02", icon: "ph:cube-fill", title: "Design & 3D Plans", desc: "See your home before it's built", duration: "2–4 weeks" },
+                            { num: "03", icon: "ph:file-text-fill", title: "Approvals & Permits", desc: "We handle all paperwork", duration: "4–8 weeks" },
+                            { num: "04", icon: "ph:hard-hat-fill", title: "Construction Begins", desc: "Daily updates via your mobile app", duration: "8–18 months" },
+                            { num: "05", icon: "ph:check-circle-fill", title: "Quality Inspections", desc: "Ongoing checks at every milestone", duration: "Throughout" },
+                            { num: "06", icon: "ph:key-fill", title: "Handover Keys", desc: "Move into your dream home", duration: "On agreed date" }
                         ].map((step, index) => (
                             <div key={index} className="relative bg-white dark:bg-dark border border-black/10 dark:border-white/10 rounded-2xl p-6 hover:shadow-xl transition-all duration-300 print-card">
                                 <div className="absolute -top-4 -left-4 w-12 h-12 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
@@ -829,7 +798,8 @@ export default function BrochureContent() {
                                     <Icon icon={step.icon} width={28} height={28} className="text-primary" />
                                 </div>
                                 <h3 className="text-xl font-bold text-black dark:text-white mb-2">{step.title}</h3>
-                                <p className="text-sm text-black/60 dark:text-white/60">{step.desc}</p>
+                                <p className="text-sm text-black/60 dark:text-white/60 mb-2">{step.desc}</p>
+                                <span className="inline-block text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-full">{step.duration}</span>
                             </div>
                         ))}
                     </div>
@@ -876,8 +846,9 @@ export default function BrochureContent() {
                         {/* Walldot Way */}
                         <div className="border-2 border-green-200 rounded-2xl p-8 bg-gradient-to-br from-green-50 to-primary/5 dark:from-green-900/10 dark:to-primary/10 relative overflow-hidden print-card">
                             <div className="absolute top-4 right-4">
-                                <div className="bg-gradient-to-r from-primary to-green-500 text-white px-3 py-1 rounded-full text-xs font-bold">
-                                    RECOMMENDED
+                                <div className="bg-gradient-to-r from-primary to-green-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                                    <Icon icon={"ph:star-fill"} width={12} height={12} />
+                                    CLIENT CHOICE
                                 </div>
                             </div>
                             <div className="flex items-center gap-3 mb-6">
@@ -942,12 +913,12 @@ export default function BrochureContent() {
 
                     <div className="grid md:grid-cols-3 gap-6 print-grid">
                         {[
-                            { icon: "ph:device-mobile-fill", title: "Mobile Project Tracking", desc: "Industry-first 24/7 mobile monitoring system", color: "from-blue-500 to-blue-600" },
-                            { icon: "ph:shield-check-fill", title: "100% Quality Guarantee", desc: "Premium materials & certified vendors only", color: "from-green-500 to-green-600" },
-                            { icon: "ph:clock-fill", title: "On-Time Delivery", desc: "98% projects completed on or before deadline", color: "from-orange-500 to-orange-600" },
-                            { icon: "ph:currency-inr-fill", title: "Transparent Pricing", desc: "Zero hidden costs, clear quotations", color: "from-purple-500 to-purple-600" },
-                            { icon: "ph:users-three-fill", title: "Expert Team", desc: "Skilled professionals with 3+ years of experience", color: "from-red-500 to-red-600" },
-                            { icon: "ph:medal-fill", title: "Lifetime Support", desc: "Post-construction support & warranty", color: "from-teal-500 to-teal-600" }
+                            { icon: "ph:device-mobile-fill", title: "Mobile Project Tracking", desc: "Kerala's only 24/7 live site monitoring app — track everything from anywhere", color: "from-blue-500 to-blue-600" },
+                            { icon: "ph:shield-check-fill", title: "100% Quality Guarantee", desc: "ISI-certified materials from authorized dealers — no compromise on standards", color: "from-green-500 to-green-600" },
+                            { icon: "ph:clock-fill", title: "98% On-Time Delivery", desc: "Industry-leading delivery rate — your timeline is our commitment", color: "from-orange-500 to-orange-600" },
+                            { icon: "ph:currency-inr-fill", title: "Transparent Pricing", desc: "Zero hidden costs. Itemized quotations. What you see is what you pay", color: "from-purple-500 to-purple-600" },
+                            { icon: "ph:users-three-fill", title: "In-House Expert Team", desc: "Trained engineers, masons & supervisors — no sub-contracting your project", color: "from-red-500 to-red-600" },
+                            { icon: "ph:medal-fill", title: "5-Year Warranty", desc: "Structural warranty on foundations, columns & roof — free repairs, guaranteed", color: "from-teal-500 to-teal-600" }
                         ].map((item, index) => (
                             <div key={index} className="border border-black/10 dark:border-white/10 rounded-2xl p-6 hover:shadow-2xl transition-all duration-300 hover:scale-105 group cursor-pointer print-card">
                                 <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${item.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
@@ -976,17 +947,17 @@ export default function BrochureContent() {
                         <div className="bg-white dark:bg-dark border border-black/10 dark:border-white/10 rounded-2xl p-8 text-center print-card">
                             <Icon icon={"ph:certificate-fill"} width={48} height={48} className="text-primary mx-auto mb-4" />
                             <h3 className="text-xl font-bold text-black dark:text-white mb-2">Certified Materials</h3>
-                            <p className="text-sm text-black/60 dark:text-white/60">ISI certified materials from authorized dealers</p>
+                            <p className="text-sm text-black/60 dark:text-white/60">ISI-certified cement, steel & bricks from authorized dealers only — no compromises</p>
                         </div>
                         <div className="bg-white dark:bg-dark border border-black/10 dark:border-white/10 rounded-2xl p-8 text-center print-card">
                             <Icon icon={"ph:shield-checkered-fill"} width={48} height={48} className="text-primary mx-auto mb-4" />
-                            <h3 className="text-xl font-bold text-black dark:text-white mb-2">5-Year Warranty</h3>
-                            <p className="text-sm text-black/60 dark:text-white/60">Comprehensive warranty on all structural work</p>
+                            <h3 className="text-xl font-bold text-black dark:text-white mb-2">5-Year Structural Warranty</h3>
+                            <p className="text-sm text-black/60 dark:text-white/60">Foundation, columns & roof covered — we fix any structural issue free of charge</p>
                         </div>
                         <div className="bg-white dark:bg-dark border border-black/10 dark:border-white/10 rounded-2xl p-8 text-center print-card">
                             <Icon icon={"ph:users-fill"} width={48} height={48} className="text-primary mx-auto mb-4" />
-                            <h3 className="text-xl font-bold text-black dark:text-white mb-2">Skilled Workforce</h3>
-                            <p className="text-sm text-black/60 dark:text-white/60">Trained & certified construction professionals</p>
+                            <h3 className="text-xl font-bold text-black dark:text-white mb-2">In-House Skilled Workforce</h3>
+                            <p className="text-sm text-black/60 dark:text-white/60">Trained engineers, masons & supervisors on our payroll — never sub-contracted</p>
                         </div>
                     </div>
                 </section>
@@ -999,20 +970,29 @@ export default function BrochureContent() {
                     </div>
                     <div className="relative z-10 text-center">
                         <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-4 md:mb-6 leading-tight px-4">
-                            Ready to Build Your Dream Home?
+                            Your Dream Home Deserves a Builder You Can Watch Over — 24/7
                         </h2>
                         <p className="text-base sm:text-lg md:text-xl text-white/90 mb-6 md:mb-8 max-w-3xl mx-auto leading-relaxed px-4">
-                            Join the happy families who trusted Walldot Builders. Get a free consultation and quotation today!
+                            Call now — your free consultation takes less than 10 minutes, and we&apos;ll walk you through your complete project plan, timeline, and budget on the spot.
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center mb-8 md:mb-12 px-4">
-                                <a 
+                            <a 
                                 href="/contactus"
                                 className="inline-flex items-center justify-center gap-2 md:gap-3 px-6 py-3 md:px-8 md:py-4 rounded-full bg-white text-primary text-sm md:text-base lg:text-lg font-bold hover:bg-white/90 transition-all duration-300 hover:scale-105 shadow-2xl cursor-pointer"
                             >
                                 <Icon icon={"ph:phone-fill"} width={20} height={20} className="md:w-6 md:h-6" />
-                                <span>Schedule Free Consultation</span>
+                                <span>Book Free Consultation</span>
                                 <Icon icon={"ph:arrow-right"} width={20} height={20} className="md:w-6 md:h-6" />
+                            </a>
+                            <a 
+                                href="https://wa.me/919074954874?text=Hi%2C+I+saw+your+brochure+and+I%27m+interested+in+a+free+consultation"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center justify-center gap-2 md:gap-3 px-6 py-3 md:px-8 md:py-4 rounded-full bg-green-500 hover:bg-green-600 text-white text-sm md:text-base lg:text-lg font-bold transition-all duration-300 hover:scale-105 shadow-xl cursor-pointer"
+                            >
+                                <Icon icon={"ph:whatsapp-logo-fill"} width={20} height={20} className="md:w-6 md:h-6" />
+                                <span className="whitespace-nowrap">WhatsApp Us Now</span>
                             </a>
                             <a 
                                 href="tel:+919074954874"
@@ -1043,7 +1023,8 @@ export default function BrochureContent() {
                                     <Icon icon={"ph:clock-fill"} width={28} height={28} className="text-white" />
                                 </div>
                                 <h3 className="text-white font-bold mb-1">Working Hours</h3>
-                                <p className="text-white/80 text-sm">Mon-Sat: 9AM-6PM</p>
+                                <p className="text-white/80 text-sm">Mon–Sat: 9AM–6PM</p>
+                                <p className="text-white/60 text-xs mt-1">WhatsApp: 24/7</p>
                             </div>
                         </div>
                     </div>
@@ -1057,20 +1038,20 @@ export default function BrochureContent() {
                             Building Dreams. Creating Homes. Since 2022
                         </p>
                         <p className="text-sm text-black/50 dark:text-white/50">
-                            Licensed & Insured | All Kerala Services | ISO Certified
+                            Licensed &amp; Insured | Serving All of Kerala | Vastu-Friendly Designs
                         </p>
                     </div>
                     <div className="flex items-center justify-center gap-4">
-                        <a href="#" className="text-black/50 dark:text-white/50 hover:text-primary transition-colors cursor-pointer">
+                        <a href="https://www.facebook.com/walldotbuilders" target="_blank" rel="noopener noreferrer" className="text-black/50 dark:text-white/50 hover:text-primary transition-colors cursor-pointer">
                             <Icon icon={"ph:facebook-logo-fill"} width={24} height={24} />
                         </a>
-                        <a href="#" className="text-black/50 dark:text-white/50 hover:text-primary transition-colors cursor-pointer">
+                        <a href="https://www.instagram.com/walldotbuilders" target="_blank" rel="noopener noreferrer" className="text-black/50 dark:text-white/50 hover:text-primary transition-colors cursor-pointer">
                             <Icon icon={"ph:instagram-logo-fill"} width={24} height={24} />
                         </a>
-                        <a href="#" className="text-black/50 dark:text-white/50 hover:text-primary transition-colors cursor-pointer">
+                        <a href="https://www.linkedin.com/company/walldotbuilders" target="_blank" rel="noopener noreferrer" className="text-black/50 dark:text-white/50 hover:text-primary transition-colors cursor-pointer">
                             <Icon icon={"ph:linkedin-logo-fill"} width={24} height={24} />
                         </a>
-                        <a href="#" className="text-black/50 dark:text-white/50 hover:text-primary transition-colors cursor-pointer">
+                        <a href="https://www.youtube.com/@walldotbuilders" target="_blank" rel="noopener noreferrer" className="text-black/50 dark:text-white/50 hover:text-primary transition-colors cursor-pointer">
                             <Icon icon={"ph:youtube-logo-fill"} width={24} height={24} />
                         </a>
                     </div>
