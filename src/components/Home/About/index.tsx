@@ -10,19 +10,15 @@ const About = () => {
         <Image
           src="/images/categories/Vector.svg"
           alt="vector"
-          layout="fill"
-          objectFit="cover"
-          className="dark:hidden"
-          priority
+          fill
+          className="object-cover dark:hidden"
           quality={75}
         />
         <Image
           src="/images/categories/Vector-dark.svg"
           alt="vector"
-          layout="fill"
-          objectFit="cover"
-          className="hidden dark:block"
-          priority
+          fill
+          className="object-cover hidden dark:block"
           quality={75}
         />
       </div>
@@ -39,21 +35,21 @@ const About = () => {
               Crafting Homes with Trust.
             </h2>
             <p className="text-dark/70 dark:text-white/70 text-base md:text-lg leading-relaxed max-w-full mb-4">
-              We understand that a home is more than just a residence; it's a personal sanctuary, a legacy, and a place where memories are made. As one of the top <Link href="/residential-homes" className="text-primary hover:underline font-semibold">construction companies in Thrissur</Link>, we are committed to delivering not only homes but also value and satisfaction to our clients.
+              We understand that a home is more than just a residence; it&apos;s a personal sanctuary, a legacy, and a place where memories are made. As one of the top <Link href="/residential-homes" className="text-primary hover:underline font-semibold">construction companies in Thrissur</Link>, we are committed to delivering not only homes but also value and satisfaction to our clients.
             </p>
             <p className="text-dark/70 dark:text-white/70 text-base md:text-lg leading-relaxed max-w-full">
               From <Link href="/luxury-villa" className="text-primary hover:underline font-semibold">luxury villas</Link> to <Link href="/appartment" className="text-primary hover:underline font-semibold">modern apartments</Link> and <Link href="/office-spaces" className="text-primary hover:underline font-semibold">office spaces</Link>, we bring your vision to life with precision and care.
             </p>
             <div className="flex flex-wrap gap-3 sm:gap-4 mt-4 sm:mt-6">
-              <Link 
-                href="/aboutus" 
+              <Link
+                href="/aboutus"
                 className="inline-block py-2 px-5 xs:py-3 xs:px-6 sm:py-4 sm:px-8 bg-primary text-sm xs:text-base leading-4 text-white rounded-full font-semibold hover:bg-dark transition-colors duration-300"
                 title="Learn more about Walldot Builders"
               >
                 About us
               </Link>
-              <Link 
-                href="/tools" 
+              <Link
+                href="/tools"
                 className="inline-block py-2 px-5 xs:py-3 xs:px-6 sm:py-4 sm:px-8 bg-transparent border-2 border-primary text-sm xs:text-base leading-4 text-primary rounded-full font-semibold hover:bg-primary hover:text-white transition-colors duration-300"
                 title="Explore construction tools and calculators"
               >
@@ -68,10 +64,8 @@ const About = () => {
               <Image
                 src="/images/categories/villas.jpg"
                 alt="villas"
-                layout="fill"
-                objectFit="cover"
-                className="w-full h-full"
-                priority
+                fill
+                className="object-cover w-full h-full"
                 quality={85}
               />
             </div>

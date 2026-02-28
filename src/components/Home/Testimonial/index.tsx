@@ -10,42 +10,80 @@ import {
 } from "@/components/ui/carousel";
 import { testimonials } from "@/app/api/testimonial";
 
+// Click-to-play YouTube facade — avoids loading ~500KB of YouTube scripts on page load
+const YouTubeFacade = ({
+    youtubeId,
+    title,
+}: {
+    youtubeId: string;
+    title: string;
+}) => {
+    const [playing, setPlaying] = React.useState(false);
+    const thumbnailUrl = `https://i.ytimg.com/vi/${youtubeId}/hqdefault.jpg`;
+
+    if (playing) {
+        return (
+            <div
+                className="relative w-full rounded-2xl overflow-hidden shadow-2xl"
+                style={{ paddingBottom: "56.25%" }}
+            >
+                <iframe
+                    className="absolute inset-0 w-full h-full"
+                    src={`https://www.youtube.com/embed/${youtubeId}?rel=0&modestbranding=1&autoplay=1`}
+                    title={title}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                />
+            </div>
+        );
+    }
+
+    return (
+        <button
+            onClick={() => setPlaying(true)}
+            aria-label={`Play ${title}`}
+            className="relative w-full rounded-2xl overflow-hidden shadow-2xl group cursor-pointer focus:outline-none"
+            style={{ paddingBottom: "56.25%" }}
+        >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+                src={thumbnailUrl}
+                alt={title}
+                loading="lazy"
+                className="absolute inset-0 w-full h-full object-cover"
+            />
+            {/* Play button overlay */}
+            <span className="absolute inset-0 flex items-center justify-center">
+                <span className="bg-red-600 group-hover:bg-red-700 transition-colors duration-200 rounded-full p-4">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="32"
+                        height="32"
+                        viewBox="0 0 24 24"
+                        fill="white"
+                    >
+                        <path d="M8 5v14l11-7z" />
+                    </svg>
+                </span>
+            </span>
+        </button>
+    );
+};
+
 const Testimonial = () => {
     const [api, setApi] = React.useState<CarouselApi | undefined>(undefined);
     const [current, setCurrent] = React.useState(0);
     const [count, setCount] = React.useState(0);
-    const [isSectionInView, setIsSectionInView] = React.useState(false);
     const sectionRef = React.useRef<HTMLElement>(null);
 
     React.useEffect(() => {
         if (!api) return;
-
         setCount(api.scrollSnapList().length);
         setCurrent(api.selectedScrollSnap() + 1);
-
         api.on("select", () => {
             setCurrent(api.selectedScrollSnap() + 1);
         });
     }, [api]);
-
-    React.useEffect(() => {
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                setIsSectionInView(entry.isIntersecting);
-            },
-            { threshold: 0.3 } // Play when at least 30% of the section is visible
-        );
-
-        if (sectionRef.current) {
-            observer.observe(sectionRef.current);
-        }
-
-        return () => {
-            if (sectionRef.current) {
-                observer.unobserve(sectionRef.current);
-            }
-        };
-    }, []);
 
     const handleDotClick = (index: number) => {
         if (api) {
@@ -58,10 +96,11 @@ const Testimonial = () => {
             <div className="absolute right-0">
                 <Image
                     src="/images/testimonial/Vector.png"
-                    alt="victor"
+                    alt="decorative vector"
                     width={700}
                     height={1039}
-                    unoptimized={true}
+                    loading="lazy"
+                    quality={75}
                 />
             </div>
             <div className="container max-w-8xl mx-auto px-4 sm:px-5 2xl:px-0">
@@ -82,12 +121,6 @@ const Testimonial = () => {
                 >
                     <CarouselContent>
                         {testimonials.map((item, index) => {
-                            const isActiveSlide = current === index + 1;
-                            const shouldAutoPlay = isSectionInView && isActiveSlide;
-                            const videoUrl = item.youtubeId 
-                                ? `https://www.youtube.com/embed/${item.youtubeId}?rel=0&modestbranding=1&loop=1&playlist=${item.youtubeId}${shouldAutoPlay ? '&autoplay=1&mute=1' : ''}`
-                                : '';
-
                             return (
                                 <CarouselItem key={index} className="mt-9">
                                     <div className="lg:flex items-center gap-11">
@@ -99,7 +132,6 @@ const Testimonial = () => {
                                             <div>
                                                 <h4 className="text-white text-xl md:text-2xl lg:text-3xl font-medium leading-relaxed">{item.review}</h4>
                                                 <div className="flex items-center mt-8 gap-6">
-                                                    {/* Mobile: show photo if no video */}
                                                     {!item.youtubeId && (
                                                         <Image
                                                             src={item.image ?? ""}
@@ -107,7 +139,8 @@ const Testimonial = () => {
                                                             width={80}
                                                             height={80}
                                                             className="rounded-full lg:hidden block"
-                                                            unoptimized={true}
+                                                            loading="lazy"
+                                                            quality={75}
                                                         />
                                                     )}
                                                     <div>
@@ -118,19 +151,13 @@ const Testimonial = () => {
                                             </div>
                                         </div>
 
-                                        {/* Right: YouTube embed or fallback photo */}
+                                        {/* Right: YouTube facade or fallback photo */}
                                         <div className="lg:block hidden w-full max-w-[440px] flex-shrink-0">
                                             {item.youtubeId ? (
-                                                <div className="relative w-full rounded-2xl overflow-hidden shadow-2xl"
-                                                    style={{ paddingBottom: '56.25%' /* 16:9 */ }}>
-                                                    <iframe
-                                                        className="absolute inset-0 w-full h-full"
-                                                        src={videoUrl}
-                                                        title={`${item.name} testimonial`}
-                                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                        allowFullScreen
-                                                    />
-                                                </div>
+                                                <YouTubeFacade
+                                                    youtubeId={item.youtubeId}
+                                                    title={`${item.name} testimonial`}
+                                                />
                                             ) : (
                                                 <div className="w-full h-full rounded-2xl overflow-hidden">
                                                     <Image
@@ -138,25 +165,20 @@ const Testimonial = () => {
                                                         alt={item.name}
                                                         width={440}
                                                         height={440}
-                                                        unoptimized={true}
+                                                        loading="lazy"
+                                                        quality={80}
                                                     />
                                                 </div>
                                             )}
                                         </div>
 
-                                        {/* Mobile: YouTube embed below text */}
+                                        {/* Mobile: YouTube facade below text */}
                                         {item.youtubeId && (
                                             <div className="lg:hidden block w-full mt-6">
-                                                <div className="relative w-full rounded-2xl overflow-hidden shadow-2xl"
-                                                    style={{ paddingBottom: '56.25%' }}>
-                                                    <iframe
-                                                        className="absolute inset-0 w-full h-full"
-                                                        src={videoUrl}
-                                                        title={`${item.name} testimonial`}
-                                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                        allowFullScreen
-                                                    />
-                                                </div>
+                                                <YouTubeFacade
+                                                    youtubeId={item.youtubeId}
+                                                    title={`${item.name} testimonial`}
+                                                />
                                             </div>
                                         )}
                                     </div>

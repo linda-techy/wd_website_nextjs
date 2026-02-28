@@ -37,7 +37,8 @@ const Hero: React.FC = () => {
               src={"/images/hero/modern-kerala-home.png"}
               alt="Modern Kerala Home"
               fill
-              unoptimized={true}
+              priority
+              quality={85}
               className="object-cover rounded-l-[50px]"
             />
           </div>
@@ -47,19 +48,17 @@ const Hero: React.FC = () => {
             <div className="flex flex-col sm:items-center gap-3">
               <Image
                 src={"/images/hero/floor-plan.svg"}
-                alt="sofa"
+                alt="Floor plan icon"
                 width={32}
                 height={32}
                 className="block dark:hidden"
-                unoptimized={true}
               />
               <Image
                 src={"/images/hero/floor-plan.svg"}
-                alt="sofa"
+                alt="Floor plan icon"
                 width={32}
                 height={32}
                 className="hidden dark:block"
-                unoptimized={true}
               />
               <p className="text-base md:text-lg font-semibold text-inherit">
                 Plan Your Dream
@@ -71,19 +70,17 @@ const Hero: React.FC = () => {
             <div className="flex flex-col sm:items-center gap-3">
               <Image
                 src={"/images/hero/brickwall.svg"}
-                alt="sofa"
+                alt="Brick wall icon"
                 width={32}
                 height={32}
                 className="block dark:hidden"
-                unoptimized={true}
               />
               <Image
                 src={"/images/hero/brickwall.svg"}
-                alt="sofa"
+                alt="Brick wall icon"
                 width={32}
                 height={32}
                 className="hidden dark:block"
-                unoptimized={true}
               />
               <p className="text-base md:text-lg font-semibold text-inherit">
                 Build on Strength
@@ -95,19 +92,17 @@ const Hero: React.FC = () => {
             <div className="flex flex-col sm:items-center gap-3">
               <Image
                 src={"/images/hero/roof.svg"}
-                alt="sofa"
+                alt="Roof icon"
                 width={32}
                 height={32}
                 className="block dark:hidden"
-                unoptimized={true}
               />
               <Image
                 src={"/images/hero/roof.svg"}
-                alt="sofa"
+                alt="Roof icon"
                 width={32}
                 height={32}
                 className="hidden dark:block"
-                unoptimized={true}
               />
               <p className="text-base md:text-lg font-semibold text-inherit">
                 Beautiful Roofs
@@ -119,11 +114,10 @@ const Hero: React.FC = () => {
             <div className="flex flex-col sm:items-center gap-3">
               <Image
                 src={"/images/hero/livingroom.svg"}
-                alt="sofa"
+                alt="Living room icon"
                 width={32}
                 height={32}
                 className="block dark:hidden"
-                unoptimized={true}
               />
               <p className="text-base md:text-lg font-semibold text-inherit">
                 Finish with Care

@@ -1,31 +1,28 @@
-import FeaturedProperty from '@/components/Home/FeaturedProperty'
+import dynamic from 'next/dynamic'
 import Hero from '@/components/Home/Hero'
-import Properties from '@/components/Home/Properties'
-import About from '@/components/Home/About'
-import Projects from '@/components/Home/Projects'
-import Services from '@/components/Home/Services'
-import Testimonial from '@/components/Home/Testimonial'
-import BlogSmall from '@/components/shared/Blog'
-import GetInTouch from '@/components/Home/GetInTouch'
-import FAQ from '@/components/Home/FAQs'
-import RelatedLinks, { homeRelatedLinks } from '@/components/shared/RelatedLinks'
+import { homeRelatedLinks } from '@/components/shared/RelatedLinks'
+
+// Eagerly load Hero (LCP — above the fold)
+// Lazy-load everything below the fold to reduce initial JS bundle
+const About = dynamic(() => import('@/components/Home/About'))
+const Projects = dynamic(() => import('@/components/Home/Projects'))
+const Testimonial = dynamic(() => import('@/components/Home/Testimonial'))
+const GetInTouch = dynamic(() => import('@/components/Home/GetInTouch'))
+const FAQ = dynamic(() => import('@/components/Home/FAQs'))
+const RelatedLinks = dynamic(() => import('@/components/shared/RelatedLinks').then(m => ({ default: m.default })))
 
 export default function Home() {
   return (
     <main>
       <Hero />
       <About />
-      {/* <Services /> */}
       <Projects />
-      {/* <Properties /> */}
-      {/* <FeaturedProperty /> */}
       <Testimonial />
-      {/* <BlogSmall /> */}
       <GetInTouch />
       <FAQ />
-      <RelatedLinks 
-        title="Explore Our Services & Resources" 
-        links={homeRelatedLinks} 
+      <RelatedLinks
+        title="Explore Our Services & Resources"
+        links={homeRelatedLinks}
       />
     </main>
   )

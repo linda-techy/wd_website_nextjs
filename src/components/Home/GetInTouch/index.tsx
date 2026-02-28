@@ -10,8 +10,9 @@ const GetInTouch: React.FC = () => {
                         src="/images/get-in-touch-bg.jpg"
                         alt="Kerala luxury interior"
                         fill
+                        quality={75}
+                        loading="lazy"
                         className="object-cover -z-10"
-                        priority
                     />
 
                     <div className="bg-black/30 py-8 sm:py-10 md:py-12 lg:py-14">

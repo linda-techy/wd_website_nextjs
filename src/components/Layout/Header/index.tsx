@@ -60,10 +60,10 @@ const Header: React.FC = () => {
             <Link href="/">
               <Image
                 src={"/images/header/dark-logo.svg"}
-                alt="logo"
+                alt="Walldot Builders logo"
                 width={150}
                 height={68}
-                unoptimized={true}
+                priority
                 className={`${
                   isHomepage
                     ? sticky
@@ -76,10 +76,10 @@ const Header: React.FC = () => {
               />
               <Image
                 src={"/images/header/logo.svg"}
-                alt="logo"
+                alt="Walldot Builders logo"
                 width={150}
                 height={68}
-                unoptimized={true}
+                priority
                 className={`${
                   isHomepage
                     ? sticky

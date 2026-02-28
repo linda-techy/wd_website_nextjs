@@ -9,9 +9,13 @@ import SessionProviderComp from '@/components/nextauth/SessionProvider'
 import LeadCapturePopupWrapper from '@/components/shared/LeadCapturePopup/PopupWrapper'
 import WhatsAppButton from '@/components/shared/WhatsAppButton'
 
-const font = Bricolage_Grotesque({ subsets: ["latin"] });
+const font = Bricolage_Grotesque({
+  subsets: ["latin"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://walldotbuilders.com'),
   title: 'Walldot Builders | Best Home Construction Company in Kerala',
   description: 'Walldot Builders is one of the leading construction companies in Kerala, specializing in custom home building, architectural design, and turnkey projects. We craft homes with precision, quality, and a commitment to excellence across Kerala.',
 }
