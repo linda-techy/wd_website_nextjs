@@ -59,8 +59,8 @@ const About = () => {
           </div>
 
           {/* Image - Mobile First */}
-          <div className="col-span-12 lg:col-span-6 order-1 lg:order-2">
-            <div className="relative rounded-lg lg:rounded-2xl overflow-hidden group aspect-video w-full h-auto min-h-[200px] sm:min-h-[300px]">
+          <div className="col-span-12 lg:col-span-6 order-1 lg:order-2 flex items-center justify-center">
+            <div className="relative rounded-lg lg:rounded-2xl overflow-hidden group w-full aspect-video min-h-[250px] sm:min-h-[400px]">
               <Image
                 src="/images/categories/villas.jpg"
                 alt="villas"

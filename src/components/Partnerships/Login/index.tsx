@@ -8,7 +8,7 @@ import { partnershipAPI } from "@/lib/api";
 export default function PartnerLogin() {
     const router = useRouter();
     const [formData, setFormData] = useState({
-        phone: "",
+        email: "",
         password: "",
     });
     const [error, setError] = useState("");
@@ -30,7 +30,7 @@ export default function PartnerLogin() {
         try {
             // Call Spring Boot API
             const response = await partnershipAPI.login({
-                phone: formData.phone,
+                email: formData.email,
                 password: formData.password,
             });
 
@@ -65,10 +65,10 @@ export default function PartnerLogin() {
                         <Icon icon={"ph:handshake-fill"} width={40} height={40} className="text-primary" />
                     </div>
                     <h1 className="text-3xl font-bold text-black dark:text-white mb-2">
-                        Referral Partner Login
+                        Dashboard Login
                     </h1>
                     <p className="text-sm text-black/60 dark:text-white/60">
-                        Access your referral partnership dashboard
+                        Access your Refer a Friend or Partnership dashboard
                     </p>
                 </div>
 
@@ -86,20 +86,20 @@ export default function PartnerLogin() {
                             )}
 
                             <div>
-                                <label htmlFor="phone" className="block text-sm font-semibold text-black dark:text-white mb-2">
-                                    Phone Number
+                                <label htmlFor="email" className="block text-sm font-semibold text-black dark:text-white mb-2">
+                                    Email Address
                                 </label>
                                 <div className="relative">
                                     <div className="absolute left-4 top-1/2 -translate-y-1/2">
-                                        <Icon icon={"ph:phone-fill"} width={20} height={20} className="text-black/40 dark:text-white/40" />
+                                        <Icon icon={"ph:envelope-fill"} width={20} height={20} className="text-black/40 dark:text-white/40" />
                                     </div>
                                     <input
-                                        type="tel"
-                                        id="phone"
-                                        name="phone"
-                                        placeholder="Enter your phone number"
+                                        type="email"
+                                        id="email"
+                                        name="email"
+                                        placeholder="Enter your email address"
                                         required
-                                        value={formData.phone}
+                                        value={formData.email}
                                         onChange={handleChange}
                                         className="w-full pl-12 pr-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline bg-transparent text-black dark:text-white"
                                     />
@@ -161,15 +161,25 @@ export default function PartnerLogin() {
 
                     <div className="mt-8 pt-6 border-t border-black/10 dark:border-white/10 text-center">
                         <p className="text-sm text-black/60 dark:text-white/60 mb-4">
-                            Don&apos;t have a partner account?
+                            Don&apos;t have an account yet?
                         </p>
-                        <a
-                            href="/partnerships"
-                            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-black/5 dark:bg-white/5 text-black dark:text-white hover:bg-primary hover:text-white transition-colors font-semibold cursor-pointer"
-                        >
-                            <Icon icon={"ph:user-plus-fill"} width={20} height={20} />
-                            Apply for Referral Partnership
-                        </a>
+
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                            <a
+                                href="/referrals"
+                                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-black/5 dark:bg-white/5 text-black dark:text-white hover:bg-primary hover:text-white transition-colors font-semibold cursor-pointer text-sm w-full sm:w-auto justify-center"
+                            >
+                                <Icon icon={"ph:users-fill"} width={20} height={20} />
+                                Refer a Friend
+                            </a>
+                            <a
+                                href="/partnerships"
+                                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-black/5 dark:bg-white/5 text-black dark:text-white hover:bg-primary hover:text-white transition-colors font-semibold cursor-pointer text-sm w-full sm:w-auto justify-center"
+                            >
+                                <Icon icon={"ph:briefcase-fill"} width={20} height={20} />
+                                Apply for Partnership
+                            </a>
+                        </div>
                     </div>
                 </div>
 

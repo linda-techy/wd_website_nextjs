@@ -283,7 +283,7 @@ export default function PartnerDashboard() {
                             Referral Partner Dashboard
                         </h1>
                         <p className="text-black/60 dark:text-white/60">
-                            Welcome back, {partnerInfo?.phone || "Referral Partner"}
+                            Welcome back, {partnerInfo?.email || partnerInfo?.name || "Referral Partner"}
                         </p>
                     </div>
                     <button

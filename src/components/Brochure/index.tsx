@@ -2,7 +2,7 @@
 
 import { Icon } from "@iconify/react";
 import Image from "next/image";
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { testimonials } from "@/app/api/testimonial";
 import { propertyHomes } from "@/app/api/propertyhomes";
 
@@ -130,9 +130,6 @@ const BudgetPhone = () => (
 );
 
 export default function BrochureContent() {
-    const brochureRef = useRef<HTMLDivElement>(null);
-    const [isGenerating, setIsGenerating] = useState(false);
-    const [isPrinting, setIsPrinting] = useState(false);
     const [activeMockup, setActiveMockup] = useState(0);
 
     // Auto-rotate mobile mockups
@@ -143,183 +140,11 @@ export default function BrochureContent() {
         return () => clearInterval(timer);
     }, []);
 
-    /**
-     * PRIMARY: Print / Save as PDF via browser print dialog.
-     * Uses the @media print CSS in globals.css for pixel-perfect rendering.
-     * Works in all browsers, zero dependencies, handles fonts/images natively.
-     */
-    const handlePrint = () => {
-        setIsPrinting(true);
-        // Small delay to let the state update render (hides the button via print-hidden)
-        setTimeout(() => {
-            window.print();
-            setIsPrinting(false);
-        }, 100);
-    };
-
-    /**
-     * SECONDARY: Programmatic PDF download using html-to-image + jsPDF.
-     * High-DPI capture (3x scale), preloads fonts and images before capture.
-     */
-    const handleDownloadPDF = async () => {
-        if (!brochureRef.current) return;
-        setIsGenerating(true);
-
-        try {
-            // Dynamically import to keep initial bundle small
-            const [{ toPng }, { default: jsPDF }] = await Promise.all([
-                import('html-to-image'),
-                import('jspdf'),
-            ]);
-
-            // 1. Wait for all web fonts to be fully loaded
-            await document.fonts.ready;
-
-            // 2. Preload all images in the brochure
-            const images = Array.from(brochureRef.current.querySelectorAll('img'));
-            await Promise.allSettled(
-                images.map(
-                    (img) =>
-                        new Promise<void>((resolve) => {
-                            if (img.complete && img.naturalWidth > 0) {
-                                resolve();
-                            } else {
-                                img.onload = () => resolve();
-                                img.onerror = () => resolve(); // Don't block on broken images
-                            }
-                        })
-                )
-            );
-
-            // 3. Capture the brochure as a high-DPI PNG
-            const dataUrl = await toPng(brochureRef.current, {
-                quality: 1,
-                pixelRatio: 3, // 3x for print-quality resolution
-                backgroundColor: '#ffffff',
-                // Ensure cross-origin images are handled
-                fetchRequestInit: { cache: 'no-cache' },
-                // Filter out the download button itself
-                filter: (node) => {
-                    if (node instanceof HTMLElement) {
-                        return !node.classList.contains('print-hidden');
-                    }
-                    return true;
-                },
-            });
-
-            // 4. Calculate dimensions for A4 PDF
-            const img = new window.Image();
-            img.src = dataUrl;
-            await new Promise<void>((resolve) => { img.onload = () => resolve(); });
-
-            const A4_WIDTH_MM = 210;
-            const A4_HEIGHT_MM = 297;
-            const imgAspectRatio = img.width / img.height;
-            const pdfWidth = A4_WIDTH_MM;
-            const pdfHeight = pdfWidth / imgAspectRatio;
-
-            // 5. Build multi-page PDF
-            const pdf = new jsPDF({
-                orientation: pdfHeight > A4_HEIGHT_MM ? 'portrait' : 'portrait',
-                unit: 'mm',
-                format: 'a4',
-                compress: true,
-            });
-
-            let yOffset = 0;
-            const pageContentHeight = A4_HEIGHT_MM;
-
-            // If content fits on one page
-            if (pdfHeight <= pageContentHeight) {
-                pdf.addImage(dataUrl, 'PNG', 0, 0, pdfWidth, pdfHeight);
-            } else {
-                // Multi-page: slice the image across pages
-                let remainingHeight = pdfHeight;
-                let page = 0;
-
-                while (remainingHeight > 0) {
-                    if (page > 0) pdf.addPage();
-
-                    const sliceHeight = Math.min(pageContentHeight, remainingHeight);
-                    const srcY = (yOffset / pdfHeight) * img.height;
-                    const srcH = (sliceHeight / pdfHeight) * img.height;
-
-                    // Create a canvas slice for this page
-                    const canvas = document.createElement('canvas');
-                    canvas.width = img.width;
-                    canvas.height = srcH;
-                    const ctx = canvas.getContext('2d')!;
-                    ctx.drawImage(img, 0, srcY, img.width, srcH, 0, 0, img.width, srcH);
-
-                    pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, pdfWidth, sliceHeight);
-
-                    yOffset += sliceHeight;
-                    remainingHeight -= sliceHeight;
-                    page++;
-                }
-            }
-
-            pdf.save('Walldot-Builders-Brochure.pdf');
-        } catch (error) {
-            console.error('PDF generation failed:', error);
-            alert('PDF generation failed. Please use the "Print / Save as PDF" button instead.');
-        } finally {
-            setIsGenerating(false);
-        }
-    };
-
     return (
         <>
             <div className="container max-w-8xl mx-auto px-4 sm:px-5 2xl:px-0 py-6 sm:py-8 md:py-10 lg:py-12">
-                {/* Download Buttons - Fixed, hidden on print */}
-                <div className="fixed bottom-8 right-8 z-50 print-hidden flex flex-col gap-3 items-end">
-                    {/* Primary: Print / Save as PDF */}
-                    <button
-                        onClick={handlePrint}
-                        disabled={isPrinting || isGenerating}
-                        title="Open browser print dialog to save as PDF"
-                        className={`px-5 py-3.5 rounded-full bg-primary text-white shadow-2xl hover:shadow-primary/50 transition-all duration-300 flex items-center gap-2.5 group hover:scale-105 ${
-                            isPrinting ? 'opacity-75 cursor-not-allowed' : 'cursor-pointer'
-                        }`}
-                    >
-                        {isPrinting ? (
-                            <>
-                                <Icon icon="ph:spinner" width={20} height={20} className="animate-spin" />
-                                <span className="font-semibold text-sm">Preparing...</span>
-                            </>
-                        ) : (
-                            <>
-                                <Icon icon="ph:printer-fill" width={20} height={20} />
-                                <span className="font-semibold text-sm">Print / Save as PDF</span>
-                            </>
-                        )}
-                    </button>
-
-                    {/* Secondary: Programmatic PDF download */}
-                    <button
-                        onClick={handleDownloadPDF}
-                        disabled={isGenerating || isPrinting}
-                        title="Download as PDF file directly"
-                        className={`px-5 py-3.5 rounded-full bg-white text-primary border-2 border-primary shadow-xl hover:shadow-primary/30 transition-all duration-300 flex items-center gap-2.5 group hover:scale-105 ${
-                            isGenerating ? 'opacity-75 cursor-not-allowed' : 'cursor-pointer'
-                        }`}
-                    >
-                        {isGenerating ? (
-                            <>
-                                <Icon icon="ph:spinner" width={20} height={20} className="animate-spin" />
-                                <span className="font-semibold text-sm">Generating PDF...</span>
-                            </>
-                        ) : (
-                            <>
-                                <Icon icon="ph:download-simple-fill" width={20} height={20} />
-                                <span className="font-semibold text-sm">Download PDF</span>
-                            </>
-                        )}
-                    </button>
-                </div>
-
             {/* Brochure Content */}
-            <div ref={brochureRef} className="space-y-8 sm:space-y-10 md:space-y-12 lg:space-y-14 brochure-content">
+            <div className="space-y-8 sm:space-y-10 md:space-y-12 lg:space-y-14 brochure-content">
                 
                 {/* 1. HERO - Attention Grabber with Visual Impact */}
                 <section className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-primary via-primary/90 to-primary/80 p-5 sm:p-6 md:p-8 lg:p-10 min-h-[350px] sm:min-h-[400px] flex items-center">
@@ -399,13 +224,13 @@ export default function BrochureContent() {
                                 </div>
                                 <div className="flex items-center gap-4 mb-4">
                                     <div className="relative w-16 h-16 rounded-full overflow-hidden bg-primary/20">
-                                        <Image
+                                        {/* <Image
                                             src={testimonial.image || '/images/default-avatar.jpg'}
                                             alt={testimonial.name}
                                             fill
                                             className="object-cover"
                                             unoptimized
-                                        />
+                                        /> */}
                                     </div>
                                     <div>
                                         <h4 className="font-bold text-base sm:text-lg text-black dark:text-white">{testimonial.name}</h4>

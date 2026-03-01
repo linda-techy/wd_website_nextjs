@@ -4,7 +4,7 @@ import { BASE_API_URL } from './config';
 const API_BASE = BASE_API_URL || 'http://localhost:8080';
 
 export interface PartnerLoginRequest {
-    phone: string;
+    email: string;
     password: string;
 }
 

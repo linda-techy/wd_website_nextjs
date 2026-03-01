@@ -9,6 +9,7 @@ export default function Referrals() {
         yourName: "",
         yourEmail: "",
         yourPhone: "",
+        accountPassword: "",
         referralName: "",
         referralEmail: "",
         referralPhone: "",
@@ -51,6 +52,7 @@ export default function Referrals() {
                     yourName: "",
                     yourEmail: "",
                     yourPhone: "",
+                    accountPassword: "",
                     referralName: "",
                     referralEmail: "",
                     referralPhone: "",
@@ -140,6 +142,26 @@ export default function Referrals() {
     return (
         <div className="container max-w-8xl mx-auto px-4 sm:px-5 2xl:px-0">
             
+            {/* Returning Referrer Login Notice */}
+            <div className="mb-12 border border-primary/30 rounded-2xl p-6 bg-gradient-to-r from-primary/10 to-transparent flex items-center justify-between flex-wrap gap-4">
+                <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                        <Icon icon={"ph:users-fill"} width={24} height={24} className="text-primary" />
+                    </div>
+                    <div>
+                        <h3 className="font-bold text-lg md:text-xl text-black dark:text-white">Already referred someone?</h3>
+                        <p className="text-sm md:text-base text-black/70 dark:text-white/70 mt-1 leading-relaxed">Login to your dashboard to track your referral's status and rewards</p>
+                    </div>
+                </div>
+                <a
+                    href="/partnerships/login"
+                    className="inline-flex items-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-full bg-primary text-white text-base md:text-lg font-bold hover:bg-dark transition-colors shadow-lg hover:scale-105"
+                >
+                    <Icon icon={"ph:sign-in-fill"} width={20} height={20} className="md:w-6 md:h-6" />
+                    Dashboard Login
+                </a>
+            </div>
+
             {/* Why Refer Section */}
             <section className="mb-20">
                 <div className="text-center mb-12">
@@ -233,12 +255,24 @@ export default function Referrals() {
 
                 {/* Success/Error Messages */}
                 {submitStatus === 'success' && (
-                    <div className="mb-6 p-4 rounded-2xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 max-w-4xl mx-auto">
-                        <div className="flex items-center gap-3">
-                            <Icon icon="ph:check-circle-fill" width={24} height={24} className="text-green-600" />
-                            <p className="text-green-600 dark:text-green-400 font-semibold">
-                                Thank you! Your referral has been submitted successfully. We&apos;ll reach out to your friend soon!
-                            </p>
+                    <div className="mb-6 p-6 rounded-2xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 max-w-4xl mx-auto text-center sm:text-left">
+                        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+                            <Icon icon="ph:check-circle-fill" width={32} height={32} className="text-green-600 flex-shrink-0" />
+                            <div>
+                                <h3 className="text-green-800 dark:text-green-300 font-bold text-lg mb-1">
+                                    Referral Submitted Successfully!
+                                </h3>
+                                <p className="text-green-700 dark:text-green-400 font-medium mb-4">
+                                    We've automatically created a tracking dashboard for you. You can log in using your provided email address and the password you just created to track your referral's status and your upcoming rewards.
+                                </p>
+                                <a
+                                    href="/partnerships/login"
+                                    className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-green-600 hover:bg-green-700 text-white font-semibold transition-colors w-full sm:w-auto"
+                                >
+                                    Login to Track Status
+                                    <Icon icon="ph:arrow-right-bold" width={16} height={16} />
+                                </a>
+                            </div>
                         </div>
                     </div>
                 )}
@@ -291,6 +325,23 @@ export default function Referrals() {
                                         value={formData.yourPhone}
                                         onChange={handleChange}
                                         className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white"
+                                    />
+                                </div>
+                                <div className="bg-primary/5 border border-primary/20 p-5 rounded-2xl mb-2">
+                                    <div className="flex gap-3 mb-3">
+                                        <Icon icon="ph:lock-key-fill" width={20} height={20} className="text-primary flex-shrink-0 mt-0.5" />
+                                        <div>
+                                            <p className="text-sm font-semibold text-black dark:text-white">Create a Tracking Account (Optional but Recommended)</p>
+                                            <p className="text-xs text-black/60 dark:text-white/60 mt-1">Provide a password below and we'll automatically create a dashboard for you. You can log in later to track your referral's status and see when you'll get paid.</p>
+                                        </div>
+                                    </div>
+                                    <input
+                                        type="password"
+                                        name="accountPassword"
+                                        placeholder="Create a Password to track status later"
+                                        value={formData.accountPassword}
+                                        onChange={handleChange}
+                                        className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-white dark:bg-black/20 text-black dark:text-white"
                                     />
                                 </div>
                             </div>
