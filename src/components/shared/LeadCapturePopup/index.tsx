@@ -181,10 +181,6 @@ export default function LeadCapturePopup({
         name: formData.name.trim(),
         email: formData.email.trim(),
         phone: formData.phone.replace(/\s/g, ''),
-        projectType: "turnkey_project",
-        state: "Kerala",
-        district: "Thrissur",
-        message: "Interested via popup inquiry",
       };
 
       const response = await fetch(`${BASE_API_URL}/leads/contact`, {

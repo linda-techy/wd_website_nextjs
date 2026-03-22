@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { Suspense } from "react";
 import PartnerLogin from "@/components/Partnerships/Login";
 
 export const metadata: Metadata = {
@@ -8,7 +9,11 @@ export const metadata: Metadata = {
 };
 
 const page = () => {
-    return <PartnerLogin />;
+    return (
+        <Suspense fallback={null}>
+            <PartnerLogin />
+        </Suspense>
+    );
 };
 
 export default page;

@@ -197,6 +197,48 @@ class PartnershipAPI {
         return response.json();
     }
 
+    async forgotPassword(email: string): Promise<void> {
+        const response = await fetch(`${API_BASE}/api/partnerships/forgot-password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email }),
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Failed to send reset email');
+        }
+    }
+
+    async resetPassword(email: string, token: string, newPassword: string): Promise<void> {
+        const response = await fetch(`${API_BASE}/api/partnerships/reset-password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, token, newPassword }),
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Failed to reset password');
+        }
+    }
+
+    /**
+     * For referred_client type: returns the status of their own inquiry lead.
+     * Shows them where they are in the pipeline (contacted, qualified, etc.)
+     */
+    async getMyInquiry(): Promise<any> {
+        const response = await fetch(`${API_BASE}/api/partnerships/my-inquiry`, {
+            method: 'GET',
+            headers: { ...this.getAuthHeader() },
+        });
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Failed to fetch inquiry status');
+        }
+        return response.json();
+    }
+
     async submitReferralAsLead(referralData: PartnershipReferralRequest): Promise<any> {
         const response = await fetch(`${API_BASE}/api/partnerships/referrals/lead`, {
             method: 'POST',

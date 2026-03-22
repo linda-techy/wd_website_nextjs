@@ -2,25 +2,34 @@
 
 import { Icon } from "@iconify/react";
 import { useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import { BASE_API_URL } from "@/lib/config";
+import { STATE_LIST, DEFAULT_STATE, DEFAULT_DISTRICT, getDistrictsByState } from "@/lib/constants";
+
+const EMPTY_FORM = {
+    yourName: "",
+    yourEmail: "",
+    yourPhone: "",
+    accountPassword: "",
+    referralName: "",
+    referralEmail: "",
+    referralPhone: "",
+    projectType: "",
+    estimatedBudget: "",
+    state: DEFAULT_STATE,
+    district: DEFAULT_DISTRICT,
+    location: "",
+    message: "",
+};
 
 export default function Referrals() {
-    const [formData, setFormData] = useState({
-        yourName: "",
-        yourEmail: "",
-        yourPhone: "",
-        accountPassword: "",
-        referralName: "",
-        referralEmail: "",
-        referralPhone: "",
-        projectType: "",
-        estimatedBudget: "",
-        location: "",
-        message: "",
-    });
+    const [formData, setFormData] = useState({ ...EMPTY_FORM });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
     const [errorMessage, setErrorMessage] = useState('');
+    const [accountCreated, setAccountCreated] = useState(false);
+    const [emailMatchError, setEmailMatchError] = useState(false);
+    const [phoneMatchError, setPhoneMatchError] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -28,60 +37,157 @@ export default function Referrals() {
         setSubmitStatus('idle');
         setErrorMessage('');
 
+        // Validate phone numbers
+        const phoneRegex = /^[6-9]\d{9}$/;
+        if (!phoneRegex.test(formData.yourPhone.replace(/\s/g, ''))) {
+            toast.error('Please enter a valid 10-digit Indian mobile number for Your Phone', {
+                duration: 4000,
+                icon: '📱',
+            });
+            setIsSubmitting(false);
+            return;
+        }
+        if (!phoneRegex.test(formData.referralPhone.replace(/\s/g, ''))) {
+            toast.error("Please enter a valid 10-digit Indian mobile number for your friend's phone", {
+                duration: 4000,
+                icon: '📱',
+            });
+            setIsSubmitting(false);
+            return;
+        }
+
+        // Validate that referrer is not referring themselves
+        if (formData.yourEmail.trim().toLowerCase() === formData.referralEmail.trim().toLowerCase()) {
+            toast.error("You cannot refer yourself. Please enter a different email address for your friend.", {
+                duration: 5000,
+                icon: '⚠️',
+            });
+            setIsSubmitting(false);
+            return;
+        }
+
+        // Validate that phone numbers are different
+        const cleanYourPhone = formData.yourPhone.replace(/\s/g, '');
+        const cleanReferralPhone = formData.referralPhone.replace(/\s/g, '');
+        if (cleanYourPhone === cleanReferralPhone) {
+            toast.error("You cannot use the same phone number for both you and your friend.", {
+                duration: 5000,
+                icon: '⚠️',
+            });
+            setIsSubmitting(false);
+            return;
+        }
+
+        const hasPassword = formData.accountPassword.trim().length > 0;
+
+        // Show loading toast
+        const loadingToast = toast.loading('Submitting your referral...');
+
         try {
-            // Submit to public referral API endpoint (no authentication required)
             const response = await fetch(`${BASE_API_URL}/leads/referral`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    yourName: formData.yourName,
+                    yourEmail: formData.yourEmail,
+                    yourPhone: formData.yourPhone.replace(/\s/g, ''),
+                    accountPassword: hasPassword ? formData.accountPassword : undefined,
+                    referralName: formData.referralName,
+                    referralEmail: formData.referralEmail || undefined,
+                    referralPhone: formData.referralPhone.replace(/\s/g, ''),
+                    projectType: formData.projectType,
+                    estimatedBudget: formData.estimatedBudget || undefined,
+                    state: formData.state || undefined,
+                    district: formData.district || undefined,
+                    location: formData.location || undefined,
+                    message: formData.message || undefined,
+                }),
             });
 
-            if (!response.ok) {
-                throw new Error('Failed to submit referral');
-            }
-
             const result = await response.json();
-            
-            if (result.success) {
+
+            // Dismiss loading toast
+            toast.dismiss(loadingToast);
+
+            if (response.ok && result.success) {
+                setAccountCreated(hasPassword && !!formData.yourEmail);
                 setSubmitStatus('success');
+                setFormData({ ...EMPTY_FORM });
                 
-                // Reset form
-                setFormData({
-                    yourName: "",
-                    yourEmail: "",
-                    yourPhone: "",
-                    accountPassword: "",
-                    referralName: "",
-                    referralEmail: "",
-                    referralPhone: "",
-                    projectType: "",
-                    estimatedBudget: "",
-                    location: "",
-                    message: "",
-                });
-                
-                // Hide success message after 5 seconds
-                setTimeout(() => {
-                    setSubmitStatus('idle');
-                }, 5000);
+                // Show success toast
+                toast.success(
+                    hasPassword 
+                        ? 'Referral submitted! Your tracking account is ready.' 
+                        : 'Thank you! We will contact your friend within 24 hours.',
+                    {
+                        duration: 5000,
+                        icon: '🎉',
+                    }
+                );
+
+                // Scroll to success message
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
-                throw new Error(result.message || 'Failed to submit referral');
+                throw new Error(result.message || result.error || 'Failed to submit referral');
             }
         } catch (error) {
             console.error('Error submitting referral:', error);
+            
+            // Dismiss loading toast
+            toast.dismiss(loadingToast);
+            
+            const errorMsg = error instanceof Error ? error.message : 'Failed to submit. Please try again.';
+            
+            // Show detailed error toast
+            toast.error(errorMsg, {
+                duration: 6000,
+                icon: '❌',
+                style: {
+                    maxWidth: '500px',
+                },
+            });
+            
             setSubmitStatus('error');
-            setErrorMessage(error instanceof Error ? error.message : 'Failed to submit. Please try again.');
+            setErrorMessage(errorMsg);
         } finally {
             setIsSubmitting(false);
         }
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
+        const { name, value } = e.target;
+        setFormData(prev => {
+            const updated = { ...prev, [name]: value };
+            if (name === 'state') {
+                const districts = getDistrictsByState(value);
+                updated.district = districts.length > 0 ? districts[0].value : '';
+            }
+            
+            // Check for email match in real-time
+            if (name === 'yourEmail' || name === 'referralEmail') {
+                const yourEmail = name === 'yourEmail' ? value : prev.yourEmail;
+                const refEmail = name === 'referralEmail' ? value : prev.referralEmail;
+                setEmailMatchError(
+                    yourEmail.trim() !== '' && 
+                    refEmail.trim() !== '' && 
+                    yourEmail.trim().toLowerCase() === refEmail.trim().toLowerCase()
+                );
+            }
+            
+            // Check for phone match in real-time
+            if (name === 'yourPhone' || name === 'referralPhone') {
+                const yourPhone = name === 'yourPhone' ? value : prev.yourPhone;
+                const refPhone = name === 'referralPhone' ? value : prev.referralPhone;
+                const cleanYourPhone = yourPhone.replace(/\s/g, '');
+                const cleanRefPhone = refPhone.replace(/\s/g, '');
+                setPhoneMatchError(
+                    cleanYourPhone.length > 0 && 
+                    cleanRefPhone.length > 0 && 
+                    cleanYourPhone === cleanRefPhone
+                );
+            }
+            
+            return updated;
         });
     };
 
@@ -141,6 +247,30 @@ export default function Referrals() {
 
     return (
         <div className="container max-w-8xl mx-auto px-4 sm:px-5 2xl:px-0">
+            {/* Toast Notification Container */}
+            <Toaster 
+                position="top-right"
+                toastOptions={{
+                    className: '',
+                    style: {
+                        background: '#363636',
+                        color: '#fff',
+                        fontWeight: '500',
+                        borderRadius: '12px',
+                        padding: '16px',
+                    },
+                    success: {
+                        style: {
+                            background: '#10b981',
+                        },
+                    },
+                    error: {
+                        style: {
+                            background: '#ef4444',
+                        },
+                    },
+                }}
+            />
             
             {/* Returning Referrer Login Notice */}
             <div className="mb-12 border border-primary/30 rounded-2xl p-6 bg-gradient-to-r from-primary/10 to-transparent flex items-center justify-between flex-wrap gap-4">
@@ -262,16 +392,34 @@ export default function Referrals() {
                                 <h3 className="text-green-800 dark:text-green-300 font-bold text-lg mb-1">
                                     Referral Submitted Successfully!
                                 </h3>
-                                <p className="text-green-700 dark:text-green-400 font-medium mb-4">
-                                    We've automatically created a tracking dashboard for you. You can log in using your provided email address and the password you just created to track your referral's status and your upcoming rewards.
-                                </p>
-                                <a
-                                    href="/partnerships/login"
-                                    className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-green-600 hover:bg-green-700 text-white font-semibold transition-colors w-full sm:w-auto"
-                                >
-                                    Login to Track Status
-                                    <Icon icon="ph:arrow-right-bold" width={16} height={16} />
-                                </a>
+                                {accountCreated ? (
+                                    <>
+                                        <p className="text-green-700 dark:text-green-400 font-medium mb-2">
+                                            Your referral has been recorded and a tracking account has been created for you.
+                                            Log in with your email and the password you set to track your referral&apos;s status and reward progress.
+                                        </p>
+                                        <p className="text-green-700/80 dark:text-green-400/80 text-sm mb-4">
+                                            Your friend will also receive an email invitation to track their own inquiry status.
+                                        </p>
+                                        <a
+                                            href="/partnerships/login"
+                                            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-green-600 hover:bg-green-700 text-white font-semibold transition-colors w-full sm:w-auto"
+                                        >
+                                            Login to Track Status
+                                            <Icon icon="ph:arrow-right-bold" width={16} height={16} />
+                                        </a>
+                                    </>
+                                ) : (
+                                    <>
+                                        <p className="text-green-700 dark:text-green-400 font-medium">
+                                            Thank you! Our team will contact your friend within 24 hours.
+                                            Once the project is confirmed, we&apos;ll reach out to you about your reward.
+                                        </p>
+                                        <p className="text-green-700/80 dark:text-green-400/80 text-sm mt-2">
+                                            Your friend will receive an email to track their inquiry status online.
+                                        </p>
+                                    </>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -308,24 +456,46 @@ export default function Referrals() {
                                     className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white"
                                 />
                                 <div className="flex flex-col lg:flex-row gap-6">
-                                    <input
-                                        type="email"
-                                        name="yourEmail"
-                                        placeholder="Your Email*"
-                                        required
-                                        value={formData.yourEmail}
-                                        onChange={handleChange}
-                                        className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white"
-                                    />
-                                    <input
-                                        type="tel"
-                                        name="yourPhone"
-                                        placeholder="Your Phone Number*"
-                                        required
-                                        value={formData.yourPhone}
-                                        onChange={handleChange}
-                                        className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white"
-                                    />
+                                    <div className="w-full">
+                                        <input
+                                            type="email"
+                                            name="yourEmail"
+                                            placeholder="Your Email*"
+                                            required
+                                            value={formData.yourEmail}
+                                            onChange={handleChange}
+                                            className={`px-6 py-3.5 border rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white ${
+                                                emailMatchError 
+                                                    ? 'border-red-500 dark:border-red-500' 
+                                                    : 'border-black/10 dark:border-white/10'
+                                            }`}
+                                        />
+                                        {emailMatchError && (
+                                            <p className="text-sm text-red-600 dark:text-red-400 mt-2 ml-4">
+                                                ⚠️ Warning: You&apos;re using the same email for yourself and the person you&apos;re referring.
+                                            </p>
+                                        )}
+                                    </div>
+                                    <div className="w-full">
+                                        <input
+                                            type="tel"
+                                            name="yourPhone"
+                                            placeholder="Your Phone Number*"
+                                            required
+                                            value={formData.yourPhone}
+                                            onChange={handleChange}
+                                            className={`px-6 py-3.5 border rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white ${
+                                                phoneMatchError 
+                                                    ? 'border-red-500 dark:border-red-500' 
+                                                    : 'border-black/10 dark:border-white/10'
+                                            }`}
+                                        />
+                                        {phoneMatchError && (
+                                            <p className="text-sm text-red-600 dark:text-red-400 mt-2 ml-4">
+                                                ⚠️ Warning: You&apos;re using the same phone number for both you and your friend.
+                                            </p>
+                                        )}
+                                    </div>
                                 </div>
                                 <div className="bg-primary/5 border border-primary/20 p-5 rounded-2xl mb-2">
                                     <div className="flex gap-3 mb-3">
@@ -365,24 +535,46 @@ export default function Referrals() {
                                     className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white"
                                 />
                                 <div className="flex flex-col lg:flex-row gap-6">
-                                    <input
-                                        type="email"
-                                        name="referralEmail"
-                                        placeholder="Friend&apos;s Email*"
-                                        required
-                                        value={formData.referralEmail}
-                                        onChange={handleChange}
-                                        className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white"
-                                    />
-                                    <input
-                                        type="tel"
-                                        name="referralPhone"
-                                        placeholder="Friend&apos;s Phone Number*"
-                                        required
-                                        value={formData.referralPhone}
-                                        onChange={handleChange}
-                                        className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white"
-                                    />
+                                    <div className="w-full">
+                                        <input
+                                            type="email"
+                                            name="referralEmail"
+                                            placeholder="Friend&apos;s Email*"
+                                            required
+                                            value={formData.referralEmail}
+                                            onChange={handleChange}
+                                            className={`px-6 py-3.5 border rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white ${
+                                                emailMatchError 
+                                                    ? 'border-red-500 dark:border-red-500' 
+                                                    : 'border-black/10 dark:border-white/10'
+                                            }`}
+                                        />
+                                        {emailMatchError && (
+                                            <p className="text-sm text-red-600 dark:text-red-400 mt-2 ml-4">
+                                                ⚠️ This email matches your email above. Please enter your friend&apos;s email.
+                                            </p>
+                                        )}
+                                    </div>
+                                    <div className="w-full">
+                                        <input
+                                            type="tel"
+                                            name="referralPhone"
+                                            placeholder="Friend&apos;s Phone Number*"
+                                            required
+                                            value={formData.referralPhone}
+                                            onChange={handleChange}
+                                            className={`px-6 py-3.5 border rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white ${
+                                                phoneMatchError 
+                                                    ? 'border-red-500 dark:border-red-500' 
+                                                    : 'border-black/10 dark:border-white/10'
+                                            }`}
+                                        />
+                                        {phoneMatchError && (
+                                            <p className="text-sm text-red-600 dark:text-red-400 mt-2 ml-4">
+                                                ⚠️ This phone matches your phone above. Please enter your friend&apos;s phone number.
+                                            </p>
+                                        )}
+                                    </div>
                                 </div>
                                 <div className="flex flex-col lg:flex-row gap-6">
                                     <select
@@ -390,36 +582,59 @@ export default function Referrals() {
                                         required
                                         value={formData.projectType}
                                         onChange={handleChange}
-                                        className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white"
+                                        className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-white dark:bg-dark text-black dark:text-white"
                                     >
                                         <option value="">Project Type*</option>
-                                        <option value="residential">Residential Home</option>
+                                        <option value="turnkey_project">Turnkey Project</option>
+                                        <option value="residential_construction">Residential Home</option>
                                         <option value="villa">Luxury Villa</option>
                                         <option value="apartment">Apartment</option>
-                                        <option value="office">Office Space</option>
-                                        <option value="renovation">Renovation</option>
+                                        <option value="commercial_construction">Commercial / Office</option>
+                                        <option value="renovation_remodeling">Renovation</option>
                                         <option value="other">Other</option>
                                     </select>
                                     <select
                                         name="estimatedBudget"
-                                        required
                                         value={formData.estimatedBudget}
                                         onChange={handleChange}
-                                        className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white"
+                                        className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-white dark:bg-dark text-black dark:text-white"
                                     >
-                                        <option value="">Estimated Budget*</option>
-                                        <option value="15-25">₹15-25 Lakhs</option>
-                                        <option value="25-50">₹25-50 Lakhs</option>
-                                        <option value="50-75">₹50-75 Lakhs</option>
-                                        <option value="75-100">₹75 Lakhs - 1 Crore</option>
+                                        <option value="">Estimated Budget (Optional)</option>
+                                        <option value="15-25">₹15–25 Lakhs</option>
+                                        <option value="25-50">₹25–50 Lakhs</option>
+                                        <option value="50-75">₹50–75 Lakhs</option>
+                                        <option value="75-100">₹75 Lakhs – 1 Crore</option>
                                         <option value="100+">Above ₹1 Crore</option>
+                                    </select>
+                                </div>
+                                <div className="flex flex-col lg:flex-row gap-6">
+                                    <select
+                                        name="state"
+                                        required
+                                        value={formData.state}
+                                        onChange={handleChange}
+                                        className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-white dark:bg-dark text-black dark:text-white"
+                                    >
+                                        {STATE_LIST.map(s => (
+                                            <option key={s.value} value={s.value}>{s.displayText}</option>
+                                        ))}
+                                    </select>
+                                    <select
+                                        name="district"
+                                        required
+                                        value={formData.district}
+                                        onChange={handleChange}
+                                        className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-white dark:bg-dark text-black dark:text-white"
+                                    >
+                                        {getDistrictsByState(formData.state).map(d => (
+                                            <option key={d.value} value={d.value}>{d.displayText}</option>
+                                        ))}
                                     </select>
                                 </div>
                                 <input
                                     type="text"
                                     name="location"
-                                    placeholder="Location/District*"
-                                    required
+                                    placeholder="Specific Location / Area (Optional)"
                                     value={formData.location}
                                     onChange={handleChange}
                                     className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white"
