@@ -9,6 +9,9 @@ import {
     type CarouselApi,
 } from "@/components/ui/carousel";
 import { testimonials } from "@/app/api/testimonial";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { useParallax } from "@/components/animations/hooks/useParallax";
 
 // Click-to-play YouTube facade — avoids loading ~500KB of YouTube scripts on page load
 const YouTubeFacade = ({
@@ -75,6 +78,30 @@ const Testimonial = () => {
     const [current, setCurrent] = React.useState(0);
     const [count, setCount] = React.useState(0);
     const sectionRef = React.useRef<HTMLElement>(null);
+    const contentRef = React.useRef<HTMLDivElement>(null);
+    const vectorRef = React.useRef<HTMLDivElement>(null);
+
+    useParallax(vectorRef, 0.2);
+
+    useGSAP(() => {
+        if (contentRef.current) {
+            gsap.fromTo(
+                contentRef.current.children,
+                { y: 50, opacity: 0 },
+                {
+                    y: 0,
+                    opacity: 1,
+                    stagger: 0.15,
+                    duration: 1,
+                    ease: "power4.out",
+                    scrollTrigger: {
+                        trigger: sectionRef.current,
+                        start: "top 85%",
+                    },
+                }
+            );
+        }
+    }, { scope: sectionRef });
 
     React.useEffect(() => {
         if (!api) return;
@@ -93,7 +120,7 @@ const Testimonial = () => {
 
     return (
         <section ref={sectionRef} className="bg-dark relative overflow-hidden" id="testimonial">
-            <div className="absolute right-0">
+            <div ref={vectorRef} className="absolute right-0">
                 <Image
                     src="/images/testimonial/Vector.png"
                     alt="decorative vector"
@@ -103,7 +130,7 @@ const Testimonial = () => {
                     quality={75}
                 />
             </div>
-            <div className="container max-w-8xl mx-auto px-4 sm:px-5 2xl:px-0">
+            <div ref={contentRef} className="container max-w-8xl mx-auto px-4 sm:px-5 2xl:px-0">
                 <div className="mb-8">
                     <p className="text-white text-base md:text-lg font-semibold flex gap-2 mb-3">
                         <Icon icon="ph:house-simple-fill" className="text-2xl text-primary" />

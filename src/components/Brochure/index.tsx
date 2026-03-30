@@ -2,9 +2,12 @@
 
 import { Icon } from "@iconify/react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { testimonials } from "@/app/api/testimonial";
 import { propertyHomes } from "@/app/api/propertyhomes";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 // Phone Mockup Components
 const PhoneMockup = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
@@ -131,6 +134,65 @@ const BudgetPhone = () => (
 
 export default function BrochureContent() {
     const [activeMockup, setActiveMockup] = useState(0);
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    useGSAP(() => {
+        gsap.registerPlugin(ScrollTrigger);
+        if (!containerRef.current) return;
+
+        const mm = gsap.matchMedia();
+
+        mm.add("(min-width: 320px)", () => {
+            // 1. Hero animate in
+            const heroSection = containerRef.current?.querySelector('.brochure-content > section');
+            if (heroSection) {
+                // Slower, more deliberate luxury stagger
+                gsap.fromTo(heroSection.querySelectorAll('h1, p, .flex > div'), 
+                    { y: 40, opacity: 0 },
+                    { y: 0, opacity: 1, stagger: 0.15, duration: 1.6, ease: 'expo.out', delay: 0.2 }
+                );
+                
+                // Subtle parallax on the absolutely positioned background wrappers
+                const heroBg = heroSection.querySelector('.absolute.inset-0.opacity-10');
+                if (heroBg) {
+                    gsap.to(heroBg, {
+                        yPercent: 20,
+                        ease: "none",
+                        scrollTrigger: {
+                            trigger: heroSection,
+                            start: "top top",
+                            end: "bottom top",
+                            scrub: true
+                        }
+                    });
+                }
+            }
+
+            // 2. Generic scroll reveals for all child sections with premium architectural easing
+            const sections = containerRef.current?.querySelectorAll('.brochure-content > section');
+            sections?.forEach((sec, i) => {
+                if (i === 0) return; // skip hero as it's animated on load
+                
+                // Collect key elements to stagger animate inside this section
+                const animTargets = sec.querySelectorAll('.print-card, h2, h3, .grid > div:not(.print-card)');
+                
+                if (animTargets.length > 0) {
+                    gsap.fromTo(Array.from(animTargets), 
+                        { y: 50, opacity: 0, scale: 0.98 },
+                        {
+                            y: 0, opacity: 1, scale: 1, duration: 1.4, stagger: 0.1, ease: "expo.out",
+                            scrollTrigger: {
+                                trigger: sec,
+                                start: "top 85%",
+                            }
+                        }
+                    );
+                }
+            });
+        });
+
+        return () => mm.revert();
+    }, { scope: containerRef });
 
     // Auto-rotate mobile mockups
     useEffect(() => {
@@ -141,7 +203,7 @@ export default function BrochureContent() {
     }, []);
 
     return (
-        <>
+        <div ref={containerRef}>
             <div className="container max-w-8xl mx-auto px-4 sm:px-5 2xl:px-0 py-6 sm:py-8 md:py-10 lg:py-12">
             {/* Brochure Content */}
             <div className="space-y-8 sm:space-y-10 md:space-y-12 lg:space-y-14 brochure-content">
@@ -886,6 +948,6 @@ export default function BrochureContent() {
                 </section>
             </div>
         </div>
-        </>
+        </div>
     );
 }

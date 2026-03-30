@@ -46,7 +46,7 @@ export const metadata: Metadata = {
 
 const page = () => {
     return (
-        <>
+        <main className="no-global-gsap">
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{
@@ -94,7 +94,7 @@ const page = () => {
                 badge="Download Brochure"
             />
             <BrochureContent />
-        </>
+        </main>
     );
 };
 

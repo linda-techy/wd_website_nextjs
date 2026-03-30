@@ -1,10 +1,58 @@
+"use client";
+
+import { useRef } from "react";
 import Image from "next/image";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Link from "next/link";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
 
 const About = () => {
+  const containerRef = useRef<HTMLElement>(null);
+  const textContainerRef = useRef<HTMLDivElement>(null);
+  const imageContainerRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    // Text entrance
+    if (textContainerRef.current) {
+      gsap.fromTo(
+        textContainerRef.current.children,
+        { y: 30, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          stagger: 0.1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: textContainerRef.current,
+            start: "top 80%",
+          },
+        }
+      );
+    }
+
+    // Image clip-path reveal
+    if (imageContainerRef.current) {
+      gsap.fromTo(
+        imageContainerRef.current,
+        { clipPath: "inset(20% 20% 20% 20%)", scale: 1.05 },
+        {
+          clipPath: "inset(0% 0% 0% 0%)",
+          scale: 1,
+          duration: 1.5,
+          ease: "power4.out",
+          scrollTrigger: {
+            trigger: imageContainerRef.current,
+            start: "top 85%",
+          },
+        }
+      );
+    }
+  }, { scope: containerRef });
+
   return (
-    <section className="relative overflow-hidden">
+    <section ref={containerRef} className="relative overflow-hidden">
       {/* Background Vector - Mobile Optimized */}
       <div className="absolute left-0 top-0 w-full h-full">
         <Image
@@ -26,7 +74,7 @@ const About = () => {
       <div className="container mx-auto px-4 xs:px-5 sm:px-6 lg:px-8 max-w-7xl 2xl:max-w-8xl relative z-10">
         <div className="grid grid-cols-12 items-center gap-y-6 gap-x-4 sm:gap-5 md:gap-6">
           {/* Text Content - Mobile First */}
-          <div className="col-span-12 lg:col-span-6 order-2 lg:order-1">
+          <div ref={textContainerRef} className="col-span-12 lg:col-span-6 order-2 lg:order-1">
             <p className="text-dark/75 dark:text-white/75 text-base md:text-lg font-semibold flex items-center gap-2 mb-3">
               <Icon icon="ph:house-simple-fill" className="text-2xl text-primary" />
               About us
@@ -60,7 +108,7 @@ const About = () => {
 
           {/* Image - Mobile First */}
           <div className="col-span-12 lg:col-span-6 order-1 lg:order-2 flex items-center justify-center">
-            <div className="relative rounded-lg lg:rounded-2xl overflow-hidden group w-full aspect-video min-h-[250px] sm:min-h-[400px]">
+            <div ref={imageContainerRef} className="relative rounded-lg lg:rounded-2xl overflow-hidden group w-full aspect-video min-h-[250px] sm:min-h-[400px]">
               <Image
                 src="/images/categories/villas.jpg"
                 alt="villas"

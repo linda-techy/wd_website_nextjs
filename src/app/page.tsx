@@ -13,7 +13,7 @@ const RelatedLinks = dynamic(() => import('@/components/shared/RelatedLinks').th
 
 export default function Home() {
   return (
-    <main>
+    <main className="no-global-gsap">
       <Hero />
       <About />
       <Projects />

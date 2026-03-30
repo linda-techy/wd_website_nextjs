@@ -8,6 +8,7 @@ import NextTopLoader from 'nextjs-toploader';
 import SessionProviderComp from '@/components/nextauth/SessionProvider'
 import LeadCapturePopupWrapper from '@/components/shared/LeadCapturePopup/PopupWrapper'
 import WhatsAppButton from '@/components/shared/WhatsAppButton'
+import SmoothScroll from '@/components/animations/SmoothScroll'
 
 const font = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -38,7 +39,9 @@ export default function RootLayout({
             enableSystem={true}
             defaultTheme='light'>
             <Header />
-            {children}
+            <SmoothScroll>
+              {children}
+            </SmoothScroll>
             <Footer />
             <LeadCapturePopupWrapper />
             <WhatsAppButton />
