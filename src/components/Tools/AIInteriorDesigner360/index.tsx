@@ -4,6 +4,8 @@ import toast, { Toaster } from 'react-hot-toast'
 import { BASE_API_URL } from '@/lib/config'
 import Image from 'next/image'
 import type { Viewer as PSVViewer } from 'photo-sphere-viewer'
+import gsap from 'gsap'
+import { useGSAP } from '@gsap/react'
 
 type RoomKey = 'living room' | 'bedroom' | 'kitchen' | 'dining room' | 'bathroom' | 'toilet' | 'pooja room' | 'home office' | 'balcony'
 
@@ -66,6 +68,16 @@ export default function AIInteriorDesigner360() {
   const [imageDataUrl, setImageDataUrl] = useState<string>('')
   const viewerContainerRef = useRef<HTMLDivElement | null>(null)
   const viewerInstanceRef = useRef<PSVViewer | null>(null)
+  const wrapperRef = useRef<HTMLDivElement>(null)
+
+  useGSAP(() => {
+    if (wrapperRef.current) {
+      gsap.fromTo(wrapperRef.current.children, 
+        { y: 30, opacity: 0 }, 
+        { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" }
+      );
+    }
+  }, { scope: wrapperRef, dependencies: [step] });
 
   // Initialize viewer when image is ready (lazy-load to avoid SSR issues)
   useEffect(() => {
@@ -195,6 +207,7 @@ export default function AIInteriorDesigner360() {
 
         {/* Initial lead step removed; capture moved to Review */}
 
+        <div ref={wrapperRef}>
         {step === 'rooms' && (
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 md:p-8">
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 text-gray-900 dark:text-white leading-tight">Choose rooms</h2>
@@ -337,6 +350,7 @@ export default function AIInteriorDesigner360() {
             <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 mt-4 leading-relaxed bg-blue-50 dark:bg-blue-900/20 p-3 md:p-4 rounded-lg border border-blue-200 dark:border-blue-800">💡 <strong>Tip:</strong> Tap and drag to look around. Use two fingers on touch devices.</p>
           </div>
         )}
+        </div>
       </div>
     </div>
   )

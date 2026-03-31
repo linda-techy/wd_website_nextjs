@@ -8,6 +8,10 @@ import { STATE_LIST, DEFAULT_STATE, DEFAULT_DISTRICT, getDistrictsByState, PROJE
 import { BASE_API_URL } from '@/lib/config'
 import Breadcrumb from '@/components/shared/Breadcrumb'
 import RelatedLinks, { toolsRelatedLinks } from '@/components/shared/RelatedLinks'
+import gsap from 'gsap'
+import { useGSAP } from '@gsap/react'
+import { useRef } from 'react'
+import MagneticWrapper from '@/components/animations/MagneticWrapper'
 
 function ContactUs() {
   const [formData, setFormData] = useState({
@@ -22,6 +26,29 @@ function ContactUs() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const formRef = useRef<HTMLFormElement>(null);
+
+  useGSAP(() => {
+    if (formRef.current) {
+      const elements = formRef.current.querySelectorAll('.form-animate-input');
+      if (elements && elements.length > 0) {
+        gsap.fromTo(elements, 
+          { y: 30, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.8,
+            stagger: 0.08,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: formRef.current,
+              start: "top 85%",
+            }
+          }
+        );
+      }
+    }
+  }, { scope: formRef });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -206,7 +233,7 @@ function ContactUs() {
             </div>
           </div>
           <div className='flex-1/2 w-full'>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} ref={formRef}>
               <div className='flex flex-col gap-4 sm:gap-5 md:gap-6'>
                 <div className='flex flex-col lg:flex-row gap-4 sm:gap-5 md:gap-6'>
                   <input
@@ -218,7 +245,7 @@ function ContactUs() {
                     required
                     value={formData.name}
                     onChange={handleChange}
-                    className='px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 md:py-3.5 text-sm sm:text-base border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white'
+                    className='form-animate-input px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 md:py-3.5 text-sm sm:text-base border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300'
                   />
                   <input
                     type='tel'
@@ -229,7 +256,7 @@ function ContactUs() {
                     required
                     value={formData.phone}
                     onChange={handleChange}
-                    className='px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 md:py-3.5 text-sm sm:text-base border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white'
+                    className='form-animate-input px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 md:py-3.5 text-sm sm:text-base border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300'
                   />
                 </div>
                 <input
@@ -241,7 +268,7 @@ function ContactUs() {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className='px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 md:py-3.5 text-sm sm:text-base border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline bg-transparent text-black dark:text-white'
+                  className='form-animate-input px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 md:py-3.5 text-sm sm:text-base border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline bg-transparent text-black dark:text-white focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300'
                 />
                 <div className='flex flex-col lg:flex-row gap-4 sm:gap-5 md:gap-6'>
                   <select
@@ -249,7 +276,7 @@ function ContactUs() {
                     id='projectType'
                     value={formData.projectType}
                     onChange={handleChange}
-                    className='px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 md:py-3.5 text-sm sm:text-base border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white'
+                    className='form-animate-input px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 md:py-3.5 text-sm sm:text-base border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300'
                   >
                     <option value="">Select Project Type</option>
                     {PROJECT_TYPES.map((type) => (
@@ -263,7 +290,7 @@ function ContactUs() {
                     id='state'
                     value={formData.state}
                     onChange={handleChange}
-                    className='px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 md:py-3.5 text-sm sm:text-base border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white'
+                    className='form-animate-input px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 md:py-3.5 text-sm sm:text-base border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300'
                   >
                     {STATE_LIST.map((state) => (
                       <option key={state.value} value={state.value}>
@@ -277,7 +304,7 @@ function ContactUs() {
                   id='district'
                   value={formData.district}
                   onChange={handleChange}
-                  className='px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 md:py-3.5 text-sm sm:text-base border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline bg-transparent text-black dark:text-white'
+                  className='form-animate-input px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 md:py-3.5 text-sm sm:text-base border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline bg-transparent text-black dark:text-white focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300'
                 >
                   {getDistrictsByState(formData.state).map((district) => (
                     <option key={district.value} value={district.value}>
@@ -294,27 +321,29 @@ function ContactUs() {
                   required
                   value={formData.message}
                   onChange={handleChange}
-                  className='px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 md:py-3.5 text-sm sm:text-base border border-black/10 dark:border-white/10 rounded-2xl outline-primary focus:outline bg-transparent text-black dark:text-white'
+                  className='form-animate-input px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 md:py-3.5 text-sm sm:text-base border border-black/10 dark:border-white/10 rounded-2xl outline-primary focus:outline bg-transparent text-black dark:text-white focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300'
                 />
-                <button 
-                  type="submit"
-                  disabled={isSubmitting}
-                  className={`px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 rounded-full bg-primary text-white text-sm sm:text-base font-semibold w-full mobile:w-fit hover:bg-dark duration-300 flex items-center justify-center gap-2 ${
-                    isSubmitting ? 'opacity-75 cursor-not-allowed' : 'cursor-pointer'
-                  }`}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Icon icon="ph:spinner" width={20} height={20} className="animate-spin" />
-                      <span>Submitting...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>Send message</span>
-                      <Icon icon="ph:paper-plane-right-fill" width={20} height={20} />
-                    </>
-                  )}
-                </button>
+                <MagneticWrapper intensity={30}>
+                  <button 
+                    type="submit"
+                    disabled={isSubmitting}
+                    className={`form-animate-input px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 rounded-full bg-primary text-white text-sm sm:text-base font-semibold w-full hover:bg-dark dark:hover:bg-white dark:hover:text-dark duration-300 flex items-center justify-center gap-2 ${
+                      isSubmitting ? 'opacity-75 cursor-not-allowed' : 'cursor-pointer'
+                    }`}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Icon icon="ph:spinner" width={20} height={20} className="animate-spin" />
+                        <span>Submitting...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Send message</span>
+                        <Icon icon="ph:paper-plane-right-fill" width={20} height={20} />
+                      </>
+                    )}
+                  </button>
+                </MagneticWrapper>
               </div>
             </form>
           </div>

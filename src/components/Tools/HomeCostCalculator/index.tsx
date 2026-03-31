@@ -1,11 +1,13 @@
 'use client'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Doughnut } from 'react-chartjs-2';
 import { BASE_API_URL } from '@/lib/config';
 import toast, { Toaster } from 'react-hot-toast';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 
 // Register ChartJS components
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
@@ -185,7 +187,17 @@ export default function HomeCostCalculator() {
   const [isLoading, setIsLoading] = useState(false);
   const [windowWidth, setWindowWidth] = useState(1024); // Default to desktop size
   const [countryCode, setCountryCode] = useState('+91');
-  
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    if (wrapperRef.current) {
+      gsap.fromTo(wrapperRef.current.children, 
+        { y: 30, opacity: 0, scale: 0.98 }, 
+        { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: "power2.out" }
+      );
+    }
+  }, { scope: wrapperRef, dependencies: [step] });
+
   // Calculate construction area in sq feet
   const constructionSqFtArea = selectedUnit === 'sqm' 
     ? parseFloat(constructionArea || '0') * 10.7639 
@@ -491,9 +503,10 @@ export default function HomeCostCalculator() {
       </Head>
 
       <div className="max-w-6xl mx-auto">
+        <div ref={wrapperRef}>
         {/* Header Section */}
         {step === 'captureDetails' && (
-          <div className="animate-fadeIn">
+          <div>
             <div className="text-center mb-6 sm:mb-8">
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4 px-2 leading-tight">
                 <span className="text-primary">Build</span> Your Dream Home
@@ -684,7 +697,7 @@ export default function HomeCostCalculator() {
 
         {/* WhatsApp Number Capture */}
         {step === 'captureWhatsappNumber' && (
-          <div className="animate-slideIn">
+          <div>
             <div className="text-center mb-6 sm:mb-8">
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4 px-2 leading-tight">
                 <span className="text-green-600 dark:text-green-400">One Last Step!</span>
@@ -762,7 +775,7 @@ export default function HomeCostCalculator() {
 
         {/* Results Display */}
         {step === 'showEstimation' && (
-          <div className="animate-fadeIn">
+          <div>
             <div className="text-center mb-6 sm:mb-8">
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4 px-2 leading-tight">
                 <span className="text-primary dark:text-primary">Estimated Construction Cost</span>
@@ -860,11 +873,11 @@ export default function HomeCostCalculator() {
                   className="w-full sm:w-auto bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 px-6 md:px-8 py-3 md:py-4 rounded-lg transition transform hover:scale-105 text-base md:text-lg font-bold cursor-pointer"
                 >
                   Recalculate
-                </button>
               </div>
             </div>
           </div>
         )}
+        </div>
       </div>
     </div>
   );
