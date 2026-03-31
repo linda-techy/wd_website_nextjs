@@ -9,6 +9,7 @@ const Logo: React.FC = () => {
         width={150}
         height={68}
         unoptimized={true}
+        style={{ width: 'auto', height: 'auto' }}
         className='dark:hidden'
       />
       <Image
@@ -17,6 +18,7 @@ const Logo: React.FC = () => {
         width={150}
         height={68}
         unoptimized={true}
+        style={{ width: 'auto', height: 'auto' }}
         className='dark:block hidden'
       />
     </>

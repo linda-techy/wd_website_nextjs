@@ -56,7 +56,7 @@ export default function RootLayout({
   session?: any
 }>) {
   return (
-    <html lang='en-IN'>
+    <html lang='en-IN' suppressHydrationWarning data-scroll-behavior="smooth">
       <body className={`${font.className} bg-white dark:bg-black antialiased`}>
         <script
             type="application/ld+json"

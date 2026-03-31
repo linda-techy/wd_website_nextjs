@@ -98,8 +98,8 @@ const Hero: React.FC = () => {
               src={"/images/hero/modern-kerala-home.png"}
               alt="Modern Kerala Home"
               fill
+              sizes="(max-width: 768px) 100vw, 50vw"
               priority
-              quality={85}
               className="object-cover rounded-l-[50px]"
             />
           </div>

@@ -113,8 +113,8 @@ const About = () => {
                 src="/images/categories/villas.jpg"
                 alt="villas"
                 fill
+                sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-cover w-full h-full"
-                quality={85}
               />
             </div>
           </div>

@@ -44,5 +44,32 @@ export async function generateStaticParams() {
 
 export default async function DetailsPage({ params }: Props) {
   const { slug } = await params;
-  return <PropertyDetails slug={slug} />;
+  const item = propertyHomes.find((p) => p.slug === slug);
+
+  if (!item) return <PropertyDetails slug={slug} />;
+
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "RealEstateListing",
+    "name": item.name,
+    "description": `Explore ${item.name} — a ${item.beds}-bedroom, ${item.area} sq ft home in ${item.location}.`,
+    "image": item.images?.[0]?.src ? `https://walldotbuilders.com${item.images[0].src}` : undefined,
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": item.location,
+      "addressRegion": "Kerala",
+      "addressCountry": "IN"
+    },
+    "datePosted": new Date().toISOString().split("T")[0],
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
+      <PropertyDetails slug={slug} />
+    </>
+  );
 }
