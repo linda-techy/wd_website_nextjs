@@ -146,25 +146,25 @@ export default function Partnerships() {
     // Benefits configuration
     const benefitsConfig: Record<PartnershipType, Array<{ icon: string; title: string; description: string }>> = {
         architectural: [
-            { icon: "ph:handshake-fill", title: "Partnership Revenue", description: "Earn 2-5% commission on every project value" },
+            { icon: "ph:handshake-fill", title: "Partnership Revenue", description: "Earn attractive commissions on every project — rate defined in your partnership agreement" },
             { icon: "ph:buildings-fill", title: "Expand Network", description: "Access to quality construction projects" },
             { icon: "ph:briefcase-fill", title: "Collaborative Projects", description: "Work on high-value residential & commercial projects" },
             { icon: "ph:medal-fill", title: "Priority Allocation", description: "Preferred partner status with first preference" },
         ],
         realEstate: [
-            { icon: "ph:coins-fill", title: "High Commission", description: "1-3% of project value for each client referral" },
+            { icon: "ph:coins-fill", title: "High Commission", description: "Earn a commission on each client referral that results in a signed project" },
             { icon: "ph:trend-up-fill", title: "Complete Solution", description: "Offer land + construction package to buyers" },
             { icon: "ph:handshake-fill", title: "Long-term Partnership", description: "Ongoing relationship for continuous revenue" },
             { icon: "ph:users-fill", title: "Client Retention", description: "Increase satisfaction with end-to-end service" },
         ],
         interiorDesigner: [
-            { icon: "ph:sparkle-fill", title: "Revenue Share", description: "3-7% on every project with quality execution" },
+            { icon: "ph:sparkle-fill", title: "Revenue Share", description: "Earn a revenue share on every project — structured to reward quality collaboration" },
             { icon: "ph:palette-fill", title: "Creative Freedom", description: "Work with builders who respect design vision" },
             { icon: "ph:handshake-fill", title: "Seamless Collaboration", description: "Smooth coordination between design and build" },
             { icon: "ph:trophy-fill", title: "Portfolio Growth", description: "Add quality projects to your portfolio" },
         ],
         financial: [
-            { icon: "ph:currency-inr-fill", title: "Referral Bonus", description: "₹15,000-25,000 per funded construction project" },
+            { icon: "ph:currency-inr-fill", title: "Referral Bonus", description: "Earn a referral bonus for every funded construction project you refer to us" },
             { icon: "ph:shield-check-fill", title: "Trusted Builder", description: "Refer clients to reliable construction partner" },
             { icon: "ph:chart-line-up-fill", title: "Higher Conversion", description: "Increased loan approval with trusted builders" },
             { icon: "ph:users-three-fill", title: "Client Satisfaction", description: "Happy clients lead to more referrals" },
@@ -176,20 +176,20 @@ export default function Partnerships() {
             { icon: "ph:currency-inr-fill", title: "Bonus + Orders", description: "Referral bonus plus supply business" },
         ],
         vastu: [
-            { icon: "ph:compass-fill", title: "Commission", description: "₹5,000-15,000 per client who builds" },
+            { icon: "ph:compass-fill", title: "Commission", description: "Earn a commission for every client who proceeds with construction through Walldot" },
             { icon: "ph:buildings-fill", title: "Implementation", description: "Builders who respect Vastu principles" },
             { icon: "ph:users-fill", title: "Client Assurance", description: "Recommendations properly executed" },
             { icon: "ph:medal-fill", title: "Recognition", description: "Build reputation as trusted consultant" },
         ],
         landConsultant: [
             { icon: "ph:map-trifold-fill", title: "Complete Package", description: "Land + construction solution for clients" },
-            { icon: "ph:currency-inr-fill", title: "Double Revenue", description: "2-4% commission on construction projects" },
+            { icon: "ph:currency-inr-fill", title: "Double Revenue", description: "Earn commission on the construction project alongside your land consultation fee" },
             { icon: "ph:handshake-fill", title: "Strategic Alliance", description: "Long-term collaboration for growth" },
             { icon: "ph:star-fill", title: "Client Value", description: "Provide end-to-end solution" },
         ],
         corporate: [
             { icon: "ph:buildings-fill", title: "Large-Scale Projects", description: "Commercial and industrial construction" },
-            { icon: "ph:currency-circle-dollar-fill", title: "Substantial Commission", description: "1-3% based on contract value" },
+            { icon: "ph:currency-circle-dollar-fill", title: "Substantial Commission", description: "Earn a significant commission on every contract — structured per partnership agreement" },
             { icon: "ph:briefcase-fill", title: "B2B Relations", description: "Establish valuable corporate partnerships" },
             { icon: "ph:certificate-fill", title: "Dedicated PM", description: "Priority handling with dedicated manager" },
         ],
@@ -255,15 +255,15 @@ export default function Partnerships() {
         },
         {
             question: "How do partnership commissions work?",
-            answer: "Commission rates vary by partnership type: Architects (2-5% of project value), Real Estate Agents (1-3%), Interior Designers (3-7% revenue share), Financial Institutions (₹15,000-25,000 per project), Material Suppliers (bulk orders + ₹5,000-20,000 bonus), Vastu Consultants (₹5,000-15,000), Land Consultants (2-4%), and Corporate (1-3% of contract value). Commissions are paid per completed project or agreed milestones."
+            answer: "Commission structures are tailored to each partnership type and are defined in your formal partnership agreement. Rates are based on the nature of the referral, project value, and the services you provide. Contact us to discuss the commission structure applicable to your category."
         },
         {
             question: "Do I need to sign a formal partnership agreement?",
-            answer: "Yes. All professional partnerships require a formal agreement outlining commission structure, responsibilities, payment terms, and collaboration guidelines. This protects both parties and ensures clear expectations. The agreement process typically takes 3-5 business days after verification."
+            answer: "Yes. All professional partnerships require a formal agreement outlining commission structure, responsibilities, payment terms, and collaboration guidelines. This protects both parties and ensures clear expectations. The agreement process begins after successful verification."
         },
         {
             question: "How long does the partnership verification process take?",
-            answer: "Verification typically takes 5-7 business days. We verify credentials, check references, review portfolio/track record, and schedule a partnership discussion meeting. Once approved, onboarding and agreement signing takes an additional 3-5 days."
+            answer: "Verification involves credential checks, reference review, portfolio assessment, and a partnership discussion. Timelines vary based on document completeness and availability. We will keep you updated throughout the process."
         },
         {
             question: "Can I be part of multiple partnership categories?",
@@ -275,7 +275,7 @@ export default function Partnerships() {
         },
         {
             question: "How and when are commissions paid?",
-            answer: "Commission payment schedules vary: Architects/Designers - after project completion; Real Estate/Land - after client agreement signing; Financial - after first loan disbursement; Suppliers - monthly after order fulfillment; Vastu - after project commencement; Corporate - per agreed milestones. Payments are processed within 15-30 days of milestone completion."
+            answer: "Commission payment schedules are defined in your partnership agreement and tied to project milestones — such as agreement signing, project commencement, or completion, depending on your partnership category. Payments are processed promptly after milestone verification."
         },
         {
             question: "What support do partners receive?",

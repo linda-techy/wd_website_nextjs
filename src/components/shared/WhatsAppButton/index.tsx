@@ -50,7 +50,7 @@ export default function WhatsAppButton() {
         >
           <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700">
             <p className="text-sm font-semibold">Chat with us!</p>
-            <p className="text-xs text-gray-600 dark:text-gray-400">We typically reply within minutes</p>
+            <p className="text-xs text-gray-600 dark:text-gray-400">We aim to respond promptly</p>
           </div>
           {/* Arrow */}
           <div className="absolute top-1/2 -translate-y-1/2 -right-2 w-0 h-0 border-t-8 border-t-transparent border-b-8 border-b-transparent border-l-8 border-l-white dark:border-l-gray-800"></div>

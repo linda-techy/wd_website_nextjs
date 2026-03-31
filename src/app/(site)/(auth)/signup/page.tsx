@@ -2,8 +2,8 @@ import SignUp from "@/components/Auth/SignUp";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title:
-        "Sign Up | Walldot Builders",
+    title: "Sign Up | Walldot Builders",
+    robots: { index: false, follow: false },
 };
 
 const SignUpPage = () => {

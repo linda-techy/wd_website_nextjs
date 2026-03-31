@@ -18,8 +18,8 @@ const GetInTouch: React.FC = () => {
                     <div className="bg-black/30 py-8 sm:py-10 md:py-12 lg:py-14">
                         <div className="flex flex-col items-center gap-5 sm:gap-6 md:gap-8">
                             <h2 className='text-white text-2xl md:text-40 lg:text-52 max-w-3/4 text-center font-bold leading-tight tracking-tight px-4'>
-                                Enter a realm where exquisite design and
-                                timeless luxury come together.
+                                Where thoughtful design meets
+                                quality construction.
                             </h2>
                             <div className="flex flex-wrap gap-4 justify-center">
                                 <Link href="/contactus" className='bg-white py-4 px-8 rounded-full text-dark hover:bg-dark hover:text-white duration-300 font-semibold' title="Contact best construction company in Kerala">

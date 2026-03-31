@@ -222,7 +222,7 @@ export default function BrochureContent() {
                             Building Dreams.<br/>Creating Homes.
                         </h1>
                         <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 mb-4 sm:mb-6 md:mb-8 leading-relaxed">
-                            Daily site photos. Real-time budget tracking. Direct chat with your construction team — all from your phone, without visiting the site once. No surprises. No delays. No hidden costs.
+                            Daily site photos. Real-time budget tracking. Direct chat with your construction team — all from your phone, without visiting the site once. Full transparency at every stage.
                         </p>
                         <div className="flex flex-wrap gap-2 sm:gap-3 md:gap-4">
                             <div className="flex items-center gap-1.5 sm:gap-2 bg-white/20 backdrop-blur-sm px-3 py-1.5 sm:px-4 sm:py-2 md:px-5 md:py-2.5 rounded-full">
@@ -231,7 +231,7 @@ export default function BrochureContent() {
                             </div>
                             <div className="flex items-center gap-1.5 sm:gap-2 bg-white/20 backdrop-blur-sm px-3 py-1.5 sm:px-4 sm:py-2 md:px-5 md:py-2.5 rounded-full">
                                 <Icon icon={"ph:shield-check-fill"} width={16} height={16} className="text-white sm:w-5 sm:h-5 md:w-6 md:h-6" />
-                                <span className="text-white text-xs sm:text-sm md:text-base font-semibold whitespace-nowrap">100% Quality Assured</span>
+                                <span className="text-white text-xs sm:text-sm md:text-base font-semibold whitespace-nowrap">Quality Assured</span>
                             </div>
                             <div className="flex items-center gap-1.5 sm:gap-2 bg-white/20 backdrop-blur-sm px-3 py-1.5 sm:px-4 sm:py-2 md:px-5 md:py-2.5 rounded-full">
                                 <Icon icon={"ph:clock-fill"} width={16} height={16} className="text-white sm:w-5 sm:h-5 md:w-6 md:h-6" />
@@ -747,8 +747,8 @@ export default function BrochureContent() {
                             <ul className="space-y-4">
                                 {[
                                     "24/7 mobile tracking from anywhere",
-                                    "100% transparent pricing upfront",
-                                    "On-time delivery guarantee",
+                                    "Itemized, transparent pricing before work begins",
+                                    "Committed to on-time project delivery",
                                     "Direct chat with entire team",
                                     "Daily photo & video updates",
                                     "Real-time budget monitoring"
@@ -765,11 +765,11 @@ export default function BrochureContent() {
                     {/* Stats Comparison */}
                     <div className="mt-8 grid md:grid-cols-4 gap-4">
                         <div className="bg-gradient-to-br from-primary/10 to-transparent border border-primary/20 rounded-xl p-6 text-center">
-                            <div className="text-4xl font-bold text-primary mb-2">98%</div>
-                            <p className="text-sm text-black/70 dark:text-white/70">On-Time Delivery</p>
+                            <div className="text-4xl font-bold text-primary mb-2">✓</div>
+                            <p className="text-sm text-black/70 dark:text-white/70">On-Time Focus</p>
                         </div>
                         <div className="bg-gradient-to-br from-green-500/10 to-transparent border border-green-500/20 rounded-xl p-6 text-center">
-                            <div className="text-4xl font-bold text-green-600 mb-2">100%</div>
+                            <div className="text-4xl font-bold text-green-600 mb-2">Full</div>
                             <p className="text-sm text-black/70 dark:text-white/70">Transparency</p>
                         </div>
                         <div className="bg-gradient-to-br from-blue-500/10 to-transparent border border-blue-500/20 rounded-xl p-6 text-center">
@@ -801,11 +801,11 @@ export default function BrochureContent() {
                     <div className="grid md:grid-cols-3 gap-6 print-grid">
                         {[
                             { icon: "ph:device-mobile-fill", title: "Mobile Project Tracking", desc: "Kerala's only 24/7 live site monitoring app — track everything from anywhere", color: "from-blue-500 to-blue-600" },
-                            { icon: "ph:shield-check-fill", title: "100% Quality Guarantee", desc: "ISI-certified materials from authorized dealers — no compromise on standards", color: "from-green-500 to-green-600" },
-                            { icon: "ph:clock-fill", title: "98% On-Time Delivery", desc: "Industry-leading delivery rate — your timeline is our commitment", color: "from-orange-500 to-orange-600" },
+                            { icon: "ph:shield-check-fill", title: "Quality Commitment", desc: "ISI-certified materials from authorized dealers — no compromise on standards", color: "from-green-500 to-green-600" },
+                            { icon: "ph:clock-fill", title: "On-Time Focused", desc: "We prioritize your timeline with proactive project management and regular updates", color: "from-orange-500 to-orange-600" },
                             { icon: "ph:currency-inr-fill", title: "Transparent Pricing", desc: "Zero hidden costs. Itemized quotations. What you see is what you pay", color: "from-purple-500 to-purple-600" },
                             { icon: "ph:users-three-fill", title: "In-House Expert Team", desc: "Trained engineers, masons & supervisors — no sub-contracting your project", color: "from-red-500 to-red-600" },
-                            { icon: "ph:medal-fill", title: "5-Year Warranty", desc: "Structural warranty on foundations, columns & roof — free repairs, guaranteed", color: "from-teal-500 to-teal-600" }
+                            { icon: "ph:medal-fill", title: "Structural Warranty", desc: "Post-construction structural support on foundations, columns & roof — as per warranty terms", color: "from-teal-500 to-teal-600" }
                         ].map((item, index) => (
                             <div key={index} className="border border-black/10 dark:border-white/10 rounded-2xl p-6 hover:shadow-2xl transition-all duration-300 hover:scale-105 group cursor-pointer print-card">
                                 <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${item.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
@@ -838,8 +838,8 @@ export default function BrochureContent() {
                         </div>
                         <div className="bg-white dark:bg-dark border border-black/10 dark:border-white/10 rounded-2xl p-8 text-center print-card">
                             <Icon icon={"ph:shield-checkered-fill"} width={48} height={48} className="text-primary mx-auto mb-4" />
-                            <h3 className="text-xl font-bold text-black dark:text-white mb-2">5-Year Structural Warranty</h3>
-                            <p className="text-sm text-black/60 dark:text-white/60">Foundation, columns & roof covered — we fix any structural issue free of charge</p>
+                            <h3 className="text-xl font-bold text-black dark:text-white mb-2">Structural Warranty</h3>
+                            <p className="text-sm text-black/60 dark:text-white/60">Foundation, columns & roof covered under our post-construction structural support program</p>
                         </div>
                         <div className="bg-white dark:bg-dark border border-black/10 dark:border-white/10 rounded-2xl p-8 text-center print-card">
                             <Icon icon={"ph:users-fill"} width={48} height={48} className="text-primary mx-auto mb-4" />
@@ -860,7 +860,7 @@ export default function BrochureContent() {
                             Your Dream Home Deserves a Builder You Can Watch Over — 24/7
                         </h2>
                         <p className="text-base sm:text-lg md:text-xl text-white/90 mb-6 md:mb-8 max-w-3xl mx-auto leading-relaxed px-4">
-                            Call now — your free consultation takes less than 10 minutes, and we&apos;ll walk you through your complete project plan, timeline, and budget on the spot.
+                            Call now for your free initial consultation — our team will walk you through the project process, discuss your vision, and help you plan your next steps.
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center mb-8 md:mb-12 px-4">

@@ -44,8 +44,40 @@ const FAQ: React.FC = () => {
         }
     }, { scope: sectionRef });
 
+    const faqSchema = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Can I personalize my home with Walldot Builders?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, absolutely. We offer full customization options — from layout changes to material selection — so your home reflects your unique taste and lifestyle."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Where do Walldot Builders operate?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "We offer home construction services across Kerala, delivering personalized solutions based on each client’s location and needs. Our team ensures every project — whether a city home or a countryside retreat — is built with precision and care."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What are the steps to build a home with Walldot Builders?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "It starts with a consultation. We discuss your requirements, provide a detailed estimate, design your plan, handle permits, and begin construction with regular updates — all the way to final handover."
+                }
+            }
+        ]
+    };
+
     return (
         <section id='faqs' ref={sectionRef}>
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
             <div className='container max-w-8xl mx-auto px-4 sm:px-5 2xl:px-0'>
                 <div className="grid lg:grid-cols-2 gap-6 sm:gap-7 md:gap-8">
                     <div ref={imageRef} className='lg:mx-0 mx-auto'>

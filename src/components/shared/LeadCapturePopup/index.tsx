@@ -325,7 +325,7 @@ export default function LeadCapturePopup({
                     We&apos;ve received your inquiry successfully.
                   </p>
                   <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-500">
-                    Our team will contact you within 24 hours.
+                    Our team will get in touch with you shortly.
                   </p>
                 </div>
               )}

@@ -10,7 +10,6 @@ const EMPTY_FORM = {
     yourName: "",
     yourEmail: "",
     yourPhone: "",
-    accountPassword: "",
     referralName: "",
     referralEmail: "",
     referralPhone: "",
@@ -27,7 +26,6 @@ export default function Referrals() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
     const [errorMessage, setErrorMessage] = useState('');
-    const [accountCreated, setAccountCreated] = useState(false);
     const [emailMatchError, setEmailMatchError] = useState(false);
     const [phoneMatchError, setPhoneMatchError] = useState(false);
 
@@ -78,8 +76,6 @@ export default function Referrals() {
             return;
         }
 
-        const hasPassword = formData.accountPassword.trim().length > 0;
-
         // Show loading toast
         const loadingToast = toast.loading('Submitting your referral...');
 
@@ -91,7 +87,6 @@ export default function Referrals() {
                     yourName: formData.yourName,
                     yourEmail: formData.yourEmail,
                     yourPhone: formData.yourPhone.replace(/\s/g, ''),
-                    accountPassword: hasPassword ? formData.accountPassword : undefined,
                     referralName: formData.referralName,
                     referralEmail: formData.referralEmail || undefined,
                     referralPhone: formData.referralPhone.replace(/\s/g, ''),
@@ -110,20 +105,14 @@ export default function Referrals() {
             toast.dismiss(loadingToast);
 
             if (response.ok && result.success) {
-                setAccountCreated(hasPassword && !!formData.yourEmail);
                 setSubmitStatus('success');
                 setFormData({ ...EMPTY_FORM });
-                
+
                 // Show success toast
-                toast.success(
-                    hasPassword 
-                        ? 'Referral submitted! Your tracking account is ready.' 
-                        : 'Thank you! We will contact your friend within 24 hours.',
-                    {
-                        duration: 5000,
-                        icon: '🎉',
-                    }
-                );
+                toast.success('Thank you! Our team will reach out to your friend shortly.', {
+                    duration: 5000,
+                    icon: '🎉',
+                });
 
                 // Scroll to success message
                 window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -194,27 +183,27 @@ export default function Referrals() {
     const benefits = [
         {
             icon: "ph:currency-inr-fill",
-            title: "Cash Rewards",
-            value: "₹10,000 - ₹50,000",
-            description: "Earn attractive cash rewards based on project value"
+            title: "Generous Cash Rewards",
+            value: "Up to ₹50,000+",
+            description: "Earn rewards based on project value — the bigger the project, the bigger your reward"
         },
         {
-            icon: "ph:users-three-fill",
-            title: "Help Loved Ones",
-            value: "Trust & Quality",
-            description: "Help friends and family build their dream homes with quality construction"
+            icon: "ph:seal-check-fill",
+            title: "Trusted by Families",
+            value: "Proven Track Record",
+            description: "Refer with confidence — your friends get the same quality construction we are known for across Kerala"
         },
         {
             icon: "ph:infinity-fill",
-            title: "Unlimited Referrals",
-            value: "No Limits",
-            description: "Refer as many people as you want, earn for each"
+            title: "No Limits",
+            value: "Unlimited Referrals",
+            description: "Refer as many people as you want — every successful project earns you a reward"
         },
         {
             icon: "ph:clock-fill",
-            title: "Quick Processing",
-            value: "30-45 Days",
-            description: "Rewards processed after foundation completion"
+            title: "Fast Payout",
+            value: "After Foundation",
+            description: "Rewards processed after foundation stage — one of the earliest milestones in construction"
         },
     ];
 
@@ -272,26 +261,6 @@ export default function Referrals() {
                 }}
             />
             
-            {/* Returning Referrer Login Notice */}
-            <div className="mb-12 border border-primary/30 rounded-2xl p-6 bg-gradient-to-r from-primary/10 to-transparent flex items-center justify-between flex-wrap gap-4">
-                <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                        <Icon icon={"ph:users-fill"} width={24} height={24} className="text-primary" />
-                    </div>
-                    <div>
-                        <h3 className="font-bold text-lg md:text-xl text-black dark:text-white">Already referred someone?</h3>
-                        <p className="text-sm md:text-base text-black/70 dark:text-white/70 mt-1 leading-relaxed">Login to your dashboard to track your referral's status and rewards</p>
-                    </div>
-                </div>
-                <a
-                    href="/partnerships/login"
-                    className="inline-flex items-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-full bg-primary text-white text-base md:text-lg font-bold hover:bg-dark transition-colors shadow-lg hover:scale-105"
-                >
-                    <Icon icon={"ph:sign-in-fill"} width={20} height={20} className="md:w-6 md:h-6" />
-                    Dashboard Login
-                </a>
-            </div>
-
             {/* Why Refer Section */}
             <section className="mb-20">
                 <div className="text-center mb-12">
@@ -392,34 +361,10 @@ export default function Referrals() {
                                 <h3 className="text-green-800 dark:text-green-300 font-bold text-lg mb-1">
                                     Referral Submitted Successfully!
                                 </h3>
-                                {accountCreated ? (
-                                    <>
-                                        <p className="text-green-700 dark:text-green-400 font-medium mb-2">
-                                            Your referral has been recorded and a tracking account has been created for you.
-                                            Log in with your email and the password you set to track your referral&apos;s status and reward progress.
+                                            <p className="text-green-700 dark:text-green-400 font-medium">
+                                            Thank you! Our team will reach out to your friend shortly.
+                                            Once the project is confirmed, we&apos;ll contact you about your reward.
                                         </p>
-                                        <p className="text-green-700/80 dark:text-green-400/80 text-sm mb-4">
-                                            Your friend will also receive an email invitation to track their own inquiry status.
-                                        </p>
-                                        <a
-                                            href="/partnerships/login"
-                                            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-green-600 hover:bg-green-700 text-white font-semibold transition-colors w-full sm:w-auto"
-                                        >
-                                            Login to Track Status
-                                            <Icon icon="ph:arrow-right-bold" width={16} height={16} />
-                                        </a>
-                                    </>
-                                ) : (
-                                    <>
-                                        <p className="text-green-700 dark:text-green-400 font-medium">
-                                            Thank you! Our team will contact your friend within 24 hours.
-                                            Once the project is confirmed, we&apos;ll reach out to you about your reward.
-                                        </p>
-                                        <p className="text-green-700/80 dark:text-green-400/80 text-sm mt-2">
-                                            Your friend will receive an email to track their inquiry status online.
-                                        </p>
-                                    </>
-                                )}
                             </div>
                         </div>
                     </div>
@@ -497,23 +442,6 @@ export default function Referrals() {
                                         )}
                                     </div>
                                 </div>
-                                <div className="bg-primary/5 border border-primary/20 p-5 rounded-2xl mb-2">
-                                    <div className="flex gap-3 mb-3">
-                                        <Icon icon="ph:lock-key-fill" width={20} height={20} className="text-primary flex-shrink-0 mt-0.5" />
-                                        <div>
-                                            <p className="text-sm font-semibold text-black dark:text-white">Create a Tracking Account (Optional but Recommended)</p>
-                                            <p className="text-xs text-black/60 dark:text-white/60 mt-1">Provide a password below and we'll automatically create a dashboard for you. You can log in later to track your referral's status and see when you'll get paid.</p>
-                                        </div>
-                                    </div>
-                                    <input
-                                        type="password"
-                                        name="accountPassword"
-                                        placeholder="Create a Password to track status later"
-                                        value={formData.accountPassword}
-                                        onChange={handleChange}
-                                        className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-white dark:bg-black/20 text-black dark:text-white"
-                                    />
-                                </div>
                             </div>
                         </div>
 
@@ -585,7 +513,6 @@ export default function Referrals() {
                                         className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-white dark:bg-dark text-black dark:text-white"
                                     >
                                         <option value="">Project Type*</option>
-                                        <option value="turnkey_project">Turnkey Project</option>
                                         <option value="residential_construction">Residential Home</option>
                                         <option value="villa">Luxury Villa</option>
                                         <option value="apartment">Apartment</option>
@@ -721,23 +648,23 @@ export default function Referrals() {
                                 </li>
                                 <li className="flex items-start gap-2">
                                     <Icon icon={"ph:check-circle-fill"} width={18} height={18} className="text-primary flex-shrink-0 mt-0.5" />
-                                    <span>Minimum project value: ₹15 lakhs for referral to qualify</span>
+                                    <span>Reward amount is determined by Walldot Builders based on final project value and scope</span>
                                 </li>
                                 <li className="flex items-start gap-2">
                                     <Icon icon={"ph:check-circle-fill"} width={18} height={18} className="text-primary flex-shrink-0 mt-0.5" />
-                                    <span>Rewards processed 30-45 days after project foundation completion</span>
+                                    <span>Valid only for residential or commercial construction projects that reach the agreement stage</span>
                                 </li>
                                 <li className="flex items-start gap-2">
                                     <Icon icon={"ph:check-circle-fill"} width={18} height={18} className="text-primary flex-shrink-0 mt-0.5" />
-                                    <span>Referred client must mention your name during initial consultation</span>
+                                    <span>Reward is credited after the project foundation stage is completed</span>
                                 </li>
                                 <li className="flex items-start gap-2">
                                     <Icon icon={"ph:check-circle-fill"} width={18} height={18} className="text-primary flex-shrink-0 mt-0.5" />
-                                    <span>Referral valid for 90 days from submission date</span>
+                                    <span>Valid only for new clients who have not previously engaged with Walldot Builders</span>
                                 </li>
                                 <li className="flex items-start gap-2">
                                     <Icon icon={"ph:check-circle-fill"} width={18} height={18} className="text-primary flex-shrink-0 mt-0.5" />
-                                    <span>Walldot Builders reserves the right to modify program terms. Contact info@walldotbuilders.com for queries</span>
+                                    <span>Referral submission is valid for 90 days. Contact info@walldotbuilders.com for any queries</span>
                                 </li>
                             </ul>
                         </div>

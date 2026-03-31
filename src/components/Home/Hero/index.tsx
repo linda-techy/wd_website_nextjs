@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useParallax } from '@/components/animations/hooks/useParallax';
+import MagneticWrapper from '@/components/animations/MagneticWrapper';
 
 const Hero: React.FC = () => {
   const containerRef = useRef<HTMLElement>(null);
@@ -65,25 +66,31 @@ const Hero: React.FC = () => {
               {/* Palm springs, CA */}
               Kerala, India
             </p>
-            <h1 className="text-inherit text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight md:max-w-45p mt-4 mb-6 leading-tight">
-              {/* Futuristic Haven */}
-              Your dream home starts here.
+            <h1 className="text-inherit text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight md:max-w-45p mt-4 mb-6 leading-tight">
+              Premium Custom Home Builders in Kerala
             </h1>
+            <p className="sr-only">
+              Walldot Builders provides turnkey residential construction, architectural design, and 24/7 mobile project tracking across Thrissur and Kerala. We specialize in luxury villas, modern homes, and commercial office spaces built with uncompromising quality.
+            </p>
             <div className="flex flex-col xs:flex-row justify-center md:justify-start gap-4">
-              <Link
-                href="/contactus"
-                className="px-8 py-4 border border-white dark:border-dark bg-white dark:bg-dark text-dark dark:text-white duration-300 dark:hover:text-dark hover:bg-transparent hover:text-white text-base font-semibold rounded-full hover:cursor-pointer"
-                title="Contact Walldot Builders for home construction in Kerala"
-              >
-                Get in touch
-              </Link>
-              <Link
-                href="/brochure"
-                className="px-8 py-4 border border-white dark:border-dark bg-transparent text-white dark:text-dark hover:bg-white dark:hover:bg-dark dark:hover:text-white hover:text-dark duration-300 text-base font-semibold rounded-full hover:cursor-pointer"
-                title="Download Walldot Builders company brochure"
-              >
-                Brochure
-              </Link>
+              <MagneticWrapper intensity={40}>
+                <Link
+                  href="/contactus"
+                  className="inline-block px-8 py-4 border border-white dark:border-dark bg-white dark:bg-dark text-dark dark:text-white duration-300 dark:hover:text-dark hover:bg-transparent hover:text-white text-base font-semibold rounded-full hover:cursor-pointer"
+                  title="Contact Walldot Builders for home construction in Kerala"
+                >
+                  Get in touch
+                </Link>
+              </MagneticWrapper>
+              <MagneticWrapper intensity={20}>
+                <Link
+                  href="/brochure"
+                  className="inline-block px-8 py-4 border border-white dark:border-dark bg-transparent text-white dark:text-dark hover:bg-white dark:hover:bg-dark dark:hover:text-white hover:text-dark duration-300 text-base font-semibold rounded-full hover:cursor-pointer"
+                  title="Download Walldot Builders company brochure"
+                >
+                  Brochure
+                </Link>
+              </MagneticWrapper>
             </div>
           </div>
           <div ref={imageRef} className="hidden md:block absolute top-10 right-0 bottom-10 w-1/2 z-0 origin-right">

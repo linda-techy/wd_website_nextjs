@@ -5,7 +5,7 @@ const AboutUs: React.FC = () => {
     const features = [
         {
             title: "Experience and Expertise",
-            content: "As the best construction company in Thrissur, our team of dedicated builders and designers bring their extensive knowledge and skills to every project. With years of experience, we stand proud among the top 10 builders in Thrissur, showcasing a portfolio that spans high-quality Thrissur villas and flats.",
+            content: "As a trusted construction company in Thrissur, our team of dedicated builders and designers bring their extensive knowledge and skills to every project. With years of hands-on experience, we have built a strong reputation across Thrissur, with a portfolio spanning high-quality villas, flats, and commercial projects.",
             icon: "🏗️"
         },
         {

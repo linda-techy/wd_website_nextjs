@@ -11,7 +11,31 @@ interface BreadcrumbProps {
 }
 
 export default function Breadcrumb({ items }: BreadcrumbProps) {
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://walldotbuilders.com",
+      },
+      ...items.map((item, index) => ({
+        "@type": "ListItem",
+        "position": index + 2,
+        "name": item.label,
+        ...(item.href ? { "item": `https://walldotbuilders.com${item.href}` } : {}),
+      })),
+    ],
+  };
+
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
     <nav aria-label="Breadcrumb" className="py-4">
       <ol className="flex items-center flex-wrap gap-2 text-sm md:text-base">
         <li>
@@ -44,6 +68,7 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
         ))}
       </ol>
     </nav>
+    </>
   );
 }
 
