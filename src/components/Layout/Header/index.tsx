@@ -40,6 +40,14 @@ const Header: React.FC = () => {
     }
   }, [handleScroll])
 
+  // Lock body scroll when menu is open
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.body.style.overflow = navbarOpen ? 'hidden' : ''
+      return () => { document.body.style.overflow = '' }
+    }
+  }, [navbarOpen])
+
   const isHomepage = pathname === '/'
 
   return (
@@ -166,8 +174,8 @@ const Header: React.FC = () => {
           navbarOpen ? "translate-x-0" : "translate-x-full"
         } z-50 px-20 overflow-auto no-scrollbar`}
       >
-        <div className="flex flex-col h-full justify-between">
-          <div className="">
+        <div className="flex flex-col min-h-full justify-between">
+          <div>
             <div className="flex items-center justify-start py-10">
               <button
                 onClick={() => setNavbarOpen(false)}
@@ -200,9 +208,19 @@ const Header: React.FC = () => {
                     onClick={() => setNavbarOpen(false)}
                   />
                 ))}
-
               </ul>
             </nav>
+
+            <div className="mt-10">
+              <Link
+                href="/partnerships/login"
+                onClick={() => setNavbarOpen(false)}
+                className="inline-flex items-center gap-3 px-7 py-4 rounded-full bg-primary text-white font-semibold text-lg hover:bg-white hover:text-dark transition-colors duration-300"
+              >
+                <Icon icon="ph:sign-in-fill" width={22} height={22} />
+                Partner Login
+              </Link>
+            </div>
           </div>
           <div className="flex flex-col gap-2 my-16 text-white">
             <p className="text-base md:text-lg font-medium text-white/60">

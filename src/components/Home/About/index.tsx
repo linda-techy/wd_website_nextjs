@@ -4,6 +4,7 @@ import { useRef } from "react";
 import Image from "next/image";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Link from "next/link";
+import BrochureButton from "@/components/shared/BrochureButton";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
@@ -103,6 +104,7 @@ const About = () => {
               >
                 Explore Tools
               </Link>
+              <BrochureButton variant="outline" />
             </div>
           </div>
 

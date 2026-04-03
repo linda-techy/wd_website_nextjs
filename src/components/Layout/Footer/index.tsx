@@ -96,7 +96,7 @@ const Footer = () => {
         </div>
         <div className="flex justify-between md:flex-nowrap flex-wrap items-center py-6 gap-6">
           <p className="text-white/60 text-sm md:text-base">
-            ©2025 Walldot Builders LLP
+            © {new Date().getFullYear()} Walldot Builders LLP
           </p>
           {/* <div className="flex gap-8 items-center">
             <Link href="#" className="text-white/40 hover:text-primary text-sm">

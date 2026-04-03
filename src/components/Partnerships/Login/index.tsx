@@ -14,6 +14,7 @@ export default function PartnerLogin() {
     const [mode, setMode] = useState<Mode>("login");
     const [resetToken, setResetToken] = useState("");
     const [resetEmail, setResetEmail] = useState("");
+    const [sessionExpired, setSessionExpired] = useState(false);
 
     // Login form
     const [loginData, setLoginData] = useState({ email: "", password: "" });
@@ -21,13 +22,14 @@ export default function PartnerLogin() {
     const [forgotEmail, setForgotEmail] = useState("");
     // Reset password form
     const [resetData, setResetData] = useState({ newPassword: "", confirmPassword: "" });
+    const [showLoginPassword, setShowLoginPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
-    // Detect reset mode from URL params
+    // Detect reset mode and session expiry from URL params
     useEffect(() => {
         const urlMode = searchParams.get("mode");
         const token = searchParams.get("token");
@@ -37,9 +39,12 @@ export default function PartnerLogin() {
             setResetEmail(email);
             setMode("reset");
         }
+        if (searchParams.get("reason") === "session_expired") {
+            setSessionExpired(true);
+        }
     }, [searchParams]);
 
-    const clearError = () => setError("");
+    const clearError = () => { setError(""); setSessionExpired(false); };
 
     // ── Login ────────────────────────────────────────────────────────
     const handleLogin = async (e: React.FormEvent) => {
@@ -120,7 +125,7 @@ export default function PartnerLogin() {
 
     // ── Render ───────────────────────────────────────────────────────
     return (
-        <div className="min-h-screen flex items-center justify-center px-4 py-12 sm:py-16 bg-gradient-to-br from-primary/5 via-white to-primary/5 dark:from-primary/10 dark:via-black dark:to-primary/10">
+        <div className="no-global-gsap min-h-screen flex items-center justify-center px-4 py-12 sm:py-16 bg-gradient-to-br from-primary/5 via-white to-primary/5 dark:from-primary/10 dark:via-black dark:to-primary/10">
             <div className="w-full max-w-md">
 
                 {/* Logo */}
@@ -143,6 +148,17 @@ export default function PartnerLogin() {
                 </div>
 
                 <div className="border border-black/10 dark:border-white/10 rounded-2xl p-8 shadow-xl dark:shadow-white/10 bg-white dark:bg-dark">
+
+                    {/* ── SESSION EXPIRED BANNER ─────────────────────────── */}
+                    {sessionExpired && (
+                        <div className="mb-6 p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-300 dark:border-amber-700 flex items-start gap-3">
+                            <Icon icon="ph:lock-open-fill" width={20} height={20} className="text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+                            <div>
+                                <p className="text-sm font-semibold text-amber-800 dark:text-amber-300">Session Expired</p>
+                                <p className="text-sm text-amber-700 dark:text-amber-400 mt-0.5">Your session has expired. Please log in again to continue.</p>
+                            </div>
+                        </div>
+                    )}
 
                     {/* ── LOGIN FORM ─────────────────────────────────────── */}
                     {mode === "login" && (
@@ -180,15 +196,22 @@ export default function PartnerLogin() {
                                             <Icon icon="ph:lock-fill" width={20} height={20} className="text-black/40 dark:text-white/40" />
                                         </div>
                                         <input
-                                            type="password"
+                                            type={showLoginPassword ? "text" : "password"}
                                             id="password"
                                             name="password"
                                             placeholder="Enter your password"
                                             required
                                             value={loginData.password}
                                             onChange={(e) => { setLoginData({ ...loginData, password: e.target.value }); clearError(); }}
-                                            className="w-full pl-12 pr-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline bg-transparent text-black dark:text-white"
+                                            className="w-full pl-12 pr-12 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline bg-transparent text-black dark:text-white"
                                         />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowLoginPassword(!showLoginPassword)}
+                                            className="absolute right-4 top-1/2 -translate-y-1/2 text-black/40 dark:text-white/40 hover:text-primary"
+                                        >
+                                            <Icon icon={showLoginPassword ? "ph:eye-slash-fill" : "ph:eye-fill"} width={20} height={20} />
+                                        </button>
                                     </div>
                                 </div>
 
@@ -380,17 +403,10 @@ export default function PartnerLogin() {
                             <p className="text-sm text-black/60 dark:text-white/60 mb-4">
                                 Don&apos;t have an account yet?
                             </p>
-                            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                                <a
-                                    href="/referrals"
-                                    className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-black/5 dark:bg-white/5 text-black dark:text-white hover:bg-primary hover:text-white transition-colors font-semibold cursor-pointer text-sm w-full sm:w-auto justify-center"
-                                >
-                                    <Icon icon="ph:users-fill" width={20} height={20} />
-                                    Refer a Friend
-                                </a>
+                            <div className="flex justify-center">
                                 <a
                                     href="/partnerships"
-                                    className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-black/5 dark:bg-white/5 text-black dark:text-white hover:bg-primary hover:text-white transition-colors font-semibold cursor-pointer text-sm w-full sm:w-auto justify-center"
+                                    className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-black/5 dark:bg-white/5 text-black dark:text-white hover:bg-primary hover:text-white transition-colors font-semibold cursor-pointer text-sm justify-center"
                                 >
                                     <Icon icon="ph:briefcase-fill" width={20} height={20} />
                                     Apply for Partnership

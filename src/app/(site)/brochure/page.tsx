@@ -91,7 +91,7 @@ const page = () => {
             <HeroSub
                 title="Your Dream Home Starts Here"
                 description="Explore our portfolio, innovative services, and proven track record of delivering exceptional homes across Kerala"
-                badge="Download Brochure"
+                badge="Brochure"
             />
             <BrochureContent />
         </main>

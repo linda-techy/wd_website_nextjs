@@ -155,7 +155,7 @@ export const toolsRelatedLinks: RelatedLink[] = [
     icon: "ph:magic-wand-fill"
   },
   {
-    label: "Download Brochure",
+    label: "Brochure",
     href: "/brochure",
     description: "Get our detailed company brochure",
     icon: "ph:file-pdf-fill"

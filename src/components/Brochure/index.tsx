@@ -8,6 +8,7 @@ import { propertyHomes } from "@/app/api/propertyhomes";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { BASE_API_URL } from "@/lib/config";
 
 // Phone Mockup Components
 const PhoneMockup = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
@@ -35,7 +36,7 @@ const ProgressPhone = () => (
                 <Icon icon={"ph:check-circle-fill"} width={24} height={24} className="text-green-600" />
                 <div className="text-left">
                     <p className="text-xs font-bold text-gray-900">Foundation Complete</p>
-                    <p className="text-xs text-gray-600">15 days ahead</p>
+                    <p className="text-xs text-gray-600">On schedule</p>
                 </div>
             </div>
             <div className="flex items-center gap-3 bg-blue-50 p-3 rounded-lg">
@@ -132,9 +133,31 @@ const BudgetPhone = () => (
     </PhoneMockup>
 );
 
+const BROCHURE_DOWNLOAD_URL = `${BASE_API_URL}/api/brochure/download`;
+
 export default function BrochureContent() {
     const [activeMockup, setActiveMockup] = useState(0);
+    const [downloadState, setDownloadState] = useState<"idle" | "loading" | "error">("idle");
     const containerRef = useRef<HTMLDivElement>(null);
+
+    const handleDownload = async () => {
+        setDownloadState("loading");
+        try {
+            const res = await fetch(BROCHURE_DOWNLOAD_URL);
+            if (!res.ok) throw new Error("not_available");
+            const blob = await res.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "Walldot-Builders-Brochure.pdf";
+            a.click();
+            window.URL.revokeObjectURL(url);
+            setDownloadState("idle");
+        } catch {
+            setDownloadState("error");
+            setTimeout(() => setDownloadState("idle"), 4000);
+        }
+    };
 
     useGSAP(() => {
         gsap.registerPlugin(ScrollTrigger);
@@ -203,6 +226,7 @@ export default function BrochureContent() {
     }, []);
 
     return (
+        <>
         <div ref={containerRef}>
             <div className="container max-w-8xl mx-auto px-4 sm:px-5 2xl:px-0 py-6 sm:py-8 md:py-10 lg:py-12">
             {/* Brochure Content */}
@@ -224,7 +248,7 @@ export default function BrochureContent() {
                         <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 mb-4 sm:mb-6 md:mb-8 leading-relaxed">
                             Daily site photos. Real-time budget tracking. Direct chat with your construction team — all from your phone, without visiting the site once. Full transparency at every stage.
                         </p>
-                        <div className="flex flex-wrap gap-2 sm:gap-3 md:gap-4">
+                        <div className="flex flex-wrap gap-2 sm:gap-3 md:gap-4 mb-6 sm:mb-8">
                             <div className="flex items-center gap-1.5 sm:gap-2 bg-white/20 backdrop-blur-sm px-3 py-1.5 sm:px-4 sm:py-2 md:px-5 md:py-2.5 rounded-full">
                                 <Icon icon={"ph:device-mobile-fill"} width={16} height={16} className="text-white sm:w-5 sm:h-5 md:w-6 md:h-6" />
                                 <span className="text-white text-xs sm:text-sm md:text-base font-semibold whitespace-nowrap">24/7 Mobile Tracking</span>
@@ -256,22 +280,22 @@ export default function BrochureContent() {
                             <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center mx-auto mb-2 sm:mb-3">
                                 <Icon icon={"ph:smiley-fill"} width={24} height={24} className="text-white sm:w-7 sm:h-7 md:w-8 md:h-8" />
                             </div>
-                            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-green-600 mb-1">4.9★</h3>
-                            <p className="text-xs sm:text-sm text-black/70 dark:text-white/70 font-semibold">Client Rating</p>
+                            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-green-600 mb-1">★★★★★</h3>
+                            <p className="text-xs sm:text-sm text-black/70 dark:text-white/70 font-semibold">Client Satisfaction</p>
                         </div>
                         <div className="border border-primary/30 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 text-center bg-gradient-to-br from-primary/5 to-transparent hover:shadow-xl transition-all duration-300 hover:scale-105">
                             <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mx-auto mb-2 sm:mb-3">
                                 <Icon icon={"ph:trophy-fill"} width={24} height={24} className="text-white sm:w-7 sm:h-7 md:w-8 md:h-8" />
                             </div>
-                            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-blue-600 mb-1">3+</h3>
-                            <p className="text-xs sm:text-sm text-black/70 dark:text-white/70 font-semibold">Years Excellence</p>
+                            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-blue-600 mb-1">2022</h3>
+                            <p className="text-xs sm:text-sm text-black/70 dark:text-white/70 font-semibold">Est. in Thrissur, Kerala</p>
                         </div>
                         <div className="border border-primary/30 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 text-center bg-gradient-to-br from-primary/5 to-transparent hover:shadow-xl transition-all duration-300 hover:scale-105">
                             <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center mx-auto mb-2 sm:mb-3">
                                 <Icon icon={"ph:currency-inr-fill"} width={24} height={24} className="text-white sm:w-7 sm:h-7 md:w-8 md:h-8" />
                             </div>
-                            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-purple-600 mb-1">₹0</h3>
-                            <p className="text-xs sm:text-sm text-black/70 dark:text-white/70 font-semibold">Hidden Costs</p>
+                            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-purple-600 mb-1">Clear</h3>
+                            <p className="text-xs sm:text-sm text-black/70 dark:text-white/70 font-semibold">Itemized Pricing</p>
                         </div>
                     </div>
 
@@ -317,13 +341,13 @@ export default function BrochureContent() {
                         <div className="text-center mb-12">
                             <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/20 backdrop-blur-sm mb-6">
                                 <Icon icon={"ph:sparkle-fill"} width={24} height={24} className="text-white" />
-                                <span className="text-white font-bold">INDUSTRY-FIRST IN KERALA</span>
+                                <span className="text-white font-bold">ADVANCED TRACKING TECHNOLOGY</span>
                             </div>
                             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-4 md:mb-6 leading-tight px-4">
                                 24/7 Mobile Project Tracking
                             </h2>
                             <p className="text-base sm:text-lg md:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed px-4">
-                                Be the boss of your construction site from anywhere in the world. India&apos;s most advanced construction tracking system.
+                                Be the boss of your construction site from anywhere in the world. Full transparency at every stage of your project.
                             </p>
                         </div>
 
@@ -498,7 +522,7 @@ export default function BrochureContent() {
                                             </span>
                                             <span className="flex items-center gap-1">
                                                 <Icon icon={"lineicons:arrow-all-direction"} width={16} height={16} />
-                                                {project.area}m²
+                                                {project.area} sq ft
                                             </span>
                                         </div>
                                     </div>
@@ -777,8 +801,8 @@ export default function BrochureContent() {
                             <p className="text-sm text-black/70 dark:text-white/70">Project Access</p>
                         </div>
                         <div className="bg-gradient-to-br from-purple-500/10 to-transparent border border-purple-500/20 rounded-xl p-6 text-center">
-                            <div className="text-4xl font-bold text-purple-600 mb-2">0%</div>
-                            <p className="text-sm text-black/70 dark:text-white/70">Hidden Costs</p>
+                            <div className="text-4xl font-bold text-purple-600 mb-2">Clear</div>
+                            <p className="text-sm text-black/70 dark:text-white/70">Itemized Pricing</p>
                         </div>
                     </div>
                 </section>
@@ -800,7 +824,7 @@ export default function BrochureContent() {
 
                     <div className="grid md:grid-cols-3 gap-6 print-grid">
                         {[
-                            { icon: "ph:device-mobile-fill", title: "Mobile Project Tracking", desc: "Kerala's only 24/7 live site monitoring app — track everything from anywhere", color: "from-blue-500 to-blue-600" },
+                            { icon: "ph:device-mobile-fill", title: "Mobile Project Tracking", desc: "24/7 live site monitoring — track your project from anywhere in the world", color: "from-blue-500 to-blue-600" },
                             { icon: "ph:shield-check-fill", title: "Quality Commitment", desc: "ISI-certified materials from authorized dealers — no compromise on standards", color: "from-green-500 to-green-600" },
                             { icon: "ph:clock-fill", title: "On-Time Focused", desc: "We prioritize your timeline with proactive project management and regular updates", color: "from-orange-500 to-orange-600" },
                             { icon: "ph:currency-inr-fill", title: "Transparent Pricing", desc: "Zero hidden costs. Itemized quotations. What you see is what you pay", color: "from-purple-500 to-purple-600" },
@@ -949,5 +973,24 @@ export default function BrochureContent() {
             </div>
         </div>
         </div>
+
+        {/* Floating Download Button */}
+        <div className="fixed bottom-6 right-6 z-50">
+            <button
+                onClick={handleDownload}
+                disabled={downloadState === "loading"}
+                aria-label="Download company brochure PDF"
+                className="flex items-center gap-2 px-5 py-3 rounded-full bg-primary text-white font-semibold shadow-2xl hover:bg-dark transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed hover:scale-105"
+            >
+                {downloadState === "loading" ? (
+                    <><Icon icon="ph:spinner" width={20} height={20} className="animate-spin" /><span className="hidden sm:inline">Preparing...</span></>
+                ) : downloadState === "error" ? (
+                    <><Icon icon="ph:warning-circle-fill" width={20} height={20} /><span className="hidden sm:inline">Not available</span></>
+                ) : (
+                    <><Icon icon="ph:file-pdf-fill" width={20} height={20} /><span className="hidden sm:inline">Download Brochure</span></>
+                )}
+            </button>
+        </div>
+        </>
     );
 }

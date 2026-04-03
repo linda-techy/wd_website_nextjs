@@ -1,5 +1,7 @@
+"use client";
 import Image from 'next/image';
 import Link from 'next/link';
+import BrochureButton from "@/components/shared/BrochureButton";
 
 const GetInTouch: React.FC = () => {
     return (
@@ -28,6 +30,7 @@ const GetInTouch: React.FC = () => {
                                 <Link href="/tools/home-cost-calculator" className='bg-primary border-2 border-white py-4 px-8 rounded-full text-white hover:bg-white hover:text-dark duration-300 font-semibold' title="Calculate construction cost">
                                     Free Cost Calculator
                                 </Link>
+                                <BrochureButton variant="white" />
                             </div>
                         </div>
                     </div>

@@ -25,6 +25,10 @@ export default function Partnerships() {
         error: string | null;
     }>({ isSubmitting: false, successTab: null, error: null });
 
+    // Password visibility toggles
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
     // Form states for each partnership type
     const [architecturalFormData, setArchitecturalFormData] = useState({
         contactName: "", contactEmail: "", contactPhone: "", designation: "",
@@ -107,6 +111,16 @@ export default function Partnerships() {
         setCorporateFormData({ ...corporateFormData, [e.target.name]: e.target.value });
     };
 
+    // Initial (empty) states for resetting forms after success
+    const initialArchitecturalData = { contactName: "", contactEmail: "", contactPhone: "", designation: "", firmName: "", portfolioLink: "", experience: "", specialization: "", additionalContact: "", gstNumber: "", message: "", password: "", confirmPassword: "" };
+    const initialRealEstateData = { contactName: "", contactEmail: "", contactPhone: "", designation: "", firmName: "", licenseNumber: "", reraNumber: "", areaOfOperation: "", additionalContact: "", message: "", password: "", confirmPassword: "" };
+    const initialInteriorDesignerData = { contactName: "", contactEmail: "", contactPhone: "", designation: "", firmName: "", portfolioLink: "", specialization: "", experience: "", gstNumber: "", additionalContact: "", message: "", password: "", confirmPassword: "" };
+    const initialFinancialData = { contactName: "", contactEmail: "", contactPhone: "", designation: "", bankName: "", branch: "", ifscCode: "", employeeId: "", message: "", password: "", confirmPassword: "" };
+    const initialMaterialSupplierData = { contactName: "", contactEmail: "", contactPhone: "", designation: "", companyName: "", materialsSupplied: "", businessSize: "", location: "", gstNumber: "", additionalContact: "", message: "", password: "", confirmPassword: "" };
+    const initialVastuData = { contactName: "", contactEmail: "", contactPhone: "", businessName: "", yearsOfPractice: "", areaServed: "", certifications: "", additionalContact: "", message: "", password: "", confirmPassword: "" };
+    const initialLandConsultantData = { contactName: "", contactEmail: "", contactPhone: "", businessName: "", areasCovered: "", landTypes: "", licenseNumber: "", additionalContact: "", message: "", password: "", confirmPassword: "" };
+    const initialCorporateData = { contactName: "", contactEmail: "", contactPhone: "", designation: "", companyName: "", industry: "", projectType: "", projectScale: "", gstNumber: "", cinNumber: "", timeline: "", message: "", password: "", confirmPassword: "" };
+
     // Generic submit helper
     const submitApplication = async (
         partnershipType: PartnershipType,
@@ -125,6 +139,17 @@ export default function Partnerships() {
         setFormState({ isSubmitting: true, successTab: null, error: null });
         try {
             await partnershipAPI.submitApplication({ ...payload, partnershipType, password } as Parameters<typeof partnershipAPI.submitApplication>[0]);
+            // Reset the submitted form
+            if (partnershipType === "architectural") setArchitecturalFormData(initialArchitecturalData);
+            else if (partnershipType === "realEstate") setRealEstateFormData(initialRealEstateData);
+            else if (partnershipType === "interiorDesigner") setInteriorDesignerFormData(initialInteriorDesignerData);
+            else if (partnershipType === "financial") setFinancialFormData(initialFinancialData);
+            else if (partnershipType === "materialSupplier") setMaterialSupplierFormData(initialMaterialSupplierData);
+            else if (partnershipType === "vastu") setVastuFormData(initialVastuData);
+            else if (partnershipType === "landConsultant") setLandConsultantFormData(initialLandConsultantData);
+            else if (partnershipType === "corporate") setCorporateFormData(initialCorporateData);
+            setShowPassword(false);
+            setShowConfirmPassword(false);
             setFormState({ isSubmitting: false, successTab: partnershipType, error: null });
         } catch (err: unknown) {
             setFormState({ isSubmitting: false, successTab: null, error: err instanceof Error ? err.message : "Submission failed. Please try again." });
@@ -300,44 +325,44 @@ export default function Partnerships() {
     // FAQ Data for partnerships
     const faqData = [
         {
-            question: "What is the difference between referral and partnership programs?",
-            answer: "Our Referral Program is for individuals referring friends/family clients (one-time cash rewards). Our Referral Partnership Program is for professionals and businesses seeking ongoing collaboration with commission-based revenue. Partnerships involve long-term relationships, formal agreements, and continuous project flow."
+            question: "What is the difference between the Refer a Friend program and the Referral Partnership Program?",
+            answer: "The Refer a Friend program is for individuals who want to refer someone they know for a one-time cash reward — no ongoing commitment needed. The Referral Partnership Program is for professionals such as architects, real estate agents, interior designers, and consultants who want a structured, ongoing business relationship with Walldot Builders — including a partner dashboard, formal agreement, and commission-based earnings on every project they bring."
         },
         {
-            question: "How do partnership commissions work?",
-            answer: "Commission structures are tailored to each partnership type and are defined in your formal partnership agreement. Rates are based on the nature of the referral, project value, and the services you provide. Contact us to discuss the commission structure applicable to your category."
+            question: "What happens after I submit my application?",
+            answer: "Our team will review your application and verify your professional credentials. If your profile is a good fit, we will reach out to schedule a brief discussion to understand your business and finalise the partnership terms. Once the agreement is signed, you will receive login credentials for your partner dashboard and can start submitting referrals immediately."
         },
         {
-            question: "Do I need to sign a formal partnership agreement?",
-            answer: "Yes. All professional partnerships require a formal agreement outlining commission structure, responsibilities, payment terms, and collaboration guidelines. This protects both parties and ensures clear expectations. The agreement process begins after successful verification."
+            question: "How long does the approval process take?",
+            answer: "Most applications are reviewed within 3–7 working days. The timeline depends on how complete your application is and our team's availability for the follow-up discussion. Submitting accurate details and credentials upfront helps speed up the process."
         },
         {
-            question: "How long does the partnership verification process take?",
-            answer: "Verification involves credential checks, reference review, portfolio assessment, and a partnership discussion. Timelines vary based on document completeness and availability. We will keep you updated throughout the process."
+            question: "How do I submit a referral once I am an approved partner?",
+            answer: "Once approved, log in to your partner dashboard using the credentials we provide and use the Add Referral option to submit your client's details. Our sales team will follow up with the client directly. You can track the status of every referral — from initial contact through to project confirmation — in real time on your dashboard."
         },
         {
-            question: "Can I be part of multiple partnership categories?",
-            answer: "Yes! If you operate in multiple domains (e.g., you're both a land consultant and real estate agent), you can apply for multiple partnership categories. Each will have its own agreement and commission structure based on the services provided."
+            question: "How do commissions work?",
+            answer: "Commission rates are specific to your partnership type and agreed upon before you start. They are tied to project milestones — typically after the client signs the construction agreement or after a defined construction stage — depending on your category. The exact rate and payment trigger will be clearly documented in your partnership agreement."
         },
         {
-            question: "Is there a minimum commitment or quota?",
-            answer: "No minimum commitment required. Partnerships are flexible - you refer/collaborate when opportunities arise. However, active partners who consistently bring projects receive priority status, higher commission rates, and exclusive benefits."
+            question: "Do I need to sign a formal agreement?",
+            answer: "Yes. All partnerships require a signed agreement covering commission rates, payment terms, and collaboration guidelines. This protects both parties and ensures there are no ambiguities. The agreement is finalised after the initial verification and discussion with our team."
         },
         {
-            question: "How and when are commissions paid?",
-            answer: "Commission payment schedules are defined in your partnership agreement and tied to project milestones — such as agreement signing, project commencement, or completion, depending on your partnership category. Payments are processed promptly after milestone verification."
+            question: "Is there a minimum number of referrals I need to make?",
+            answer: "No minimum commitment is required. You refer clients when opportunities come up naturally in your work. Partners who refer consistently are recognised with priority support and better commission structures over time."
         },
         {
-            question: "What support do partners receive?",
-            answer: "Partners receive: Dedicated partnership manager, marketing collateral, project updates, priority customer service, training on our processes, co-branded materials (for eligible partners), and quarterly partnership review meetings. We invest in our partners' success."
+            question: "Can I track my referrals and commissions?",
+            answer: "Yes. Your partner dashboard gives you a real-time view of all submitted referrals, their current status, commissions earned, and payment history. You will be notified when there are status updates on your referrals so you are always in the loop without needing to follow up manually."
         },
         {
-            question: "Can I track my partnership performance?",
-            answer: "Yes! Partners get access to a dedicated partner dashboard showing: active projects, commission earnings, payment history, client status, and performance metrics. You'll receive monthly partnership reports via email."
+            question: "Can I apply under more than one partnership category?",
+            answer: "Yes. If your work spans multiple domains — for example, you are both a land consultant and a real estate agent — you can apply for multiple categories. Each category will have its own agreement and commission structure based on the services you provide."
         },
         {
-            question: "Are partnership commissions taxable?",
-            answer: "Yes, all partnership commissions are business income subject to applicable taxes. We provide detailed invoices and TDS certificates for your tax filing. For commissions above ₹50,000, TDS is deducted as per government regulations."
+            question: "Are partnership commissions subject to tax?",
+            answer: "Yes. Partnership commissions are taxable business income under Indian tax law and TDS will be deducted as applicable under the Income Tax Act. We provide payment records for your accounts. We recommend consulting your tax advisor for guidance specific to your situation."
         }
     ];
 
@@ -367,53 +392,8 @@ export default function Partnerships() {
                 </a>
             </div>
 
-            {/* Partnership Types Selector */}
-            <section className="mb-16">
-                <div className="flex flex-col items-center justify-center">
-                    <div className="flex gap-2.5 items-center justify-center mb-6">
-                        <Icon icon={"ph:briefcase-fill"} width={24} height={24} className="text-primary" />
-                        <p className="text-base md:text-lg font-bold text-badge dark:text-white/90">
-                            Choose Referral Partnership Type
-                        </p>
-                    </div>
-                    
-                    {/* Partnership tabs */}
-                    <div className="w-full overflow-x-auto pb-4 no-scrollbar">
-                        <div className="inline-flex gap-3 p-2 border border-black/10 dark:border-white/10 rounded-2xl bg-black/5 dark:bg-white/5 min-w-full justify-center flex-wrap">
-                            {partnershipTabs.map((tab) => (
-                                <button
-                                    key={tab.id}
-                                    onClick={() => setActiveTab(tab.id)}
-                                    className={`px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 whitespace-nowrap ${
-                                        activeTab === tab.id
-                                            ? "bg-primary text-white shadow-lg"
-                                            : "text-black/70 dark:text-white/70 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5"
-                                    }`}
-                                >
-                                    <div className="flex flex-col items-center gap-1">
-                                        <Icon icon={tab.icon} width={20} height={20} />
-                                        <span className="text-xs">{tab.label}</span>
-                                    </div>
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                    
-                    <p className="text-base md:text-lg text-black/70 dark:text-white/70 mt-6 text-center max-w-3xl mx-auto leading-relaxed px-4">
-                        {activeTab === "architectural" && "Partner with us for ongoing architectural collaboration and project commissions"}
-                        {activeTab === "realEstate" && "Collaborate with Kerala's trusted builder and add value to your land buyers"}
-                        {activeTab === "interiorDesigner" && "Join our network for seamless design-to-construction projects"}
-                        {activeTab === "financial" && "Connect your loan-approved clients with reliable construction services"}
-                        {activeTab === "materialSupplier" && "Become our preferred vendor and grow your business"}
-                        {activeTab === "vastu" && "Refer clients whose projects need Vastu-compliant construction"}
-                        {activeTab === "landConsultant" && "Provide complete land + construction solutions to clients"}
-                        {activeTab === "corporate" && "Partner for commercial and industrial construction projects"}
-                    </p>
-                </div>
-            </section>
-
             {/* Partnership Benefits */}
-            <section className="mb-20">
+            <section>
                 <div className="text-center mb-12">
                     <div className="flex gap-2.5 items-center justify-center mb-4">
                         <Icon icon={"ph:star-fill"} width={24} height={24} className="text-primary" />
@@ -448,7 +428,7 @@ export default function Partnerships() {
             </section>
 
             {/* How Partnership Works */}
-            <section className="mb-20">
+            <section >
                 <div className="text-center mb-12">
                     <div className="flex gap-2.5 items-center justify-center mb-4">
                         <Icon icon={"ph:path-fill"} width={24} height={24} className="text-primary" />
@@ -485,7 +465,7 @@ export default function Partnerships() {
             </section>
 
             {/* Partnership Application Form - Will be dynamically rendered based on activeTab */}
-            <section className="mb-20">
+            <section >
                 <div className="text-center mb-12">
                     <div className="flex gap-2.5 items-center justify-center mb-4">
                         <Icon icon={"ph:file-text-fill"} width={24} height={24} className="text-primary" />
@@ -500,7 +480,44 @@ export default function Partnerships() {
                 </div>
 
                 <div className="border border-black/10 dark:border-white/10 rounded-2xl p-8 shadow-xl dark:shadow-white/10 max-w-4xl mx-auto bg-white dark:bg-dark">
-                    {/* Form rendering logic will go here - keeping it from the original comprehensive component */}
+                    {/* Step 1: Choose Partnership Type */}
+                    <div className="mb-8 pb-8 border-b border-black/10 dark:border-white/10">
+                        <div className="flex gap-2 items-center mb-4">
+                            <div className="w-7 h-7 rounded-full bg-primary flex items-center justify-center text-white text-sm font-bold flex-shrink-0">1</div>
+                            <p className="text-base font-semibold text-black dark:text-white">Choose Your Partnership Type</p>
+                        </div>
+                        <div className="w-full overflow-x-auto pb-2 no-scrollbar">
+                            <div className="inline-flex gap-2 p-2 border border-black/10 dark:border-white/10 rounded-2xl bg-black/5 dark:bg-white/5 min-w-full justify-center flex-wrap">
+                                {partnershipTabs.map((tab) => (
+                                    <button
+                                        key={tab.id}
+                                        type="button"
+                                        onClick={() => setActiveTab(tab.id)}
+                                        className={`px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 whitespace-nowrap ${
+                                            activeTab === tab.id
+                                                ? "bg-primary text-white shadow-lg"
+                                                : "text-black/70 dark:text-white/70 hover:text-black dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5"
+                                        }`}
+                                    >
+                                        <div className="flex flex-col items-center gap-1">
+                                            <Icon icon={tab.icon} width={20} height={20} />
+                                            <span className="text-xs">{tab.label}</span>
+                                        </div>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                        <p className="text-sm text-black/60 dark:text-white/60 mt-3 text-center">
+                            {activeTab === "architectural" && "Partner with us for ongoing architectural collaboration and project commissions"}
+                            {activeTab === "realEstate" && "Collaborate with Kerala's trusted builder and add value to your land buyers"}
+                            {activeTab === "interiorDesigner" && "Join our network for seamless design-to-construction projects"}
+                            {activeTab === "financial" && "Connect your loan-approved clients with reliable construction services"}
+                            {activeTab === "materialSupplier" && "Become our preferred vendor and grow your business"}
+                            {activeTab === "vastu" && "Refer clients whose projects need Vastu-compliant construction"}
+                            {activeTab === "landConsultant" && "Provide complete land + construction solutions to clients"}
+                            {activeTab === "corporate" && "Partner for commercial and industrial construction projects"}
+                        </p>
+                    </div>
                     {activeTab === "architectural" && (
                         <form onSubmit={handleArchitecturalSubmit}>
                             <div className="mb-8">
@@ -536,8 +553,18 @@ export default function Partnerships() {
                                     <input type="text" name="additionalContact" placeholder="Additional Contact Person (Optional)" value={architecturalFormData.additionalContact} onChange={handleArchitecturalChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
                                     <textarea rows={5} name="message" placeholder="Tell us about notable projects and why you&apos;d like to partner (Optional)" value={architecturalFormData.message} onChange={handleArchitecturalChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-2xl outline-primary focus:outline bg-transparent text-black dark:text-white text-base md:text-lg"></textarea>
                                     <div className="flex flex-col lg:flex-row gap-6">
-                                        <input type="password" name="password" placeholder="Create Password*" required minLength={8} value={architecturalFormData.password} onChange={handleArchitecturalChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
-                                        <input type="password" name="confirmPassword" placeholder="Confirm Password*" required value={architecturalFormData.confirmPassword} onChange={handleArchitecturalChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                        <div className="relative w-full">
+                                            <input type={showPassword ? "text" : "password"} name="password" placeholder="Create Password*" required minLength={8} value={architecturalFormData.password} onChange={handleArchitecturalChange} className="px-6 py-3.5 pr-12 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white transition-colors">
+                                                <Icon icon={showPassword ? "ph:eye-slash" : "ph:eye"} width={20} height={20} />
+                                            </button>
+                                        </div>
+                                        <div className="relative w-full">
+                                            <input type={showConfirmPassword ? "text" : "password"} name="confirmPassword" placeholder="Confirm Password*" required value={architecturalFormData.confirmPassword} onChange={handleArchitecturalChange} className="px-6 py-3.5 pr-12 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                            <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white transition-colors">
+                                                <Icon icon={showConfirmPassword ? "ph:eye-slash" : "ph:eye"} width={20} height={20} />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -601,8 +628,18 @@ export default function Partnerships() {
                                     <input type="text" name="additionalContact" placeholder="Additional Contact Person (Optional)" value={realEstateFormData.additionalContact} onChange={handleRealEstateChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
                                     <textarea rows={5} name="message" placeholder="Tell us about your business and why you&apos;d like to partner" value={realEstateFormData.message} onChange={handleRealEstateChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-2xl outline-primary focus:outline bg-transparent text-black dark:text-white text-base md:text-lg"></textarea>
                                     <div className="flex flex-col lg:flex-row gap-6">
-                                        <input type="password" name="password" placeholder="Create Password*" required minLength={8} value={realEstateFormData.password} onChange={handleRealEstateChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
-                                        <input type="password" name="confirmPassword" placeholder="Confirm Password*" required value={realEstateFormData.confirmPassword} onChange={handleRealEstateChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                        <div className="relative w-full">
+                                            <input type={showPassword ? "text" : "password"} name="password" placeholder="Create Password*" required minLength={8} value={realEstateFormData.password} onChange={handleRealEstateChange} className="px-6 py-3.5 pr-12 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white transition-colors">
+                                                <Icon icon={showPassword ? "ph:eye-slash" : "ph:eye"} width={20} height={20} />
+                                            </button>
+                                        </div>
+                                        <div className="relative w-full">
+                                            <input type={showConfirmPassword ? "text" : "password"} name="confirmPassword" placeholder="Confirm Password*" required value={realEstateFormData.confirmPassword} onChange={handleRealEstateChange} className="px-6 py-3.5 pr-12 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                            <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white transition-colors">
+                                                <Icon icon={showConfirmPassword ? "ph:eye-slash" : "ph:eye"} width={20} height={20} />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -672,8 +709,18 @@ export default function Partnerships() {
                                     <input type="text" name="additionalContact" placeholder="Additional Contact Person (Optional)" value={interiorDesignerFormData.additionalContact} onChange={handleInteriorDesignerChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
                                     <textarea rows={5} name="message" placeholder="Tell us about your design philosophy and notable projects (Optional)" value={interiorDesignerFormData.message} onChange={handleInteriorDesignerChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-2xl outline-primary focus:outline bg-transparent text-black dark:text-white text-base md:text-lg"></textarea>
                                     <div className="flex flex-col lg:flex-row gap-6">
-                                        <input type="password" name="password" placeholder="Create Password*" required minLength={8} value={interiorDesignerFormData.password} onChange={handleInteriorDesignerChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
-                                        <input type="password" name="confirmPassword" placeholder="Confirm Password*" required value={interiorDesignerFormData.confirmPassword} onChange={handleInteriorDesignerChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                        <div className="relative w-full">
+                                            <input type={showPassword ? "text" : "password"} name="password" placeholder="Create Password*" required minLength={8} value={interiorDesignerFormData.password} onChange={handleInteriorDesignerChange} className="px-6 py-3.5 pr-12 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white transition-colors">
+                                                <Icon icon={showPassword ? "ph:eye-slash" : "ph:eye"} width={20} height={20} />
+                                            </button>
+                                        </div>
+                                        <div className="relative w-full">
+                                            <input type={showConfirmPassword ? "text" : "password"} name="confirmPassword" placeholder="Confirm Password*" required value={interiorDesignerFormData.confirmPassword} onChange={handleInteriorDesignerChange} className="px-6 py-3.5 pr-12 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                            <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white transition-colors">
+                                                <Icon icon={showConfirmPassword ? "ph:eye-slash" : "ph:eye"} width={20} height={20} />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -738,8 +785,18 @@ export default function Partnerships() {
                                     </div>
                                     <textarea rows={5} name="message" placeholder="Tell us about your loan products and target clients (Optional)" value={financialFormData.message} onChange={handleFinancialChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-2xl outline-primary focus:outline bg-transparent text-black dark:text-white text-base md:text-lg"></textarea>
                                     <div className="flex flex-col lg:flex-row gap-6">
-                                        <input type="password" name="password" placeholder="Create Password*" required minLength={8} value={financialFormData.password} onChange={handleFinancialChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
-                                        <input type="password" name="confirmPassword" placeholder="Confirm Password*" required value={financialFormData.confirmPassword} onChange={handleFinancialChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                        <div className="relative w-full">
+                                            <input type={showPassword ? "text" : "password"} name="password" placeholder="Create Password*" required minLength={8} value={financialFormData.password} onChange={handleFinancialChange} className="px-6 py-3.5 pr-12 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white transition-colors">
+                                                <Icon icon={showPassword ? "ph:eye-slash" : "ph:eye"} width={20} height={20} />
+                                            </button>
+                                        </div>
+                                        <div className="relative w-full">
+                                            <input type={showConfirmPassword ? "text" : "password"} name="confirmPassword" placeholder="Confirm Password*" required value={financialFormData.confirmPassword} onChange={handleFinancialChange} className="px-6 py-3.5 pr-12 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                            <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white transition-colors">
+                                                <Icon icon={showConfirmPassword ? "ph:eye-slash" : "ph:eye"} width={20} height={20} />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -811,8 +868,18 @@ export default function Partnerships() {
                                     </div>
                                     <textarea rows={5} name="message" placeholder="Additional information about products and pricing (Optional)" value={materialSupplierFormData.message} onChange={handleMaterialSupplierChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-2xl outline-primary focus:outline bg-transparent text-black dark:text-white text-base md:text-lg"></textarea>
                                     <div className="flex flex-col lg:flex-row gap-6">
-                                        <input type="password" name="password" placeholder="Create Password*" required minLength={8} value={materialSupplierFormData.password} onChange={handleMaterialSupplierChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
-                                        <input type="password" name="confirmPassword" placeholder="Confirm Password*" required value={materialSupplierFormData.confirmPassword} onChange={handleMaterialSupplierChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                        <div className="relative w-full">
+                                            <input type={showPassword ? "text" : "password"} name="password" placeholder="Create Password*" required minLength={8} value={materialSupplierFormData.password} onChange={handleMaterialSupplierChange} className="px-6 py-3.5 pr-12 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white transition-colors">
+                                                <Icon icon={showPassword ? "ph:eye-slash" : "ph:eye"} width={20} height={20} />
+                                            </button>
+                                        </div>
+                                        <div className="relative w-full">
+                                            <input type={showConfirmPassword ? "text" : "password"} name="confirmPassword" placeholder="Confirm Password*" required value={materialSupplierFormData.confirmPassword} onChange={handleMaterialSupplierChange} className="px-6 py-3.5 pr-12 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                            <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white transition-colors">
+                                                <Icon icon={showConfirmPassword ? "ph:eye-slash" : "ph:eye"} width={20} height={20} />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -873,8 +940,18 @@ export default function Partnerships() {
                                     <input type="text" name="additionalContact" placeholder="Additional Contact (Optional)" value={vastuFormData.additionalContact} onChange={handleVastuChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
                                     <textarea rows={5} name="message" placeholder="Tell us about your practice and approach (Optional)" value={vastuFormData.message} onChange={handleVastuChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-2xl outline-primary focus:outline bg-transparent text-black dark:text-white text-base md:text-lg"></textarea>
                                     <div className="flex flex-col lg:flex-row gap-6">
-                                        <input type="password" name="password" placeholder="Create Password*" required minLength={8} value={vastuFormData.password} onChange={handleVastuChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
-                                        <input type="password" name="confirmPassword" placeholder="Confirm Password*" required value={vastuFormData.confirmPassword} onChange={handleVastuChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                        <div className="relative w-full">
+                                            <input type={showPassword ? "text" : "password"} name="password" placeholder="Create Password*" required minLength={8} value={vastuFormData.password} onChange={handleVastuChange} className="px-6 py-3.5 pr-12 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white transition-colors">
+                                                <Icon icon={showPassword ? "ph:eye-slash" : "ph:eye"} width={20} height={20} />
+                                            </button>
+                                        </div>
+                                        <div className="relative w-full">
+                                            <input type={showConfirmPassword ? "text" : "password"} name="confirmPassword" placeholder="Confirm Password*" required value={vastuFormData.confirmPassword} onChange={handleVastuChange} className="px-6 py-3.5 pr-12 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                            <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white transition-colors">
+                                                <Icon icon={showConfirmPassword ? "ph:eye-slash" : "ph:eye"} width={20} height={20} />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -937,8 +1014,18 @@ export default function Partnerships() {
                                     </div>
                                     <textarea rows={5} name="message" placeholder="Tell us about your land portfolio and client base (Optional)" value={landConsultantFormData.message} onChange={handleLandConsultantChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-2xl outline-primary focus:outline bg-transparent text-black dark:text-white text-base md:text-lg"></textarea>
                                     <div className="flex flex-col lg:flex-row gap-6">
-                                        <input type="password" name="password" placeholder="Create Password*" required minLength={8} value={landConsultantFormData.password} onChange={handleLandConsultantChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
-                                        <input type="password" name="confirmPassword" placeholder="Confirm Password*" required value={landConsultantFormData.confirmPassword} onChange={handleLandConsultantChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                        <div className="relative w-full">
+                                            <input type={showPassword ? "text" : "password"} name="password" placeholder="Create Password*" required minLength={8} value={landConsultantFormData.password} onChange={handleLandConsultantChange} className="px-6 py-3.5 pr-12 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white transition-colors">
+                                                <Icon icon={showPassword ? "ph:eye-slash" : "ph:eye"} width={20} height={20} />
+                                            </button>
+                                        </div>
+                                        <div className="relative w-full">
+                                            <input type={showConfirmPassword ? "text" : "password"} name="confirmPassword" placeholder="Confirm Password*" required value={landConsultantFormData.confirmPassword} onChange={handleLandConsultantChange} className="px-6 py-3.5 pr-12 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                            <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white transition-colors">
+                                                <Icon icon={showConfirmPassword ? "ph:eye-slash" : "ph:eye"} width={20} height={20} />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1030,8 +1117,18 @@ export default function Partnerships() {
                                     <input type="text" name="timeline" placeholder="Expected Timeline*" required value={corporateFormData.timeline} onChange={handleCorporateChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
                                     <textarea rows={5} name="message" placeholder="Project requirements and expectations (Optional)" value={corporateFormData.message} onChange={handleCorporateChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-2xl outline-primary focus:outline bg-transparent text-black dark:text-white text-base md:text-lg"></textarea>
                                     <div className="flex flex-col lg:flex-row gap-6">
-                                        <input type="password" name="password" placeholder="Create Password*" required minLength={8} value={corporateFormData.password} onChange={handleCorporateChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
-                                        <input type="password" name="confirmPassword" placeholder="Confirm Password*" required value={corporateFormData.confirmPassword} onChange={handleCorporateChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                        <div className="relative w-full">
+                                            <input type={showPassword ? "text" : "password"} name="password" placeholder="Create Password*" required minLength={8} value={corporateFormData.password} onChange={handleCorporateChange} className="px-6 py-3.5 pr-12 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                            <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white transition-colors">
+                                                <Icon icon={showPassword ? "ph:eye-slash" : "ph:eye"} width={20} height={20} />
+                                            </button>
+                                        </div>
+                                        <div className="relative w-full">
+                                            <input type={showConfirmPassword ? "text" : "password"} name="confirmPassword" placeholder="Confirm Password*" required value={corporateFormData.confirmPassword} onChange={handleCorporateChange} className="px-6 py-3.5 pr-12 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                            <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-black/40 dark:text-white/40 hover:text-black dark:hover:text-white transition-colors">
+                                                <Icon icon={showConfirmPassword ? "ph:eye-slash" : "ph:eye"} width={20} height={20} />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1069,7 +1166,7 @@ export default function Partnerships() {
             </section>
 
             {/* FAQ Section */}
-            <section className="mb-20">
+            <section >
                 <div className="text-center mb-12">
                     <div className="flex gap-2.5 items-center justify-center mb-4">
                         <Icon icon={"ph:question-fill"} width={24} height={24} className="text-primary" />

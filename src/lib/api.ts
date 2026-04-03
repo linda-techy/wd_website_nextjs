@@ -155,6 +155,7 @@ class PartnershipAPI {
             },
         });
 
+        if (response.status === 401) throw new Error('SESSION_EXPIRED');
         if (!response.ok) {
             const error = await response.json();
             throw new Error(error.error || 'Failed to fetch stats');
@@ -171,6 +172,7 @@ class PartnershipAPI {
             },
         });
 
+        if (response.status === 401) throw new Error('SESSION_EXPIRED');
         if (!response.ok) {
             const error = await response.json();
             throw new Error(error.error || 'Failed to fetch referrals');
@@ -189,6 +191,7 @@ class PartnershipAPI {
             body: JSON.stringify(referralData),
         });
 
+        if (response.status === 401) throw new Error('SESSION_EXPIRED');
         if (!response.ok) {
             const error = await response.json();
             throw new Error(error.error || 'Failed to submit referral');
@@ -232,6 +235,7 @@ class PartnershipAPI {
             method: 'GET',
             headers: { ...this.getAuthHeader() },
         });
+        if (response.status === 401) throw new Error('SESSION_EXPIRED');
         if (!response.ok) {
             const error = await response.json();
             throw new Error(error.error || 'Failed to fetch inquiry status');
@@ -249,6 +253,7 @@ class PartnershipAPI {
             body: JSON.stringify(referralData),
         });
 
+        if (response.status === 401) throw new Error('SESSION_EXPIRED');
         if (!response.ok) {
             const error = await response.json();
             throw new Error(error.error || 'Failed to submit referral as lead');

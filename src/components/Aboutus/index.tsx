@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from "next/link";
+import BrochureButton from "@/components/shared/BrochureButton";
 
 const AboutUs: React.FC = () => {
     const features = [
@@ -85,11 +86,7 @@ const AboutUs: React.FC = () => {
                   Cost Calculator
                 </div>
               </Link>
-              <Link href="/brochure" passHref>
-                <div className="px-8 py-3 bg-transparent border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-primary transition-colors shadow-md cursor-pointer inline-block text-center">
-                  Download Brochure
-                </div>
-              </Link>
+              <BrochureButton variant="white" className="rounded-lg px-8 py-3 border-2 border-white !bg-transparent !text-white hover:!bg-white hover:!text-primary shadow-md" />
             </div>
           </div>
         </div>

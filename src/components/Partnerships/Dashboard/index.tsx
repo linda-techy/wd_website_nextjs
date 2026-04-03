@@ -92,6 +92,12 @@ function getPartnerTypeLabel(type?: string): string {
 export default function PartnerDashboard() {
     const router = useRouter();
 
+    const handleSessionExpired = useCallback(() => {
+        localStorage.removeItem("partnerToken");
+        localStorage.removeItem("partnerInfo");
+        router.push("/partnerships/login?reason=session_expired");
+    }, [router]);
+
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [partnerInfo, setPartnerInfo] = useState<PartnerInfo | null>(null);
     const [activeTab, setActiveTab] = useState<"overview" | "referrals" | "add-referral">("overview");
@@ -135,22 +141,18 @@ export default function PartnerDashboard() {
             setStats(statsData);
         } catch (error) {
             console.error("Failed to load dashboard data:", error);
-            // If token expired, redirect to login
-            if (error instanceof Error && error.message.toLowerCase().includes("unauthorized")) {
-                localStorage.removeItem("partnerToken");
-                localStorage.removeItem("partnerInfo");
-                toast.error("Session expired. Please login again.", { icon: '🔒' });
-                router.push("/partnerships/login");
+            if (error instanceof Error && error.message === "SESSION_EXPIRED") {
+                handleSessionExpired();
             } else {
-                toast.error("Failed to load dashboard data. Please refresh the page.", { 
+                toast.error("Failed to load dashboard data. Please refresh the page.", {
                     duration: 4000,
-                    icon: '⚠️' 
+                    icon: '⚠️'
                 });
             }
         } finally {
             setIsLoadingReferrals(false);
         }
-    }, [router]);
+    }, [router, handleSessionExpired]);
 
     const loadMyInquiryData = useCallback(async () => {
         setIsLoadingInquiry(true);
@@ -159,10 +161,13 @@ export default function PartnerDashboard() {
             setMyInquiry(data);
         } catch (error) {
             console.error("Failed to load inquiry status:", error);
+            if (error instanceof Error && error.message === "SESSION_EXPIRED") {
+                handleSessionExpired();
+            }
         } finally {
             setIsLoadingInquiry(false);
         }
-    }, []);
+    }, [handleSessionExpired]);
 
     useEffect(() => {
         const token = localStorage.getItem("partnerToken");
@@ -298,14 +303,16 @@ export default function PartnerDashboard() {
             }
         } catch (error) {
             console.error("Submit referral error:", error);
+            if (error instanceof Error && error.message === "SESSION_EXPIRED") {
+                handleSessionExpired();
+                return;
+            }
             const errorMsg = error instanceof Error ? error.message : "An error occurred. Please try again.";
-            
             toast.error(errorMsg, {
                 duration: 5000,
                 icon: '❌',
                 style: { maxWidth: '500px' },
             });
-            
             setSubmitStatus("error");
             setSubmitError(errorMsg);
         } finally {
