@@ -873,6 +873,7 @@ export default function HomeCostCalculator() {
                   className="w-full sm:w-auto bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 px-6 md:px-8 py-3 md:py-4 rounded-lg transition transform hover:scale-105 text-base md:text-lg font-bold cursor-pointer"
                 >
                   Recalculate
+                </button>
               </div>
             </div>
           </div>
