@@ -2,6 +2,7 @@
 
 import { Icon } from "@iconify/react";
 import { useState } from "react";
+import { partnershipAPI } from "@/lib/api";
 
 type PartnershipType = 
     | "architectural" 
@@ -17,52 +18,60 @@ export default function Partnerships() {
     const [activeTab, setActiveTab] = useState<PartnershipType>("architectural");
     const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
 
+    // Form submission state
+    const [formState, setFormState] = useState<{
+        isSubmitting: boolean;
+        successTab: PartnershipType | null;
+        error: string | null;
+    }>({ isSubmitting: false, successTab: null, error: null });
+
     // Form states for each partnership type
     const [architecturalFormData, setArchitecturalFormData] = useState({
         contactName: "", contactEmail: "", contactPhone: "", designation: "",
-        firmName: "", portfolioLink: "", experience: "", specialization: "", 
-        additionalContact: "", gstNumber: "", message: "",
+        firmName: "", portfolioLink: "", experience: "", specialization: "",
+        additionalContact: "", gstNumber: "", message: "", password: "", confirmPassword: "",
     });
 
     const [realEstateFormData, setRealEstateFormData] = useState({
         contactName: "", contactEmail: "", contactPhone: "", designation: "",
-        firmName: "", licenseNumber: "", reraNumber: "", areaOfOperation: "", 
-        additionalContact: "", message: "",
+        firmName: "", licenseNumber: "", reraNumber: "", areaOfOperation: "",
+        additionalContact: "", message: "", password: "", confirmPassword: "",
     });
 
     const [interiorDesignerFormData, setInteriorDesignerFormData] = useState({
         contactName: "", contactEmail: "", contactPhone: "", designation: "",
-        firmName: "", portfolioLink: "", specialization: "", experience: "", 
-        gstNumber: "", additionalContact: "", message: "",
+        firmName: "", portfolioLink: "", specialization: "", experience: "",
+        gstNumber: "", additionalContact: "", message: "", password: "", confirmPassword: "",
     });
 
     const [financialFormData, setFinancialFormData] = useState({
         contactName: "", contactEmail: "", contactPhone: "", designation: "",
         bankName: "", branch: "", ifscCode: "", employeeId: "", message: "",
+        password: "", confirmPassword: "",
     });
 
     const [materialSupplierFormData, setMaterialSupplierFormData] = useState({
         contactName: "", contactEmail: "", contactPhone: "", designation: "",
-        companyName: "", materialsSupplied: "", businessSize: "", location: "", 
-        gstNumber: "", additionalContact: "", message: "",
+        companyName: "", materialsSupplied: "", businessSize: "", location: "",
+        gstNumber: "", additionalContact: "", message: "", password: "", confirmPassword: "",
     });
 
     const [vastuFormData, setVastuFormData] = useState({
         contactName: "", contactEmail: "", contactPhone: "",
-        businessName: "", yearsOfPractice: "", areaServed: "", 
-        certifications: "", additionalContact: "", message: "",
+        businessName: "", yearsOfPractice: "", areaServed: "",
+        certifications: "", additionalContact: "", message: "", password: "", confirmPassword: "",
     });
 
     const [landConsultantFormData, setLandConsultantFormData] = useState({
         contactName: "", contactEmail: "", contactPhone: "",
-        businessName: "", areasCovered: "", landTypes: "", 
-        licenseNumber: "", additionalContact: "", message: "",
+        businessName: "", areasCovered: "", landTypes: "",
+        licenseNumber: "", additionalContact: "", message: "", password: "", confirmPassword: "",
     });
 
     const [corporateFormData, setCorporateFormData] = useState({
         contactName: "", contactEmail: "", contactPhone: "", designation: "",
-        companyName: "", industry: "", projectType: "", projectScale: "", 
-        gstNumber: "", cinNumber: "", timeline: "", message: "",
+        companyName: "", industry: "", projectType: "", projectScale: "",
+        gstNumber: "", cinNumber: "", timeline: "", message: "", password: "", confirmPassword: "",
     });
 
     // Handle change functions
@@ -98,37 +107,78 @@ export default function Partnerships() {
         setCorporateFormData({ ...corporateFormData, [e.target.name]: e.target.value });
     };
 
+    // Generic submit helper
+    const submitApplication = async (
+        partnershipType: PartnershipType,
+        payload: Record<string, unknown>,
+        password: string,
+        confirmPassword: string,
+    ) => {
+        if (password !== confirmPassword) {
+            setFormState({ isSubmitting: false, successTab: null, error: "Passwords do not match." });
+            return;
+        }
+        if (password.length < 8) {
+            setFormState({ isSubmitting: false, successTab: null, error: "Password must be at least 8 characters." });
+            return;
+        }
+        setFormState({ isSubmitting: true, successTab: null, error: null });
+        try {
+            await partnershipAPI.submitApplication({ ...payload, partnershipType, password } as Parameters<typeof partnershipAPI.submitApplication>[0]);
+            setFormState({ isSubmitting: false, successTab: partnershipType, error: null });
+        } catch (err: unknown) {
+            setFormState({ isSubmitting: false, successTab: null, error: err instanceof Error ? err.message : "Submission failed. Please try again." });
+        }
+    };
+
     // Submit handlers
     const handleArchitecturalSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        const { confirmPassword, password, ...rest } = architecturalFormData;
+        submitApplication("architectural", { ...rest, experience: rest.experience ? parseInt(rest.experience) : undefined }, password, confirmPassword);
     };
 
     const handleRealEstateSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        const { confirmPassword, password, ...rest } = realEstateFormData;
+        submitApplication("realEstate", rest, password, confirmPassword);
     };
 
     const handleInteriorDesignerSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        const { confirmPassword, password, ...rest } = interiorDesignerFormData;
+        submitApplication("interiorDesigner", { ...rest, experience: rest.experience ? parseInt(rest.experience) : undefined }, password, confirmPassword);
     };
 
     const handleFinancialSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        const { confirmPassword, password, bankName, branch, ...rest } = financialFormData;
+        // Map financial-specific fields to generic DTO fields
+        submitApplication("financial", { ...rest, firmName: bankName, location: branch }, password, confirmPassword);
     };
 
     const handleMaterialSupplierSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        const { confirmPassword, password, ...rest } = materialSupplierFormData;
+        submitApplication("materialSupplier", rest, password, confirmPassword);
     };
 
     const handleVastuSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        const { confirmPassword, password, yearsOfPractice, ...rest } = vastuFormData;
+        submitApplication("vastu", { ...rest, yearsOfPractice: yearsOfPractice ? parseInt(yearsOfPractice) : undefined }, password, confirmPassword);
     };
 
     const handleLandConsultantSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        const { confirmPassword, password, ...rest } = landConsultantFormData;
+        submitApplication("landConsultant", rest, password, confirmPassword);
     };
 
     const handleCorporateSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        const { confirmPassword, password, ...rest } = corporateFormData;
+        submitApplication("corporate", rest, password, confirmPassword);
     };
 
     // Partnership tab configuration
@@ -474,15 +524,10 @@ export default function Partnerships() {
                                     <input type="text" name="firmName" placeholder="Firm/Company Name*" required value={architecturalFormData.firmName} onChange={handleArchitecturalChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
                                     <div className="flex flex-col lg:flex-row gap-6">
                                         <input type="number" name="experience" placeholder="Years of Experience*" required min="0" value={architecturalFormData.experience} onChange={handleArchitecturalChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
-                                        <select name="specialization" required value={architecturalFormData.specialization} onChange={handleArchitecturalChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg">
-                                            <option value="">Specialization*</option>
-                                            <option value="residential">Residential Architecture</option>
-                                            <option value="commercial">Commercial Architecture</option>
-                                            <option value="interior">Interior Design</option>
-                                            <option value="landscape">Landscape Architecture</option>
-                                            <option value="sustainable">Sustainable Design</option>
-                                            <option value="mixed">Mixed Use</option>
-                                        </select>
+                                        <div className="w-full">
+                                            <input type="text" name="specialization" placeholder="Specialization / Business Type*" required maxLength={150} value={architecturalFormData.specialization} onChange={handleArchitecturalChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                            <p className="text-xs text-black/50 dark:text-white/50 mt-1.5 px-2">e.g. Architecture Firm, Industrial Construction, MEP Contractor, Residential Architecture</p>
+                                        </div>
                                     </div>
                                     <div className="flex flex-col lg:flex-row gap-6">
                                         <input type="url" name="portfolioLink" placeholder="Portfolio/Website Link*" required value={architecturalFormData.portfolioLink} onChange={handleArchitecturalChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
@@ -490,6 +535,10 @@ export default function Partnerships() {
                                     </div>
                                     <input type="text" name="additionalContact" placeholder="Additional Contact Person (Optional)" value={architecturalFormData.additionalContact} onChange={handleArchitecturalChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
                                     <textarea rows={5} name="message" placeholder="Tell us about notable projects and why you&apos;d like to partner (Optional)" value={architecturalFormData.message} onChange={handleArchitecturalChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-2xl outline-primary focus:outline bg-transparent text-black dark:text-white text-base md:text-lg"></textarea>
+                                    <div className="flex flex-col lg:flex-row gap-6">
+                                        <input type="password" name="password" placeholder="Create Password*" required minLength={8} value={architecturalFormData.password} onChange={handleArchitecturalChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                        <input type="password" name="confirmPassword" placeholder="Confirm Password*" required value={architecturalFormData.confirmPassword} onChange={handleArchitecturalChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                    </div>
                                 </div>
                             </div>
                             <div className="mb-6 p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
@@ -506,10 +555,19 @@ export default function Partnerships() {
                                     I agree to the partnership terms and conditions, and authorize Walldot Builders to create a partner account for tracking and commission management. *
                                 </label>
                             </div>
-                            <button type="submit" className="px-8 py-4 rounded-full bg-primary text-white text-base font-semibold w-full mobile:w-fit hover:cursor-pointer hover:bg-dark duration-300 flex items-center justify-center gap-2 group">
-                                Submit Partnership Application
-                                <Icon icon={"ph:arrow-right"} width={20} height={20} className="group-hover:translate-x-1 transition-transform" />
-                            </button>
+                            {formState.error && activeTab === "architectural" && (
+                                <p className="mb-4 text-sm text-red-600 dark:text-red-400">{formState.error}</p>
+                            )}
+                            {formState.successTab === "architectural" ? (
+                                <div className="p-4 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-300 text-sm">
+                                    Application submitted successfully! Our team will review and contact you shortly.
+                                </div>
+                            ) : (
+                                <button type="submit" disabled={formState.isSubmitting} className="px-8 py-4 rounded-full bg-primary text-white text-base font-semibold w-full mobile:w-fit hover:cursor-pointer hover:bg-dark duration-300 flex items-center justify-center gap-2 group disabled:opacity-60 disabled:cursor-not-allowed">
+                                    {formState.isSubmitting ? "Submitting..." : "Submit Partnership Application"}
+                                    {!formState.isSubmitting && <Icon icon={"ph:arrow-right"} width={20} height={20} className="group-hover:translate-x-1 transition-transform" />}
+                                </button>
+                            )}
                         </form>
                     )}
 
@@ -542,6 +600,10 @@ export default function Partnerships() {
                                     <input type="text" name="areaOfOperation" placeholder="Area of Operation*" required value={realEstateFormData.areaOfOperation} onChange={handleRealEstateChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
                                     <input type="text" name="additionalContact" placeholder="Additional Contact Person (Optional)" value={realEstateFormData.additionalContact} onChange={handleRealEstateChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
                                     <textarea rows={5} name="message" placeholder="Tell us about your business and why you&apos;d like to partner" value={realEstateFormData.message} onChange={handleRealEstateChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-2xl outline-primary focus:outline bg-transparent text-black dark:text-white text-base md:text-lg"></textarea>
+                                    <div className="flex flex-col lg:flex-row gap-6">
+                                        <input type="password" name="password" placeholder="Create Password*" required minLength={8} value={realEstateFormData.password} onChange={handleRealEstateChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                        <input type="password" name="confirmPassword" placeholder="Confirm Password*" required value={realEstateFormData.confirmPassword} onChange={handleRealEstateChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                    </div>
                                 </div>
                             </div>
                             <div className="mb-6 p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
@@ -558,10 +620,19 @@ export default function Partnerships() {
                                     I agree to the partnership terms and conditions, and authorize Walldot Builders to create a partner account for tracking and commission management. *
                                 </label>
                             </div>
-                            <button type="submit" className="px-8 py-4 rounded-full bg-primary text-white text-base font-semibold w-full mobile:w-fit hover:bg-dark duration-300 flex items-center justify-center gap-2 group">
-                                Submit Partnership Application
-                                <Icon icon={"ph:arrow-right"} width={20} height={20} className="group-hover:translate-x-1 transition-transform" />
-                            </button>
+                            {formState.error && activeTab === "realEstate" && (
+                                <p className="mb-4 text-sm text-red-600 dark:text-red-400">{formState.error}</p>
+                            )}
+                            {formState.successTab === "realEstate" ? (
+                                <div className="p-4 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-300 text-sm">
+                                    Application submitted successfully! Our team will review and contact you shortly.
+                                </div>
+                            ) : (
+                                <button type="submit" disabled={formState.isSubmitting} className="px-8 py-4 rounded-full bg-primary text-white text-base font-semibold w-full mobile:w-fit hover:bg-dark duration-300 flex items-center justify-center gap-2 group disabled:opacity-60 disabled:cursor-not-allowed">
+                                    {formState.isSubmitting ? "Submitting..." : "Submit Partnership Application"}
+                                    {!formState.isSubmitting && <Icon icon={"ph:arrow-right"} width={20} height={20} className="group-hover:translate-x-1 transition-transform" />}
+                                </button>
+                            )}
                         </form>
                     )}
 
@@ -589,15 +660,10 @@ export default function Partnerships() {
                                     <input type="text" name="firmName" placeholder="Firm/Studio Name*" required value={interiorDesignerFormData.firmName} onChange={handleInteriorDesignerChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
                                     <div className="flex flex-col lg:flex-row gap-6">
                                         <input type="number" name="experience" placeholder="Years of Experience*" required min="0" value={interiorDesignerFormData.experience} onChange={handleInteriorDesignerChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
-                                        <select name="specialization" required value={interiorDesignerFormData.specialization} onChange={handleInteriorDesignerChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg">
-                                            <option value="">Specialization*</option>
-                                            <option value="residential">Residential Interiors</option>
-                                            <option value="commercial">Commercial Interiors</option>
-                                            <option value="hospitality">Hospitality Design</option>
-                                            <option value="modular">Modular Kitchens</option>
-                                            <option value="luxury">Luxury Design</option>
-                                            <option value="sustainable">Sustainable Design</option>
-                                        </select>
+                                        <div className="w-full">
+                                            <input type="text" name="specialization" placeholder="Specialization / Business Type*" required maxLength={150} value={interiorDesignerFormData.specialization} onChange={handleInteriorDesignerChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                            <p className="text-xs text-black/50 dark:text-white/50 mt-1.5 px-2">e.g. Interior Company, Modular Kitchen Studio, Luxury Design Firm, Commercial Interiors</p>
+                                        </div>
                                     </div>
                                     <div className="flex flex-col lg:flex-row gap-6">
                                         <input type="url" name="portfolioLink" placeholder="Portfolio/Website Link*" required value={interiorDesignerFormData.portfolioLink} onChange={handleInteriorDesignerChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
@@ -605,6 +671,10 @@ export default function Partnerships() {
                                     </div>
                                     <input type="text" name="additionalContact" placeholder="Additional Contact Person (Optional)" value={interiorDesignerFormData.additionalContact} onChange={handleInteriorDesignerChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
                                     <textarea rows={5} name="message" placeholder="Tell us about your design philosophy and notable projects (Optional)" value={interiorDesignerFormData.message} onChange={handleInteriorDesignerChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-2xl outline-primary focus:outline bg-transparent text-black dark:text-white text-base md:text-lg"></textarea>
+                                    <div className="flex flex-col lg:flex-row gap-6">
+                                        <input type="password" name="password" placeholder="Create Password*" required minLength={8} value={interiorDesignerFormData.password} onChange={handleInteriorDesignerChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                        <input type="password" name="confirmPassword" placeholder="Confirm Password*" required value={interiorDesignerFormData.confirmPassword} onChange={handleInteriorDesignerChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                    </div>
                                 </div>
                             </div>
                             <div className="mb-6 p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
@@ -621,10 +691,19 @@ export default function Partnerships() {
                                     I agree to the partnership terms and conditions, and authorize Walldot Builders to create a partner account for tracking and commission management. *
                                 </label>
                             </div>
-                            <button type="submit" className="px-8 py-4 rounded-full bg-primary text-white text-base font-semibold w-full mobile:w-fit hover:bg-dark duration-300 flex items-center justify-center gap-2 group">
-                                Submit Partnership Application
-                                <Icon icon={"ph:arrow-right"} width={20} height={20} className="group-hover:translate-x-1 transition-transform" />
-                            </button>
+                            {formState.error && activeTab === "interiorDesigner" && (
+                                <p className="mb-4 text-sm text-red-600 dark:text-red-400">{formState.error}</p>
+                            )}
+                            {formState.successTab === "interiorDesigner" ? (
+                                <div className="p-4 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-300 text-sm">
+                                    Application submitted successfully! Our team will review and contact you shortly.
+                                </div>
+                            ) : (
+                                <button type="submit" disabled={formState.isSubmitting} className="px-8 py-4 rounded-full bg-primary text-white text-base font-semibold w-full mobile:w-fit hover:bg-dark duration-300 flex items-center justify-center gap-2 group disabled:opacity-60 disabled:cursor-not-allowed">
+                                    {formState.isSubmitting ? "Submitting..." : "Submit Partnership Application"}
+                                    {!formState.isSubmitting && <Icon icon={"ph:arrow-right"} width={20} height={20} className="group-hover:translate-x-1 transition-transform" />}
+                                </button>
+                            )}
                         </form>
                     )}
 
@@ -658,6 +737,10 @@ export default function Partnerships() {
                                         <input type="text" name="employeeId" placeholder="Employee ID (Optional)" value={financialFormData.employeeId} onChange={handleFinancialChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
                                     </div>
                                     <textarea rows={5} name="message" placeholder="Tell us about your loan products and target clients (Optional)" value={financialFormData.message} onChange={handleFinancialChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-2xl outline-primary focus:outline bg-transparent text-black dark:text-white text-base md:text-lg"></textarea>
+                                    <div className="flex flex-col lg:flex-row gap-6">
+                                        <input type="password" name="password" placeholder="Create Password*" required minLength={8} value={financialFormData.password} onChange={handleFinancialChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                        <input type="password" name="confirmPassword" placeholder="Confirm Password*" required value={financialFormData.confirmPassword} onChange={handleFinancialChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                    </div>
                                 </div>
                             </div>
                             <div className="mb-6 p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
@@ -674,10 +757,19 @@ export default function Partnerships() {
                                     I agree to the partnership terms and conditions, and authorize Walldot Builders to create a partner account. *
                                 </label>
                             </div>
-                            <button type="submit" className="px-8 py-4 rounded-full bg-primary text-white text-base font-semibold w-full mobile:w-fit hover:bg-dark duration-300 flex items-center justify-center gap-2 group">
-                                Submit Partnership Application
-                                <Icon icon={"ph:arrow-right"} width={20} height={20} className="group-hover:translate-x-1 transition-transform" />
-                            </button>
+                            {formState.error && activeTab === "financial" && (
+                                <p className="mb-4 text-sm text-red-600 dark:text-red-400">{formState.error}</p>
+                            )}
+                            {formState.successTab === "financial" ? (
+                                <div className="p-4 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-300 text-sm">
+                                    Application submitted successfully! Our team will review and contact you shortly.
+                                </div>
+                            ) : (
+                                <button type="submit" disabled={formState.isSubmitting} className="px-8 py-4 rounded-full bg-primary text-white text-base font-semibold w-full mobile:w-fit hover:bg-dark duration-300 flex items-center justify-center gap-2 group disabled:opacity-60 disabled:cursor-not-allowed">
+                                    {formState.isSubmitting ? "Submitting..." : "Submit Partnership Application"}
+                                    {!formState.isSubmitting && <Icon icon={"ph:arrow-right"} width={20} height={20} className="group-hover:translate-x-1 transition-transform" />}
+                                </button>
+                            )}
                         </form>
                     )}
 
@@ -718,6 +810,10 @@ export default function Partnerships() {
                                         <input type="text" name="additionalContact" placeholder="Additional Contact (Optional)" value={materialSupplierFormData.additionalContact} onChange={handleMaterialSupplierChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
                                     </div>
                                     <textarea rows={5} name="message" placeholder="Additional information about products and pricing (Optional)" value={materialSupplierFormData.message} onChange={handleMaterialSupplierChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-2xl outline-primary focus:outline bg-transparent text-black dark:text-white text-base md:text-lg"></textarea>
+                                    <div className="flex flex-col lg:flex-row gap-6">
+                                        <input type="password" name="password" placeholder="Create Password*" required minLength={8} value={materialSupplierFormData.password} onChange={handleMaterialSupplierChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                        <input type="password" name="confirmPassword" placeholder="Confirm Password*" required value={materialSupplierFormData.confirmPassword} onChange={handleMaterialSupplierChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                    </div>
                                 </div>
                             </div>
                             <div className="mb-6 p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
@@ -734,10 +830,19 @@ export default function Partnerships() {
                                     I agree to the vendor partnership terms and authorize account creation. *
                                 </label>
                             </div>
-                            <button type="submit" className="px-8 py-4 rounded-full bg-primary text-white text-base font-semibold w-full mobile:w-fit hover:bg-dark duration-300 flex items-center justify-center gap-2 group">
-                                Submit Partnership Application
-                                <Icon icon={"ph:arrow-right"} width={20} height={20} className="group-hover:translate-x-1 transition-transform" />
-                            </button>
+                            {formState.error && activeTab === "materialSupplier" && (
+                                <p className="mb-4 text-sm text-red-600 dark:text-red-400">{formState.error}</p>
+                            )}
+                            {formState.successTab === "materialSupplier" ? (
+                                <div className="p-4 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-300 text-sm">
+                                    Application submitted successfully! Our team will review and contact you shortly.
+                                </div>
+                            ) : (
+                                <button type="submit" disabled={formState.isSubmitting} className="px-8 py-4 rounded-full bg-primary text-white text-base font-semibold w-full mobile:w-fit hover:bg-dark duration-300 flex items-center justify-center gap-2 group disabled:opacity-60 disabled:cursor-not-allowed">
+                                    {formState.isSubmitting ? "Submitting..." : "Submit Partnership Application"}
+                                    {!formState.isSubmitting && <Icon icon={"ph:arrow-right"} width={20} height={20} className="group-hover:translate-x-1 transition-transform" />}
+                                </button>
+                            )}
                         </form>
                     )}
 
@@ -767,6 +872,10 @@ export default function Partnerships() {
                                     <input type="text" name="certifications" placeholder="Certifications/Qualifications (Optional)" value={vastuFormData.certifications} onChange={handleVastuChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
                                     <input type="text" name="additionalContact" placeholder="Additional Contact (Optional)" value={vastuFormData.additionalContact} onChange={handleVastuChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
                                     <textarea rows={5} name="message" placeholder="Tell us about your practice and approach (Optional)" value={vastuFormData.message} onChange={handleVastuChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-2xl outline-primary focus:outline bg-transparent text-black dark:text-white text-base md:text-lg"></textarea>
+                                    <div className="flex flex-col lg:flex-row gap-6">
+                                        <input type="password" name="password" placeholder="Create Password*" required minLength={8} value={vastuFormData.password} onChange={handleVastuChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                        <input type="password" name="confirmPassword" placeholder="Confirm Password*" required value={vastuFormData.confirmPassword} onChange={handleVastuChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                    </div>
                                 </div>
                             </div>
                             <div className="mb-6 p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
@@ -783,10 +892,19 @@ export default function Partnerships() {
                                     I agree to the partnership terms and authorize account creation. *
                                 </label>
                             </div>
-                            <button type="submit" className="px-8 py-4 rounded-full bg-primary text-white text-base font-semibold w-full mobile:w-fit hover:bg-dark duration-300 flex items-center justify-center gap-2 group">
-                                Submit Partnership Application
-                                <Icon icon={"ph:arrow-right"} width={20} height={20} className="group-hover:translate-x-1 transition-transform" />
-                            </button>
+                            {formState.error && activeTab === "vastu" && (
+                                <p className="mb-4 text-sm text-red-600 dark:text-red-400">{formState.error}</p>
+                            )}
+                            {formState.successTab === "vastu" ? (
+                                <div className="p-4 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-300 text-sm">
+                                    Application submitted successfully! Our team will review and contact you shortly.
+                                </div>
+                            ) : (
+                                <button type="submit" disabled={formState.isSubmitting} className="px-8 py-4 rounded-full bg-primary text-white text-base font-semibold w-full mobile:w-fit hover:bg-dark duration-300 flex items-center justify-center gap-2 group disabled:opacity-60 disabled:cursor-not-allowed">
+                                    {formState.isSubmitting ? "Submitting..." : "Submit Partnership Application"}
+                                    {!formState.isSubmitting && <Icon icon={"ph:arrow-right"} width={20} height={20} className="group-hover:translate-x-1 transition-transform" />}
+                                </button>
+                            )}
                         </form>
                     )}
 
@@ -818,6 +936,10 @@ export default function Partnerships() {
                                         <input type="text" name="additionalContact" placeholder="Additional Contact (Optional)" value={landConsultantFormData.additionalContact} onChange={handleLandConsultantChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
                                     </div>
                                     <textarea rows={5} name="message" placeholder="Tell us about your land portfolio and client base (Optional)" value={landConsultantFormData.message} onChange={handleLandConsultantChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-2xl outline-primary focus:outline bg-transparent text-black dark:text-white text-base md:text-lg"></textarea>
+                                    <div className="flex flex-col lg:flex-row gap-6">
+                                        <input type="password" name="password" placeholder="Create Password*" required minLength={8} value={landConsultantFormData.password} onChange={handleLandConsultantChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                        <input type="password" name="confirmPassword" placeholder="Confirm Password*" required value={landConsultantFormData.confirmPassword} onChange={handleLandConsultantChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                    </div>
                                 </div>
                             </div>
                             <div className="mb-6 p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
@@ -834,10 +956,19 @@ export default function Partnerships() {
                                     I agree to the partnership terms and authorize account creation. *
                                 </label>
                             </div>
-                            <button type="submit" className="px-8 py-4 rounded-full bg-primary text-white text-base font-semibold w-full mobile:w-fit hover:bg-dark duration-300 flex items-center justify-center gap-2 group">
-                                Submit Partnership Application
-                                <Icon icon={"ph:arrow-right"} width={20} height={20} className="group-hover:translate-x-1 transition-transform" />
-                            </button>
+                            {formState.error && activeTab === "landConsultant" && (
+                                <p className="mb-4 text-sm text-red-600 dark:text-red-400">{formState.error}</p>
+                            )}
+                            {formState.successTab === "landConsultant" ? (
+                                <div className="p-4 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-300 text-sm">
+                                    Application submitted successfully! Our team will review and contact you shortly.
+                                </div>
+                            ) : (
+                                <button type="submit" disabled={formState.isSubmitting} className="px-8 py-4 rounded-full bg-primary text-white text-base font-semibold w-full mobile:w-fit hover:bg-dark duration-300 flex items-center justify-center gap-2 group disabled:opacity-60 disabled:cursor-not-allowed">
+                                    {formState.isSubmitting ? "Submitting..." : "Submit Partnership Application"}
+                                    {!formState.isSubmitting && <Icon icon={"ph:arrow-right"} width={20} height={20} className="group-hover:translate-x-1 transition-transform" />}
+                                </button>
+                            )}
                         </form>
                     )}
 
@@ -898,6 +1029,10 @@ export default function Partnerships() {
                                     </div>
                                     <input type="text" name="timeline" placeholder="Expected Timeline*" required value={corporateFormData.timeline} onChange={handleCorporateChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
                                     <textarea rows={5} name="message" placeholder="Project requirements and expectations (Optional)" value={corporateFormData.message} onChange={handleCorporateChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-2xl outline-primary focus:outline bg-transparent text-black dark:text-white text-base md:text-lg"></textarea>
+                                    <div className="flex flex-col lg:flex-row gap-6">
+                                        <input type="password" name="password" placeholder="Create Password*" required minLength={8} value={corporateFormData.password} onChange={handleCorporateChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                        <input type="password" name="confirmPassword" placeholder="Confirm Password*" required value={corporateFormData.confirmPassword} onChange={handleCorporateChange} className="px-6 py-3.5 border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white text-base md:text-lg" />
+                                    </div>
                                 </div>
                             </div>
                             <div className="mb-6 p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
@@ -914,10 +1049,19 @@ export default function Partnerships() {
                                     I am authorized to represent the company and agree to partnership terms. *
                                 </label>
                             </div>
-                            <button type="submit" className="px-8 py-4 rounded-full bg-primary text-white text-base font-semibold w-full mobile:w-fit hover:bg-dark duration-300 flex items-center justify-center gap-2 group">
-                                Submit Referral Partnership Application
-                                <Icon icon={"ph:arrow-right"} width={20} height={20} className="group-hover:translate-x-1 transition-transform" />
-                            </button>
+                            {formState.error && activeTab === "corporate" && (
+                                <p className="mb-4 text-sm text-red-600 dark:text-red-400">{formState.error}</p>
+                            )}
+                            {formState.successTab === "corporate" ? (
+                                <div className="p-4 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-300 text-sm">
+                                    Application submitted successfully! Our team will review and contact you shortly.
+                                </div>
+                            ) : (
+                                <button type="submit" disabled={formState.isSubmitting} className="px-8 py-4 rounded-full bg-primary text-white text-base font-semibold w-full mobile:w-fit hover:bg-dark duration-300 flex items-center justify-center gap-2 group disabled:opacity-60 disabled:cursor-not-allowed">
+                                    {formState.isSubmitting ? "Submitting..." : "Submit Referral Partnership Application"}
+                                    {!formState.isSubmitting && <Icon icon={"ph:arrow-right"} width={20} height={20} className="group-hover:translate-x-1 transition-transform" />}
+                                </button>
+                            )}
                         </form>
                     )}
                     

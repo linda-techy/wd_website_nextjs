@@ -30,7 +30,7 @@ const contactPageSchema = {
         "@type": "GeneralContractor",
         "name": "Walldot Builders",
         "telephone": "+91-9074954874",
-        "email": "hello@walldotbuilders.com",
+        "email": "info@walldotbuilders.com",
         "address": {
             "@type": "PostalAddress",
             "addressLocality": "Thrissur",
@@ -40,7 +40,7 @@ const contactPageSchema = {
     },
 };
 
-export default function ContactLayout({ children }: { children: React.ReactNode }) {
+export default function ContactLayout({ children     }: { children: React.ReactNode }) {
     return (
         <>
             <script
