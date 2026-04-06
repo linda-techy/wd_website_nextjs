@@ -219,7 +219,6 @@ export default function LeadCapturePopup({
         className={`fixed inset-0 bg-black/60 backdrop-blur-md z-[9998] transition-opacity duration-300 ${
           isClosing ? 'opacity-0' : 'opacity-100'
         }`}
-        onClick={handleClose}
         aria-hidden="true"
       />
 

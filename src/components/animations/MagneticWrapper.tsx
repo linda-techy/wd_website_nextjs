@@ -27,7 +27,7 @@ export default function MagneticWrapper({ children, intensity = 40, className = 
         gsap.to(ref.current, {
             x: xPercent * intensity,
             y: yPercent * intensity,
-            duration: 0.6,
+            duration: 0.22,
             ease: "power3.out",
         });
     };
@@ -37,7 +37,7 @@ export default function MagneticWrapper({ children, intensity = 40, className = 
         gsap.to(ref.current, {
             x: 0,
             y: 0,
-            duration: 0.7,
+            duration: 0.4,
             ease: "elastic.out(1.2, 0.4)", 
         });
     };

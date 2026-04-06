@@ -22,8 +22,9 @@ export default function CustomCursor() {
         gsap.set(cursor, { xPercent: -50, yPercent: -50 });
 
         // Extremely performant quickSetters bypassing React state
-        const xTo = gsap.quickTo(cursor, "x", { duration: 0.15, ease: "power3" });
-        const yTo = gsap.quickTo(cursor, "y", { duration: 0.15, ease: "power3" });
+        // Shorter duration keeps cursor tightly synced to pointer movement.
+        const xTo = gsap.quickTo(cursor, "x", { duration: 0.08, ease: "power2.out" });
+        const yTo = gsap.quickTo(cursor, "y", { duration: 0.08, ease: "power2.out" });
 
         const onMouseMove = (e: MouseEvent) => {
             xTo(e.clientX);

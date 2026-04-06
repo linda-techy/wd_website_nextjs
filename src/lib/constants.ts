@@ -2,11 +2,11 @@
 
 // Project Type Constants (aligned with portal)
 export const PROJECT_TYPES = [
-  { displayText: "Turnkey Project", value: "turnkey_project" },
   { displayText: "Residential Construction", value: "residential_construction" },
   { displayText: "Commercial Construction", value: "commercial_construction" },
   { displayText: "Interior Work", value: "interior_work" },
-  { displayText: "Renovation / Remodeling", value: "renovation_remodeling" }
+  { displayText: "Renovation / Remodeling", value: "renovation_remodeling" },
+  { displayText: "Other", value: "other" }
 ];
 
 // Customer Type Constants (aligned with portal)
