@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Metadata } from "next";
 import { Icon } from "@iconify/react/dist/iconify.js"
+import LeadQuoteForm from "@/components/shared/LeadQuoteForm";
 
 export const metadata: Metadata = {
   title: "404 Page | Property ",
@@ -38,6 +39,15 @@ const ErrorPage = () => {
         <p className="text-lg text-dark/50 dark:text-white/50 font-normal w-full mx-auto">
           Looks like you’ve hit a dead end — but don’t worry, we’ll help you get back on track
         </p>
+      </section>
+      <section className="py-12 bg-gray-50 dark:bg-gray-900">
+        <div className="container mx-auto max-w-md px-4">
+          <LeadQuoteForm
+            leadSource="website_404"
+            title="Can’t find what you’re looking for? Let us help."
+            compact
+          />
+        </div>
       </section>
     </>
   );

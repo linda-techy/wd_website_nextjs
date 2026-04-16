@@ -4,6 +4,7 @@ import { propertyHomes } from '@/app/api/propertyhomes';
 import { Icon } from '@iconify/react';
 import Link from 'next/link';
 import Image from 'next/image';
+import LeadQuoteForm from '@/components/shared/LeadQuoteForm';
 
 export default function PropertyDetails({ slug }: { slug: string }) {
     const item = propertyHomes.find((item) => item.slug === slug);
@@ -181,25 +182,13 @@ export default function PropertyDetails({ slug }: { slug: string }) {
               </div>
             </div>
             <div className="lg:col-span-4 col-span-12">
-              <div className="bg-primary/10 p-8 rounded-2xl relative z-10 overflow-hidden">
-                <h4 className="text-dark text-3xl font-medium dark:text-white">
-                  Plan Your Dream Home
-                </h4>
-                <Link
-                  href="/contactus"
-                  className="py-4 px-8 bg-primary text-white rounded-full w-full block text-center hover:bg-dark duration-300 text-base mt-8 hover:cursor-pointer"
-                >
-                  Contact Us
-                </Link>
-                <div className="absolute right-0 top-4 -z-[1]">
-                  <Image
-                    src="/images/properties/vector.svg"
-                    width={400}
-                    height={500}
-                    alt="vector"
-                    unoptimized={true}
-                  />
-                </div>
+              <div className="bg-white dark:bg-gray-900 border-2 border-gray-100 dark:border-gray-700 p-6 rounded-2xl">
+                <LeadQuoteForm
+                  leadSource={`website_property_${slug}`}
+                  title="Interested in this project?"
+                  compact
+                  showMessage={false}
+                />
               </div>
                 <div
                   className="border p-10 rounded-2xl border-dark/10 dark:border-white/20 mt-10 flex flex-col gap-6"

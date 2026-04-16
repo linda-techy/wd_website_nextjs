@@ -1,5 +1,6 @@
 import HeroSub from "@/components/shared/HeroSub";
 import OfficeSpace from "@/components/Properties/OfficeSpaces";
+import LeadQuoteForm from "@/components/shared/LeadQuoteForm";
 import React from "react";
 import { Metadata } from "next";
 export const metadata: Metadata = {
@@ -31,6 +32,17 @@ const page = () => {
                 badge="Properties"
             />
             <OfficeSpace />
+            <section className="py-16 bg-gray-50 dark:bg-gray-900">
+                <div className="container mx-auto max-w-lg px-4">
+                    <LeadQuoteForm
+                        leadSource="website_office_spaces"
+                        title="Interested in a Commercial Space?"
+                        submitLabel="Get Free Consultation"
+                        showArea
+                        projectType="office_space"
+                    />
+                </div>
+            </section>
         </>
     );
 };

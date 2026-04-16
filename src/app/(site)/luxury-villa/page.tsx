@@ -1,5 +1,6 @@
 import HeroSub from "@/components/shared/HeroSub";
 import LuxuryVillas from "@/components/Properties/LuxuryVilla";
+import LeadQuoteForm from "@/components/shared/LeadQuoteForm";
 import React from "react";
 import { Metadata } from "next";
 export const metadata: Metadata = {
@@ -31,6 +32,17 @@ const page = () => {
                 badge="Properties"
             />
             <LuxuryVillas />
+            <section className="py-16 bg-gray-50 dark:bg-gray-900">
+                <div className="container mx-auto max-w-lg px-4">
+                    <LeadQuoteForm
+                        leadSource="website_luxury_villa"
+                        title="Interested in a Luxury Villa?"
+                        submitLabel="Get Free Consultation"
+                        showArea
+                        projectType="luxury_villa"
+                    />
+                </div>
+            </section>
         </>
     );
 };

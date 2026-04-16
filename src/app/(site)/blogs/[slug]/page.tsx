@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
 import { Icon } from '@iconify/react'
+import LeadQuoteForm from "@/components/shared/LeadQuoteForm";
 
 type Props = {
     params: { slug: string };
@@ -192,6 +193,16 @@ export default async function Post({ params }: any) {
                             <div dangerouslySetInnerHTML={{ __html: content }}></div>
                         </div>
                     </div>
+                </div>
+            </section>
+            <section className="py-16 bg-gray-50 dark:bg-gray-900">
+                <div className="container mx-auto max-w-lg px-4">
+                    <LeadQuoteForm
+                        leadSource="website_blog"
+                        title="Planning a Similar Project?"
+                        submitLabel="Talk to Our Experts"
+                        compact
+                    />
                 </div>
             </section>
         </>
