@@ -2,7 +2,6 @@
 
 import { Icon } from "@iconify/react";
 import { useState, useEffect } from "react";
-import { BASE_API_URL } from "@/lib/config";
 
 interface LeadCapturePopupProps {
   heading?: string;
@@ -127,9 +126,9 @@ export default function LeadCapturePopup({
         }
         break;
       case "phone":
-        const phoneRegex = /^[6-9]\d{9}$/;
+        const phoneRegex = /^(\+?\d{1,4}[-\s]?)?\d{7,14}$/;
         if (!phoneRegex.test(value.replace(/\s/g, ''))) {
-          error = "Enter a valid 10-digit mobile number";
+          error = "Enter a valid phone number";
         }
         break;
       case "email":
@@ -183,7 +182,7 @@ export default function LeadCapturePopup({
         phone: formData.phone.replace(/\s/g, ''),
       };
 
-      const response = await fetch(`${BASE_API_URL}/leads/contact`, {
+      const response = await fetch('/api/leads/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -405,9 +404,8 @@ export default function LeadCapturePopup({
                           type="tel"
                           id="phone"
                           name="phone"
-                          placeholder="10-digit mobile number"
+                          placeholder="Phone number"
                           required
-                          maxLength={10}
                           value={formData.phone}
                           onChange={handleChange}
                           onBlur={handleBlur}

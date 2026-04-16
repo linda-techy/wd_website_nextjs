@@ -1,7 +1,4 @@
 // API configuration for partnership authentication
-import { BASE_API_URL } from './config';
-
-const API_BASE = BASE_API_URL || 'http://localhost:8080';
 
 export interface PartnerLoginRequest {
     email: string;
@@ -95,7 +92,7 @@ class PartnershipAPI {
     }
 
     async login(credentials: PartnerLoginRequest): Promise<PartnerLoginResponse> {
-        const response = await fetch(`${API_BASE}/api/partnerships/login`, {
+        const response = await fetch(`/api/partnerships/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -112,7 +109,7 @@ class PartnershipAPI {
     }
 
     async submitApplication(data: PartnershipApplicationRequest): Promise<any> {
-        const response = await fetch(`${API_BASE}/api/partnerships/apply`, {
+        const response = await fetch(`/api/partnerships/apply`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -129,7 +126,7 @@ class PartnershipAPI {
     }
 
     async logout(): Promise<void> {
-        const response = await fetch(`${API_BASE}/api/partnerships/logout`, {
+        const response = await fetch(`/api/partnerships/logout`, {
             method: 'POST',
             headers: {
                 ...this.getAuthHeader(),
@@ -148,7 +145,7 @@ class PartnershipAPI {
     }
 
     async getStats(): Promise<any> {
-        const response = await fetch(`${API_BASE}/api/partnerships/stats`, {
+        const response = await fetch(`/api/partnerships/stats`, {
             method: 'GET',
             headers: {
                 ...this.getAuthHeader(),
@@ -165,7 +162,7 @@ class PartnershipAPI {
     }
 
     async getReferrals(): Promise<any[]> {
-        const response = await fetch(`${API_BASE}/api/partnerships/referrals`, {
+        const response = await fetch(`/api/partnerships/referrals`, {
             method: 'GET',
             headers: {
                 ...this.getAuthHeader(),
@@ -182,7 +179,7 @@ class PartnershipAPI {
     }
 
     async submitReferral(referralData: any): Promise<any> {
-        const response = await fetch(`${API_BASE}/api/partnerships/referrals`, {
+        const response = await fetch(`/api/partnerships/referrals`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -201,7 +198,7 @@ class PartnershipAPI {
     }
 
     async forgotPassword(email: string): Promise<void> {
-        const response = await fetch(`${API_BASE}/api/partnerships/forgot-password`, {
+        const response = await fetch(`/api/partnerships/forgot-password`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email }),
@@ -214,7 +211,7 @@ class PartnershipAPI {
     }
 
     async resetPassword(email: string, token: string, newPassword: string): Promise<void> {
-        const response = await fetch(`${API_BASE}/api/partnerships/reset-password`, {
+        const response = await fetch(`/api/partnerships/reset-password`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, token, newPassword }),
@@ -231,7 +228,7 @@ class PartnershipAPI {
      * Shows them where they are in the pipeline (contacted, qualified, etc.)
      */
     async getMyInquiry(): Promise<any> {
-        const response = await fetch(`${API_BASE}/api/partnerships/my-inquiry`, {
+        const response = await fetch(`/api/partnerships/my-inquiry`, {
             method: 'GET',
             headers: { ...this.getAuthHeader() },
         });
@@ -244,7 +241,7 @@ class PartnershipAPI {
     }
 
     async submitReferralAsLead(referralData: PartnershipReferralRequest): Promise<any> {
-        const response = await fetch(`${API_BASE}/api/partnerships/referrals/lead`, {
+        const response = await fetch(`/api/partnerships/referrals/lead`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

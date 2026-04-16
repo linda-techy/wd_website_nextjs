@@ -3,7 +3,6 @@
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { BASE_API_URL } from "@/lib/config";
 import { STATE_LIST, DEFAULT_STATE, DEFAULT_DISTRICT, getDistrictsByState } from "@/lib/constants";
 
 const EMPTY_FORM = {
@@ -36,9 +35,9 @@ export default function Referrals() {
         setErrorMessage('');
 
         // Validate phone numbers
-        const phoneRegex = /^[6-9]\d{9}$/;
+        const phoneRegex = /^(\+?\d{1,4}[-\s]?)?\d{7,14}$/;
         if (!phoneRegex.test(formData.yourPhone.replace(/\s/g, ''))) {
-            toast.error('Please enter a valid 10-digit Indian mobile number for Your Phone', {
+            toast.error('Please enter a valid phone number for Your Phone', {
                 duration: 4000,
                 icon: '📱',
             });
@@ -46,7 +45,7 @@ export default function Referrals() {
             return;
         }
         if (!phoneRegex.test(formData.referralPhone.replace(/\s/g, ''))) {
-            toast.error("Please enter a valid 10-digit Indian mobile number for your friend's phone", {
+            toast.error("Please enter a valid phone number for your friend's phone", {
                 duration: 4000,
                 icon: '📱',
             });
@@ -80,7 +79,7 @@ export default function Referrals() {
         const loadingToast = toast.loading('Submitting your referral...');
 
         try {
-            const response = await fetch(`${BASE_API_URL}/leads/referral`, {
+            const response = await fetch('/api/leads/referral', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

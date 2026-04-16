@@ -4,7 +4,6 @@ import Head from 'next/head';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Doughnut } from 'react-chartjs-2';
-import { BASE_API_URL } from '@/lib/config';
 import toast, { Toaster } from 'react-hot-toast';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
@@ -321,7 +320,7 @@ export default function HomeCostCalculator() {
     const fetchRates = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`${BASE_API_URL}/tools/getwdsqftcategories`);
+        const response = await fetch('/api/tools/getwdsqftcategories');
         const data = await response.json();
         setTypeCostRanges(data);
         // Initialize cost ranges for the default selected type
@@ -446,7 +445,7 @@ export default function HomeCostCalculator() {
     };
 
     try {
-      const response = await fetch(`${BASE_API_URL}/leads/calculator/home-cost`, {
+      const response = await fetch('/api/leads/calculator', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)

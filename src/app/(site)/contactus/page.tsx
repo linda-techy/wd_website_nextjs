@@ -5,7 +5,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
 import { STATE_LIST, DEFAULT_STATE, DEFAULT_DISTRICT, getDistrictsByState, PROJECT_TYPES } from '@/lib/constants'
-import { BASE_API_URL } from '@/lib/config'
 import Breadcrumb from '@/components/shared/Breadcrumb'
 import RelatedLinks, { toolsRelatedLinks } from '@/components/shared/RelatedLinks'
 import gsap from 'gsap'
@@ -26,6 +25,7 @@ function ContactUs() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({ email: '', phone: '' });
   const formRef = useRef<HTMLFormElement>(null);
 
   useGSAP(() => {
@@ -69,6 +69,24 @@ function ContactUs() {
     });
   };
 
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    if (name === 'email') {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      setFieldErrors(prev => ({
+        ...prev,
+        email: value && !emailRegex.test(value) ? 'Enter a valid email address' : '',
+      }));
+    }
+    if (name === 'phone') {
+      const phoneRegex = /^(\+?\d{1,4}[-\s]?)?\d{7,14}$/;
+      setFieldErrors(prev => ({
+        ...prev,
+        phone: value && !phoneRegex.test(value.replace(/\s/g, '')) ? 'Enter a valid phone number' : '',
+      }));
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -88,7 +106,7 @@ function ContactUs() {
       };
 
       // Submit to public contact form API endpoint (no authentication required)
-      const response = await fetch(`${BASE_API_URL}/leads/contact`, {
+      const response = await fetch('/api/leads/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -247,29 +265,45 @@ function ContactUs() {
                     onChange={handleChange}
                     className='form-animate-input px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 md:py-3.5 text-sm sm:text-base border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300'
                   />
-                  <input
-                    type='tel'
-                    name='phone'
-                    id='phone'
-                    autoComplete='tel'
-                    placeholder='Phone number*'
-                    required
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className='form-animate-input px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 md:py-3.5 text-sm sm:text-base border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300'
-                  />
+                  <div className="w-full">
+                    <input
+                      type='tel'
+                      name='phone'
+                      id='phone'
+                      autoComplete='tel'
+                      placeholder='Phone number*'
+                      required
+                      value={formData.phone}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className={`form-animate-input px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 md:py-3.5 text-sm sm:text-base border rounded-full outline-primary focus:outline w-full bg-transparent text-black dark:text-white focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 ${
+                        fieldErrors.phone ? 'border-red-400 dark:border-red-500' : 'border-black/10 dark:border-white/10'
+                      }`}
+                    />
+                    {fieldErrors.phone && (
+                      <p className='mt-1 text-xs text-red-500 pl-4'>{fieldErrors.phone}</p>
+                    )}
+                  </div>
                 </div>
-                <input
-                  type='email'
-                  name='email'
-                  id='email'
-                  autoComplete='email'
-                  placeholder='Email address*'
-                  required
-                  value={formData.email}
-                  onChange={handleChange}
-                  className='form-animate-input px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 md:py-3.5 text-sm sm:text-base border border-black/10 dark:border-white/10 rounded-full outline-primary focus:outline bg-transparent text-black dark:text-white focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300'
-                />
+                <div>
+                  <input
+                    type='email'
+                    name='email'
+                    id='email'
+                    autoComplete='email'
+                    placeholder='Email address*'
+                    required
+                    value={formData.email}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className={`form-animate-input px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 md:py-3.5 text-sm sm:text-base border rounded-full outline-primary focus:outline bg-transparent text-black dark:text-white focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 w-full ${
+                      fieldErrors.email ? 'border-red-400 dark:border-red-500' : 'border-black/10 dark:border-white/10'
+                    }`}
+                  />
+                  {fieldErrors.email && (
+                    <p className='mt-1 text-xs text-red-500 pl-4'>{fieldErrors.email}</p>
+                  )}
+                </div>
                 <div className='flex flex-col lg:flex-row gap-4 sm:gap-5 md:gap-6'>
                   <select
                     name='projectType'
