@@ -1,4 +1,5 @@
 import HeroSub from "@/components/shared/HeroSub";
+import LeadQuoteForm from "@/components/shared/LeadQuoteForm";
 import React from "react";
 import { Metadata } from "next";
 import BrochureContent from "@/components/Brochure";
@@ -93,6 +94,16 @@ const page = () => {
                 description="Explore our portfolio, innovative services, and proven track record of delivering exceptional homes across Kerala"
                 badge="Brochure"
             />
+            <section className="py-16 bg-gray-50 dark:bg-gray-900">
+                <div className="container mx-auto max-w-lg px-4">
+                    <LeadQuoteForm
+                        leadSource="website_brochure"
+                        title="Download Our Brochure"
+                        submitLabel="Get Brochure"
+                        compact
+                    />
+                </div>
+            </section>
             <BrochureContent />
         </main>
     );
