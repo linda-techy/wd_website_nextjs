@@ -13,6 +13,9 @@ export default function LeadCapturePopupWrapper() {
     '/partnerships',
     '/signin',
     '/signup',
+    '/contactus',
+    '/brochure',
+    '/tools/home-cost-calculator',
   ];
   
   // Check if current path should be excluded
