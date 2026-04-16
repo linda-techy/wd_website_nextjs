@@ -14,6 +14,7 @@ export const FooterServicesLinks: footerlinks[] = [
     { label: 'Luxury Villas', href: '/luxury-villa' },
     { label: 'Apartments', href: '/appartment' },
     { label: 'Office Spaces', href: '/office-spaces' },
+    { label: 'Commercial Buildings', href: '/commercial-buildings' },
 ]
 
 // Tools & Resources Links
