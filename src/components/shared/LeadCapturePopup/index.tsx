@@ -180,6 +180,7 @@ export default function LeadCapturePopup({
         name: formData.name.trim(),
         email: formData.email.trim(),
         phone: formData.phone.replace(/\s/g, ''),
+        leadSource: 'website',
       };
 
       const response = await fetch('/api/leads/contact', {

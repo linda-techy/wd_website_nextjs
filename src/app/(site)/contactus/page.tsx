@@ -103,6 +103,7 @@ function ContactUs() {
         state: formData.state,
         district: formData.district,
         message: formData.message,
+        leadSource: 'website_contact',
       };
 
       // Submit to public contact form API endpoint (no authentication required)
