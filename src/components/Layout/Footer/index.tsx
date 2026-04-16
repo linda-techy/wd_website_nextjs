@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Icon } from "@iconify/react"
+import LeadQuoteForm from "@/components/shared/LeadQuoteForm";
 import { FooterCompanyLinks, FooterServicesLinks, FooterToolsLinks } from "@/app/api/footerlinks";
 
 const Footer = () => {
@@ -41,10 +42,15 @@ const Footer = () => {
               <h2 className="text-white leading-tight tracking-tight text-3xl md:text-40 font-bold mb-6">
                Let&apos;s build your dream space together
               </h2>
-              <Link href="/contactus" className="bg-primary text-base md:text-lg font-semibold py-4 px-8 rounded-full text-white hover:bg-white hover:text-dark duration-300 hover:cursor-pointer inline-block">
-                Get In Touch
-              </Link>
-              <div className="mt-8 pt-8 border-t border-white/10">
+              <div className="bg-white/5 rounded-2xl p-5">
+                <LeadQuoteForm
+                  leadSource="website_footer"
+                  title=""
+                  submitLabel="Get In Touch"
+                  compact
+                />
+              </div>
+              <div className="mt-6 pt-6 border-t border-white/10">
                 <p className="text-white/60 text-sm md:text-base mb-3 font-medium">Contact Information</p>
                 <Link href="mailto:info@walldotbuilders.com" className="text-white text-base md:text-lg hover:text-primary flex items-center gap-2 mb-2 leading-relaxed">
                   <Icon icon="ph:envelope-fill" width={20} height={20} />
