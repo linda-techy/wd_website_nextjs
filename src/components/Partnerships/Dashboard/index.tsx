@@ -497,11 +497,11 @@ export default function PartnerDashboard() {
                             <div className="text-center py-4">
                                 <p className="text-sm text-black/50 dark:text-white/50 mb-2">Have questions about your inquiry?</p>
                                 <a
-                                    href="tel:+919207700700"
+                                    href="tel:+919074954874"
                                     className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-white hover:bg-dark transition-colors font-semibold text-sm"
                                 >
                                     <Icon icon="ph:phone-fill" width={16} height={16} />
-                                    Call +91 9207 700 700
+                                    Call +91 9074954874
                                 </a>
                             </div>
                         </>
