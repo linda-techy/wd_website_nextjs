@@ -23,9 +23,9 @@ interface PublicEstimation {
   estimationNo: string;
   projectType: string;
   status: string;
-  subtotal: number;
-  discountAmount: number;
-  gstAmount: number;
+  subtotal: number | null;
+  discountAmount: number | null;
+  gstAmount: number | null;
   grandTotal: number;
   validUntil: string;
   createdAt: string;
@@ -34,6 +34,11 @@ interface PublicEstimation {
   exclusions: SubResource[];
   assumptions: SubResource[];
   paymentMilestones: SubResource[];
+  // K — two-mode quotations.
+  pricingMode?: 'BUDGETARY' | 'LINE_ITEM';
+  estimatedAreaSqft?: number | null;
+  grandTotalMin?: number | null;
+  grandTotalMax?: number | null;
 }
 
 interface ApiResponse<T> {
@@ -61,9 +66,13 @@ export async function generateMetadata({ params }: { params: Promise<{ token: st
   const { token } = await params;
   const est = await fetchEstimation(token);
   if (!est) return { title: 'Estimation not found · Walldot Builders' };
+  const desc =
+    est.pricingMode === 'BUDGETARY' && est.grandTotalMin != null && est.grandTotalMax != null
+      ? `${est.projectType} budgetary estimate, range ₹${est.grandTotalMin.toLocaleString('en-IN')}–₹${est.grandTotalMax.toLocaleString('en-IN')}`
+      : `${est.projectType} estimation, total ₹${est.grandTotal.toLocaleString('en-IN')}`;
   return {
     title: `Estimation ${est.estimationNo} · Walldot Builders`,
-    description: `${est.projectType} estimation, total ₹${est.grandTotal.toLocaleString('en-IN')}`,
+    description: desc,
     robots: 'noindex, nofollow', // share-link tokens shouldn't be indexed
   };
 }
@@ -94,39 +103,61 @@ export default async function EstimationPage({ params }: { params: Promise<{ tok
         </p>
       </header>
 
-      {/* Project type */}
-      <section>
+      {/* Project type + mode pill */}
+      <section className="flex items-center gap-3">
         <p className="text-sm">Project type: <span className="font-semibold">{est.projectType}</span></p>
+        {est.pricingMode === 'BUDGETARY' && (
+          <span className="inline-block px-2 py-0.5 rounded text-xs font-semibold bg-slate-200 text-slate-700">
+            Budgetary
+          </span>
+        )}
       </section>
 
-      {/* Line items table */}
-      <section>
-        <h2 className="text-xl font-semibold mb-2">Line items</h2>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse text-sm">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="text-left py-2 px-3 border">Description</th>
-                <th className="text-right py-2 px-3 border w-16">Qty</th>
-                <th className="text-left py-2 px-3 border w-16">Unit</th>
-                <th className="text-right py-2 px-3 border w-24">Rate</th>
-                <th className="text-right py-2 px-3 border w-32">Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              {est.lineItems.sort((a, b) => a.displayOrder - b.displayOrder).map((li, i) => (
-                <tr key={i} className="border-b">
-                  <td className="py-2 px-3 border">{li.description}</td>
-                  <td className="py-2 px-3 border text-right">{li.quantity ?? ''}</td>
-                  <td className="py-2 px-3 border">{li.unit ?? ''}</td>
-                  <td className="py-2 px-3 border text-right">{li.unitRate != null ? fmtINR(li.unitRate) : ''}</td>
-                  <td className="py-2 px-3 border text-right">{fmtINR(li.amount)}</td>
+      {est.pricingMode === 'BUDGETARY' ? (
+        /* Budgetary mode — show area + range, no line items */
+        <section className="bg-blue-50 border border-blue-200 rounded p-4">
+          <h2 className="text-xl font-semibold mb-2">Budgetary estimate</h2>
+          <p className="text-sm">
+            Estimated buildable area:{' '}
+            <span className="font-semibold">
+              {est.estimatedAreaSqft != null ? `${est.estimatedAreaSqft.toLocaleString('en-IN')} sqft` : '—'}
+            </span>
+          </p>
+          <p className="text-xs text-gray-600 mt-2">
+            This is a lead-stage estimate. The final figure is finalised as a detailed quotation
+            once architectural drawings are agreed.
+          </p>
+        </section>
+      ) : (
+        /* Line-item table */
+        <section>
+          <h2 className="text-xl font-semibold mb-2">Line items</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse text-sm">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="text-left py-2 px-3 border">Description</th>
+                  <th className="text-right py-2 px-3 border w-16">Qty</th>
+                  <th className="text-left py-2 px-3 border w-16">Unit</th>
+                  <th className="text-right py-2 px-3 border w-24">Rate</th>
+                  <th className="text-right py-2 px-3 border w-32">Amount</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
+              </thead>
+              <tbody>
+                {est.lineItems.sort((a, b) => a.displayOrder - b.displayOrder).map((li, i) => (
+                  <tr key={i} className="border-b">
+                    <td className="py-2 px-3 border">{li.description}</td>
+                    <td className="py-2 px-3 border text-right">{li.quantity ?? ''}</td>
+                    <td className="py-2 px-3 border">{li.unit ?? ''}</td>
+                    <td className="py-2 px-3 border text-right">{li.unitRate != null ? fmtINR(li.unitRate) : ''}</td>
+                    <td className="py-2 px-3 border text-right">{fmtINR(li.amount)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
 
       {/* Sub-resources — only rendered when non-empty */}
       <SubResourceSection title="Inclusions" items={est.inclusions} />
@@ -163,27 +194,41 @@ export default async function EstimationPage({ params }: { params: Promise<{ tok
         </section>
       )}
 
-      {/* Totals */}
-      <section className="border-t pt-4 space-y-1 text-sm">
-        <div className="flex justify-between">
-          <span>Subtotal</span>
-          <span className="font-mono">{fmtINR(est.subtotal)}</span>
-        </div>
-        {est.discountAmount > 0 && (
-          <div className="flex justify-between text-red-600">
-            <span>Discount</span>
-            <span className="font-mono">−{fmtINR(est.discountAmount)}</span>
+      {/* Totals — branched on pricingMode */}
+      {est.pricingMode === 'BUDGETARY' && est.grandTotalMin != null && est.grandTotalMax != null ? (
+        <section className="border-t pt-4 space-y-1 text-sm">
+          <div className="flex justify-between text-lg font-bold pt-2 mt-2 text-green-800">
+            <span>Estimated range (incl. GST)</span>
+            <span className="font-mono">
+              {fmtINR(est.grandTotalMin)} – {fmtINR(est.grandTotalMax)}
+            </span>
           </div>
-        )}
-        <div className="flex justify-between">
-          <span>GST</span>
-          <span className="font-mono">{fmtINR(est.gstAmount)}</span>
-        </div>
-        <div className="flex justify-between text-lg font-bold border-t pt-2 mt-2 text-green-800">
-          <span>Grand total</span>
-          <span className="font-mono">{fmtINR(est.grandTotal)}</span>
-        </div>
-      </section>
+          <p className="text-xs text-gray-500">
+            Range = (area × base rate) ±10%, GST applied. Final figure available after detailed estimate.
+          </p>
+        </section>
+      ) : (
+        <section className="border-t pt-4 space-y-1 text-sm">
+          <div className="flex justify-between">
+            <span>Subtotal</span>
+            <span className="font-mono">{fmtINR(est.subtotal ?? 0)}</span>
+          </div>
+          {(est.discountAmount ?? 0) > 0 && (
+            <div className="flex justify-between text-red-600">
+              <span>Discount</span>
+              <span className="font-mono">−{fmtINR(est.discountAmount ?? 0)}</span>
+            </div>
+          )}
+          <div className="flex justify-between">
+            <span>GST</span>
+            <span className="font-mono">{fmtINR(est.gstAmount ?? 0)}</span>
+          </div>
+          <div className="flex justify-between text-lg font-bold border-t pt-2 mt-2 text-green-800">
+            <span>Grand total</span>
+            <span className="font-mono">{fmtINR(est.grandTotal)}</span>
+          </div>
+        </section>
+      )}
 
       <footer className="border-t pt-4 text-xs text-gray-500">
         This estimation is valid until {new Date(est.validUntil).toLocaleDateString('en-IN')}.
