@@ -9,8 +9,9 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { BASE_API_URL } from "@/lib/config";
+import LeadQuoteForm from "@/components/shared/LeadQuoteForm";
 
-// Phone Mockup Components
+// Phone Mockup Components — brochure download modal flow
 const PhoneMockup = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
     <div className={`bg-gradient-to-b from-gray-800 to-gray-900 rounded-[3rem] p-3 shadow-2xl border-8 border-gray-800 ${className}`}>
         <div className="bg-white rounded-[2.5rem] overflow-hidden">
@@ -138,9 +139,10 @@ const BROCHURE_DOWNLOAD_URL = `${BASE_API_URL}/api/brochure/download`;
 export default function BrochureContent() {
     const [activeMockup, setActiveMockup] = useState(0);
     const [downloadState, setDownloadState] = useState<"idle" | "loading" | "error">("idle");
+    const [modalOpen, setModalOpen] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
-    const handleDownload = async () => {
+    const triggerPdfDownload = async () => {
         setDownloadState("loading");
         try {
             const res = await fetch(BROCHURE_DOWNLOAD_URL);
@@ -158,6 +160,29 @@ export default function BrochureContent() {
             setTimeout(() => setDownloadState("idle"), 4000);
         }
     };
+
+    const openDownloadModal = () => {
+        setModalOpen(true);
+    };
+
+    const handleLeadSuccess = () => {
+        triggerPdfDownload();
+        setTimeout(() => setModalOpen(false), 1800);
+    };
+
+    useEffect(() => {
+        if (!modalOpen) return;
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === "Escape") setModalOpen(false);
+        };
+        window.addEventListener("keydown", onKey);
+        const prevOverflow = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        return () => {
+            window.removeEventListener("keydown", onKey);
+            document.body.style.overflow = prevOverflow;
+        };
+    }, [modalOpen]);
 
     useGSAP(() => {
         gsap.registerPlugin(ScrollTrigger);
@@ -192,9 +217,8 @@ export default function BrochureContent() {
             }
 
             // 2. Generic scroll reveals for all child sections with premium architectural easing
-            const sections = containerRef.current?.querySelectorAll('.brochure-content > section');
-            sections?.forEach((sec, i) => {
-                if (i === 0) return; // skip hero as it's animated on load
+            const sections = containerRef.current?.querySelectorAll('.brochure-sections > section');
+            sections?.forEach((sec) => {
                 
                 // Collect key elements to stagger animate inside this section
                 const animTargets = sec.querySelectorAll('.print-card, h2, h3, .grid > div:not(.print-card)');
@@ -228,74 +252,77 @@ export default function BrochureContent() {
     return (
         <>
         <div ref={containerRef}>
-            <div className="container max-w-8xl mx-auto px-4 sm:px-5 2xl:px-0 py-6 sm:py-8 md:py-10 lg:py-12">
-            {/* Brochure Content */}
-            <div className="space-y-8 sm:space-y-10 md:space-y-12 lg:space-y-14 brochure-content">
-                
-                {/* 1. HERO - Attention Grabber with Visual Impact */}
-                <section className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-primary via-primary/90 to-primary/80 p-5 sm:p-6 md:p-8 lg:p-10 min-h-[350px] sm:min-h-[400px] flex items-center">
-                    <div className="absolute inset-0 opacity-10">
+            <div className="brochure-content">
+
+                {/* 1. HERO - Full-bleed dark navy, matches printed brochure page 1 */}
+                <section className="relative overflow-hidden bg-gradient-to-br from-dark via-dark to-[#0b1316] min-h-[420px] sm:min-h-[460px] flex items-center">
+                    <div className="absolute inset-0 opacity-[0.08]">
                         <div className="absolute inset-0 bg-[url('/images/hero/heroBanner.png')] bg-cover bg-center"></div>
                     </div>
-                    <div className="relative z-10 max-w-4xl">
-                        <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/20 backdrop-blur-sm mb-4 sm:mb-6">
-                            <Icon icon={"ph:device-mobile-fill"} width={16} height={16} className="text-white sm:w-5 sm:h-5" />
-                            <span className="text-white text-xs sm:text-sm font-semibold">24/7 Mobile Project Tracking — Transparency You Can See</span>
+                    <div className="absolute -bottom-32 -right-32 w-[28rem] h-[28rem] bg-primary/25 rounded-full blur-3xl"></div>
+                    <div className="absolute top-1/3 -left-24 w-72 h-72 bg-amber-400/10 rounded-full blur-3xl"></div>
+                    <div className="relative z-10 container max-w-8xl mx-auto px-4 sm:px-5 2xl:px-0 py-10 md:py-14 lg:py-20 w-full">
+                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-amber-400/50 bg-amber-400/[0.06] mb-5 sm:mb-7">
+                            <span className="text-amber-400 text-xs sm:text-sm font-semibold tracking-[0.18em]">EST. 2022 · THRISSUR, KERALA</span>
                         </div>
-                        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-3 sm:mb-4 md:mb-6 leading-tight">
-                            Building Dreams.<br/>Creating Homes.
+                        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-[1.05] mb-1 sm:mb-2">
+                            Build the Home
                         </h1>
-                        <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 mb-4 sm:mb-6 md:mb-8 leading-relaxed">
-                            Daily site photos. Real-time budget tracking. Direct chat with your construction team — all from your phone, without visiting the site once. Full transparency at every stage.
+                        <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-primary leading-[1.05] mb-4 sm:mb-5">
+                            You Deserve.
                         </p>
-                        <div className="flex flex-wrap gap-2 sm:gap-3 md:gap-4 mb-6 sm:mb-8">
-                            <div className="flex items-center gap-1.5 sm:gap-2 bg-white/20 backdrop-blur-sm px-3 py-1.5 sm:px-4 sm:py-2 md:px-5 md:py-2.5 rounded-full">
-                                <Icon icon={"ph:device-mobile-fill"} width={16} height={16} className="text-white sm:w-5 sm:h-5 md:w-6 md:h-6" />
-                                <span className="text-white text-xs sm:text-sm md:text-base font-semibold whitespace-nowrap">24/7 Mobile Tracking</span>
-                            </div>
-                            <div className="flex items-center gap-1.5 sm:gap-2 bg-white/20 backdrop-blur-sm px-3 py-1.5 sm:px-4 sm:py-2 md:px-5 md:py-2.5 rounded-full">
-                                <Icon icon={"ph:shield-check-fill"} width={16} height={16} className="text-white sm:w-5 sm:h-5 md:w-6 md:h-6" />
-                                <span className="text-white text-xs sm:text-sm md:text-base font-semibold whitespace-nowrap">Quality Assured</span>
-                            </div>
-                            <div className="flex items-center gap-1.5 sm:gap-2 bg-white/20 backdrop-blur-sm px-3 py-1.5 sm:px-4 sm:py-2 md:px-5 md:py-2.5 rounded-full">
-                                <Icon icon={"ph:clock-fill"} width={16} height={16} className="text-white sm:w-5 sm:h-5 md:w-6 md:h-6" />
-                                <span className="text-white text-xs sm:text-sm md:text-base font-semibold whitespace-nowrap">On-Time Delivery</span>
-                            </div>
+                        <div className="h-1 w-16 sm:w-20 bg-amber-400 mb-5 sm:mb-7 rounded-full"></div>
+                        <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/80 mb-6 sm:mb-8 leading-relaxed max-w-2xl">
+                            Quality construction. Transparent pricing. Delivered on time.<br className="hidden sm:inline" />
+                            Kerala&apos;s trusted partner for homes, villas, and commercial spaces.
+                        </p>
+                        <div className="flex flex-wrap gap-3 sm:gap-4">
+                            <a
+                                href="/contactus"
+                                className="inline-flex items-center gap-2 px-5 py-3 sm:px-7 sm:py-3.5 rounded-full bg-primary text-white text-sm sm:text-base font-bold shadow-2xl shadow-primary/30 hover:bg-primary/90 hover:scale-105 transition-all duration-300 cursor-pointer"
+                            >
+                                <span>Call for Free Consultation</span>
+                                <Icon icon={"ph:arrow-right"} width={18} height={18} />
+                            </a>
+                            <button
+                                type="button"
+                                onClick={openDownloadModal}
+                                className="inline-flex items-center gap-2 px-5 py-3 sm:px-7 sm:py-3.5 rounded-full border-2 border-amber-400/70 text-amber-400 text-sm sm:text-base font-bold hover:bg-amber-400/10 hover:border-amber-400 transition-all duration-300 cursor-pointer"
+                            >
+                                <Icon icon={"ph:file-pdf-fill"} width={18} height={18} />
+                                <span>Get Free Brochure</span>
+                            </button>
                         </div>
                     </div>
-                    <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
                 </section>
+
+                <div className="container max-w-8xl mx-auto px-4 sm:px-5 2xl:px-0 py-8 md:py-10 lg:py-12">
+                <div className="space-y-8 sm:space-y-10 md:space-y-12 lg:space-y-14 brochure-sections">
 
                 {/* 2. SOCIAL PROOF - Trust & Credibility */}
                 <section>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-5 sm:mb-6 md:mb-8 print-grid">
                         <div className="border border-primary/30 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 text-center bg-gradient-to-br from-primary/5 to-transparent hover:shadow-xl transition-all duration-300 hover:scale-105 print-card">
-                            <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mx-auto mb-2 sm:mb-3">
-                                <Icon icon={"ph:device-mobile-fill"} width={24} height={24} className="text-white sm:w-7 sm:h-7 md:w-8 md:h-8" />
-                            </div>
-                            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-1">24/7</h3>
-                             <p className="text-xs sm:text-sm text-black/70 dark:text-white/70 font-semibold">Mobile Project Access</p>
+                            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-1 leading-none">
+                                <span className="text-xl sm:text-2xl md:text-3xl align-top mr-0.5">₹</span>2Cr<span className="text-2xl sm:text-3xl md:text-4xl">+</span>
+                            </h3>
+                            <p className="text-xs sm:text-sm font-bold text-black dark:text-white mt-3 tracking-wider uppercase">Executed Value</p>
+                            <p className="text-xs text-black/55 dark:text-white/55 mt-1">premium project delivery</p>
                         </div>
-                        <div className="border border-primary/30 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 text-center bg-gradient-to-br from-primary/5 to-transparent hover:shadow-xl transition-all duration-300 hover:scale-105">
-                            <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center mx-auto mb-2 sm:mb-3">
-                                <Icon icon={"ph:smiley-fill"} width={24} height={24} className="text-white sm:w-7 sm:h-7 md:w-8 md:h-8" />
-                            </div>
-                            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-green-600 mb-1">★★★★★</h3>
-                            <p className="text-xs sm:text-sm text-black/70 dark:text-white/70 font-semibold">Client Satisfaction</p>
+                        <div className="border border-amber-400/40 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 text-center bg-gradient-to-br from-amber-400/[0.06] to-transparent hover:shadow-xl transition-all duration-300 hover:scale-105 print-card">
+                            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-amber-500 mb-1 leading-none">2022</h3>
+                            <p className="text-xs sm:text-sm font-bold text-black dark:text-white mt-3 tracking-wider uppercase">Year Founded</p>
+                            <p className="text-xs text-black/55 dark:text-white/55 mt-1">Thrissur, Kerala</p>
                         </div>
-                        <div className="border border-primary/30 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 text-center bg-gradient-to-br from-primary/5 to-transparent hover:shadow-xl transition-all duration-300 hover:scale-105">
-                            <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mx-auto mb-2 sm:mb-3">
-                                <Icon icon={"ph:trophy-fill"} width={24} height={24} className="text-white sm:w-7 sm:h-7 md:w-8 md:h-8" />
-                            </div>
-                            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-blue-600 mb-1">2022</h3>
-                            <p className="text-xs sm:text-sm text-black/70 dark:text-white/70 font-semibold">Est. in Thrissur, Kerala</p>
+                        <div className="border border-amber-400/40 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 text-center bg-gradient-to-br from-amber-400/[0.06] to-transparent hover:shadow-xl transition-all duration-300 hover:scale-105 print-card">
+                            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-amber-500 mb-1 tracking-wider leading-none">★★★★★</h3>
+                            <p className="text-xs sm:text-sm font-bold text-black dark:text-white mt-3 tracking-wider uppercase">Client Feedback</p>
+                            <p className="text-xs text-black/55 dark:text-white/55 mt-1">5-star project reviews</p>
                         </div>
-                        <div className="border border-primary/30 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 text-center bg-gradient-to-br from-primary/5 to-transparent hover:shadow-xl transition-all duration-300 hover:scale-105">
-                            <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center mx-auto mb-2 sm:mb-3">
-                                <Icon icon={"ph:currency-inr-fill"} width={24} height={24} className="text-white sm:w-7 sm:h-7 md:w-8 md:h-8" />
-                            </div>
-                            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-purple-600 mb-1">Clear</h3>
-                            <p className="text-xs sm:text-sm text-black/70 dark:text-white/70 font-semibold">Itemized Pricing</p>
+                        <div className="border border-primary/30 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 text-center bg-gradient-to-br from-primary/5 to-transparent hover:shadow-xl transition-all duration-300 hover:scale-105 print-card">
+                            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-1 leading-none">100%</h3>
+                            <p className="text-xs sm:text-sm font-bold text-black dark:text-white mt-3 tracking-wider uppercase">Quality Checks</p>
+                            <p className="text-xs text-black/55 dark:text-white/55 mt-1">every milestone</p>
                         </div>
                     </div>
 
@@ -328,6 +355,97 @@ export default function BrochureContent() {
                                 </p>
                             </div>
                         ))}
+                    </div>
+                </section>
+
+                {/* 2.5 WHAT WE BUILD - Quick service scan (matches PDF page 1 chips) */}
+                <section>
+                    <p className="text-xs sm:text-sm font-bold text-black/60 dark:text-white/60 tracking-[0.2em] uppercase mb-3 sm:mb-4">What We Build</p>
+                    <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3 print-grid">
+                        {[
+                            { label: 'Luxury Villas', dot: 'bg-primary' },
+                            { label: 'Modern Apartments', dot: 'bg-amber-500' },
+                            { label: 'Commercial Offices', dot: 'bg-primary' },
+                            { label: 'Turnkey Projects', dot: 'bg-amber-500' },
+                            { label: 'Architectural Design', dot: 'bg-primary' },
+                            { label: 'Home Renovations', dot: 'bg-amber-500' },
+                        ].map((item, i) => (
+                            <div key={i} className="flex items-center gap-3 px-4 py-3 rounded-xl border border-black/10 dark:border-white/10 bg-white dark:bg-dark hover:border-primary/40 transition-colors print-card">
+                                <span className={`w-2 h-2 rounded-full ${item.dot} flex-shrink-0`}></span>
+                                <span className="text-sm font-medium text-black/80 dark:text-white/85">{item.label}</span>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
+                {/* 2.6 YOUR JOURNEY 4-step + Value Pills (matches PDF page 1) */}
+                <section className="bg-gradient-to-br from-primary/[0.04] via-transparent to-amber-400/[0.04] border border-black/10 dark:border-white/10 rounded-3xl p-5 sm:p-6 md:p-8 lg:p-10">
+                    <p className="text-xs sm:text-sm font-bold text-black/60 dark:text-white/60 tracking-[0.2em] uppercase mb-6 sm:mb-8 text-center">Your Journey With Us</p>
+
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-5 sm:gap-6 mb-8 sm:mb-10 relative">
+                        <div className="hidden md:block absolute top-6 left-[12.5%] right-[12.5%] h-px bg-gradient-to-r from-amber-400/30 via-primary/30 to-amber-400/30 z-0"></div>
+                        {[
+                            { num: 1, title: 'Free Consultation', desc: 'We understand your vision & budget' },
+                            { num: 2, title: 'Design & Plan', desc: '3D walkthroughs before we break ground' },
+                            { num: 3, title: 'Build With Care', desc: 'Quality materials, milestone updates' },
+                            { num: 4, title: 'Keys in Hand', desc: 'On-time handover, zero surprises' },
+                        ].map((step, i) => (
+                            <div key={i} className="text-center relative">
+                                <div className="relative z-10 w-12 h-12 mx-auto rounded-full border-2 border-amber-400 bg-white dark:bg-dark flex items-center justify-center mb-3">
+                                    <span className="text-amber-500 font-bold">{step.num}</span>
+                                </div>
+                                <h4 className="font-bold text-sm sm:text-base text-black dark:text-white mb-1.5">{step.title}</h4>
+                                <p className="text-xs text-black/60 dark:text-white/60 leading-snug">{step.desc}</p>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 pt-6 sm:pt-8 border-t border-amber-400/20">
+                        {[
+                            { title: 'Fixed-Price Contracts', desc: 'Milestone-based billing schedule.' },
+                            { title: 'On-Time Delivery', desc: 'Milestone-based schedule you can track.' },
+                            { title: 'Quality First', desc: 'Premium materials, documented QA process.' },
+                            { title: 'Full Transparency', desc: 'Daily updates & real-time app tracking.' },
+                        ].map((v, i) => (
+                            <div key={i} className="text-center">
+                                <h5 className="font-bold text-amber-600 dark:text-amber-400 text-xs sm:text-sm mb-1.5 tracking-wide">{v.title}</h5>
+                                <p className="text-xs text-black/60 dark:text-white/60 leading-snug">{v.desc}</p>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+
+                {/* 2.7 TRANSPARENT PRICING + DELIVERY TIMELINE (matches PDF page 1) */}
+                <section className="space-y-3 sm:space-y-4">
+                    <div className="rounded-2xl border border-amber-400/40 bg-gradient-to-r from-amber-400/[0.05] to-transparent p-4 sm:p-5 md:p-6 print-card">
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-6">
+                            <div>
+                                <p className="text-xs font-bold text-amber-600 dark:text-amber-400 tracking-[0.2em] uppercase mb-1">Transparent Pricing</p>
+                                <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-black dark:text-white">Itemized quotes, tailored to your plan</h3>
+                            </div>
+                            <div className="text-left md:text-right">
+                                <p className="text-sm sm:text-base text-black/80 dark:text-white/80 font-medium">
+                                    <span className="text-amber-600 dark:text-amber-400 font-bold">Standard</span>
+                                    <span className="mx-2 text-black/30 dark:text-white/30">|</span>
+                                    <span className="text-amber-600 dark:text-amber-400 font-bold">Premium</span>
+                                    <span className="mx-2 text-black/30 dark:text-white/30">|</span>
+                                    <span className="text-amber-600 dark:text-amber-400 font-bold">Luxe</span>
+                                    <span className="text-black/60 dark:text-white/60"> packages</span>
+                                </p>
+                                <p className="text-xs text-amber-600/80 dark:text-amber-400/80 mt-1">Know every line before we break ground</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="rounded-2xl bg-dark p-4 sm:p-5 md:p-6 text-center print-card">
+                        <p className="text-xs font-bold text-amber-400 tracking-[0.2em] uppercase mb-2">Typical Delivery Timeline</p>
+                        <p className="text-sm sm:text-base text-white/90">
+                            <span className="font-bold">Villa</span> 8–12 months
+                            <span className="text-amber-400/60 mx-3">|</span>
+                            <span className="font-bold">Apartment</span> 10–14 months
+                            <span className="text-amber-400/60 mx-3">|</span>
+                            <span className="font-bold">Commercial</span> 4–8 months
+                        </p>
                     </div>
                 </section>
 
@@ -555,7 +673,13 @@ export default function BrochureContent() {
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-6 print-grid">
-                        <div className="border-2 border-primary/20 rounded-2xl p-8 hover:border-primary transition-all duration-300 hover:shadow-2xl hover:shadow-primary/20 print-card">
+                        <div className="relative border-2 border-primary/20 rounded-2xl p-8 hover:border-primary transition-all duration-300 hover:shadow-2xl hover:shadow-primary/20 print-card">
+                            <div className="absolute top-4 right-4">
+                                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary text-white text-[10px] sm:text-xs font-bold tracking-wider uppercase shadow-md">
+                                    <Icon icon={"ph:star-fill"} width={10} height={10} />
+                                    Most Popular
+                                </span>
+                            </div>
                             <div className="flex items-center gap-4 mb-6">
                                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
                                     <Icon icon={"ph:house-fill"} width={32} height={32} className="text-white" />
@@ -615,9 +739,15 @@ export default function BrochureContent() {
                             </div>
                         </div>
 
-                        <div className="border-2 border-primary/20 rounded-2xl p-8 hover:border-primary transition-all duration-300 hover:shadow-2xl hover:shadow-primary/20 print-card">
+                        <div className="relative border-2 border-amber-400/30 rounded-2xl p-8 hover:border-amber-400 transition-all duration-300 hover:shadow-2xl hover:shadow-amber-400/20 print-card">
+                            <div className="absolute top-4 right-4">
+                                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-500 text-white text-[10px] sm:text-xs font-bold tracking-wider uppercase shadow-md">
+                                    <Icon icon={"ph:medal-fill"} width={10} height={10} />
+                                    Best Value
+                                </span>
+                            </div>
                             <div className="flex items-center gap-4 mb-6">
-                                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
+                                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center">
                                     <Icon icon={"ph:key-fill"} width={32} height={32} className="text-white" />
                                 </div>
                                 <h3 className="text-xl md:text-2xl font-bold text-black dark:text-white leading-snug">Turnkey Solutions</h3>
@@ -873,6 +1003,55 @@ export default function BrochureContent() {
                     </div>
                 </section>
 
+                {/* 8.5 TRUST BADGES - 6 quick assurances (matches PDF page 3) */}
+                <section>
+                    <div className="bg-dark rounded-2xl px-5 py-5 sm:px-8 sm:py-6 md:px-10 md:py-7 print-card">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 sm:gap-6">
+                            {[
+                                'Fixed-Price\nContracts',
+                                'No Hidden\nCharges',
+                                'On-Time\nDelivery',
+                                'Premium\nMaterials',
+                                'In-House\nArchitects',
+                                'Dedicated\nSupport',
+                            ].map((label, i) => (
+                                <div key={i} className="flex flex-col items-center gap-1.5 text-center">
+                                    <span className="w-2 h-2 rounded-full bg-amber-400 mb-1"></span>
+                                    <p className="text-xs sm:text-sm font-medium text-white/90 leading-snug whitespace-pre-line">{label}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* 8.6 THREE STEPS - Simplified pre-CTA process (matches PDF page 3) */}
+                <section>
+                    <div className="relative overflow-hidden bg-dark rounded-3xl p-6 sm:p-8 md:p-10 print-card">
+                        <div className="absolute top-0 right-0 w-72 h-72 bg-amber-400/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+                        <div className="relative z-10">
+                            <p className="text-xs font-bold text-amber-400 tracking-[0.2em] uppercase mb-2 text-center">Process Steps</p>
+                            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white text-center mb-6 sm:mb-8">Three steps to your dream home</h3>
+                            <div className="grid sm:grid-cols-3 gap-5 sm:gap-6">
+                                {[
+                                    { num: 1, title: 'Reach Out', desc: 'Call or WhatsApp us.' },
+                                    { num: 2, title: 'Site Visit', desc: 'Free site visit in Kerala.' },
+                                    { num: 3, title: 'Concept Quote', desc: 'Itemized plan in 48h.' },
+                                ].map((step, i) => (
+                                    <div key={i} className="flex items-start gap-3 sm:gap-4">
+                                        <div className="flex-shrink-0 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-amber-400 flex items-center justify-center">
+                                            <span className="font-bold text-dark text-sm sm:text-base">{step.num}</span>
+                                        </div>
+                                        <div>
+                                            <h4 className="font-bold text-white mb-1 text-sm sm:text-base">{step.title}</h4>
+                                            <p className="text-xs sm:text-sm text-white/70 leading-snug">{step.desc}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
                 {/* 9. CTA - Contact Section (Strong Call to Action) */}
                 <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary via-primary/90 to-primary/80 p-8 md:p-16 page-break-before">
                     <div className="absolute inset-0 opacity-10">
@@ -970,14 +1149,15 @@ export default function BrochureContent() {
                         © {new Date().getFullYear()} Walldot Builders. All rights reserved.
                     </p>
                 </section>
+                </div>
+                </div>
             </div>
-        </div>
         </div>
 
         {/* Floating Download Button */}
         <div className="fixed bottom-6 right-6 z-50">
             <button
-                onClick={handleDownload}
+                onClick={openDownloadModal}
                 disabled={downloadState === "loading"}
                 aria-label="Download company brochure PDF"
                 className="flex items-center gap-2 px-5 py-3 rounded-full bg-primary text-white font-semibold shadow-2xl hover:bg-dark transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed hover:scale-105"
@@ -991,6 +1171,59 @@ export default function BrochureContent() {
                 )}
             </button>
         </div>
+
+        {/* Download Brochure Modal */}
+        {modalOpen && (
+            <div
+                className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-in fade-in"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="brochure-modal-title"
+                onClick={(e) => {
+                    if (e.target === e.currentTarget) setModalOpen(false);
+                }}
+            >
+                <div className="relative w-full max-w-md bg-white dark:bg-dark rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
+                    <button
+                        type="button"
+                        onClick={() => setModalOpen(false)}
+                        aria-label="Close download form"
+                        className="absolute top-3 right-3 z-10 w-9 h-9 rounded-full flex items-center justify-center bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-gray-600 dark:text-gray-300 transition-colors cursor-pointer"
+                    >
+                        <Icon icon="ph:x-bold" width={18} height={18} />
+                    </button>
+
+                    <div className="px-5 pt-6 pb-2 sm:px-7 sm:pt-7">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-amber-400/40 bg-amber-400/[0.06] mb-3">
+                            <Icon icon="ph:file-pdf-fill" width={14} height={14} className="text-amber-500" />
+                            <span className="text-amber-600 dark:text-amber-400 text-[10px] font-bold tracking-[0.18em] uppercase">Free Brochure PDF</span>
+                        </div>
+                        <h3 id="brochure-modal-title" className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-1">
+                            Where should we send it?
+                        </h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                            Quick details — and the PDF downloads instantly. We&apos;ll also share a free cost estimate.
+                        </p>
+                    </div>
+
+                    <div className="px-5 pb-6 sm:px-7 sm:pb-7">
+                        <LeadQuoteForm
+                            leadSource="website_brochure"
+                            title=""
+                            submitLabel={downloadState === "loading" ? "Preparing PDF…" : "Get the Brochure"}
+                            compact
+                            showMessage={false}
+                            onSuccess={handleLeadSuccess}
+                        />
+                        {downloadState === "error" && (
+                            <p className="mt-3 text-xs text-red-600 dark:text-red-400 text-center">
+                                PDF temporarily unavailable. We&apos;ll email it to you shortly.
+                            </p>
+                        )}
+                    </div>
+                </div>
+            </div>
+        )}
         </>
     );
 }
