@@ -304,7 +304,7 @@ export default function BrochureContent() {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-5 sm:mb-6 md:mb-8 print-grid">
                         <div className="border border-primary/30 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 text-center bg-gradient-to-br from-primary/5 to-transparent hover:shadow-xl transition-all duration-300 hover:scale-105 print-card">
                             <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-1 leading-none">
-                                <span className="text-xl sm:text-2xl md:text-3xl align-top mr-0.5">₹</span>2Cr<span className="text-2xl sm:text-3xl md:text-4xl">+</span>
+                                <span className="text-xl sm:text-2xl md:text-3xl align-top mr-0.5">₹</span>10Cr<span className="text-2xl sm:text-3xl md:text-4xl">+</span>
                             </h3>
                             <p className="text-xs sm:text-sm font-bold text-black dark:text-white mt-3 tracking-wider uppercase">Executed Value</p>
                             <p className="text-xs text-black/55 dark:text-white/55 mt-1">premium project delivery</p>
