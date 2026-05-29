@@ -114,14 +114,11 @@ export default function LeadQuoteForm({
       if (formData.area.trim()) leadData.area = formData.area.trim();
       if (projectType) leadData.projectType = projectType;
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/leads/contact`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(leadData),
-        }
-      );
+      const response = await fetch("/api/leads/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(leadData),
+      });
 
       const result = await response.json();
 

@@ -107,16 +107,13 @@ function ContactUs() {
       };
 
       // Submit to public contact form API endpoint (no authentication required)
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/leads/contact`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(contactData),
-        }
-      );
+      const response = await fetch('/api/leads/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(contactData),
+      });
 
       if (!response.ok) {
         throw new Error('Failed to submit inquiry');
