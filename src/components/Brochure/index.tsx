@@ -958,7 +958,7 @@ export default function BrochureContent() {
                             { icon: "ph:shield-check-fill", title: "Quality Commitment", desc: "ISI-certified materials from authorized dealers — no compromise on standards", color: "from-green-500 to-green-600" },
                             { icon: "ph:clock-fill", title: "On-Time Focused", desc: "We prioritize your timeline with proactive project management and regular updates", color: "from-orange-500 to-orange-600" },
                             { icon: "ph:currency-inr-fill", title: "Transparent Pricing", desc: "Zero hidden costs. Itemized quotations. What you see is what you pay", color: "from-purple-500 to-purple-600" },
-                            { icon: "ph:users-three-fill", title: "In-House Expert Team", desc: "Trained engineers, masons & supervisors — no sub-contracting your project", color: "from-red-500 to-red-600" },
+                            { icon: "ph:users-three-fill", title: "Engineer-Supervised Sites", desc: "Specialist crews led by our engineers — your build never runs unsupervised", color: "from-red-500 to-red-600" },
                             { icon: "ph:medal-fill", title: "Structural Warranty", desc: "Post-construction structural support on foundations, columns & roof — as per warranty terms", color: "from-teal-500 to-teal-600" }
                         ].map((item, index) => (
                             <div key={index} className="border border-black/10 dark:border-white/10 rounded-2xl p-6 hover:shadow-2xl transition-all duration-300 hover:scale-105 group cursor-pointer print-card">
@@ -997,8 +997,8 @@ export default function BrochureContent() {
                         </div>
                         <div className="bg-white dark:bg-dark border border-black/10 dark:border-white/10 rounded-2xl p-8 text-center print-card">
                             <Icon icon={"ph:users-fill"} width={48} height={48} className="text-primary mx-auto mb-4" />
-                            <h3 className="text-xl font-bold text-black dark:text-white mb-2">In-House Skilled Workforce</h3>
-                            <p className="text-sm text-black/60 dark:text-white/60">Trained engineers, masons & supervisors on our payroll — never sub-contracted</p>
+                            <h3 className="text-xl font-bold text-black dark:text-white mb-2">Engineer-Supervised Specialist Crews</h3>
+                            <p className="text-sm text-black/60 dark:text-white/60">Hand-picked specialist teams — every site overseen daily by our in-house engineers, accountability stays with us</p>
                         </div>
                     </div>
                 </section>
