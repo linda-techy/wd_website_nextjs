@@ -72,8 +72,7 @@ const Header: React.FC = () => {
                 width={150}
                 height={68}
                 priority
-                style={{ width: 'auto', height: 'auto' }}
-                className={`${
+                className={`w-[150px] h-auto ${
                   isHomepage
                     ? sticky
                       ? "block dark:hidden"
@@ -89,8 +88,7 @@ const Header: React.FC = () => {
                 width={150}
                 height={68}
                 priority
-                style={{ width: 'auto', height: 'auto' }}
-                className={`${
+                className={`w-[150px] h-auto ${
                   isHomepage
                     ? sticky
                       ? "hidden dark:block"
